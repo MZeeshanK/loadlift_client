@@ -1,12 +1,28 @@
+import 'react-native-gesture-handler';
 import React from 'react';
 
-import {SafeAreaView, Text} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+
+import Splash from './src/screens/Splash';
+import Login from './src/screens/auth/Login';
+import OTP from './src/screens/auth/OTP';
+import UserType from './src/screens/auth/UserType';
+import CreateAccount from './src/screens/auth/CreateAccount';
+
+const Stack = createStackNavigator();
 
 function App() {
   return (
-    <SafeAreaView className="flex-1 flex-col items-center justify-center bg-black">
-      <Text className="text-white text-2xl">Welcome to loadlift</Text>
-    </SafeAreaView>
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{headerShown: false}}>
+        <Stack.Screen name="Splash" component={Splash} />
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="OTP" component={OTP} />
+        <Stack.Screen name="UserType" component={UserType} />
+        <Stack.Screen name="CreateAccount" component={CreateAccount} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
