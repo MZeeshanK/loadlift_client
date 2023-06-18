@@ -6,7 +6,7 @@ import colors from '../../constants/colors';
 const Input = ({placeholder, isDisabled, style, keyboard, value}) => {
   return (
     <TextInput
-      className={`w-full mx-5 px-8 py-1 mb-8 text-md font-semibold rounded-full ${
+      className={`w-full mx-5 px-8 py-1 text-black mb-8 text-md font-semibold rounded-full ${
         isDisabled ? 'bg-lightGrey' : 'bg-white'
       }`}
       placeholderTextColor={colors.grey}

@@ -1,19 +1,29 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {StyleSheet, Pressable} from 'react-native';
 
-const Card = ({children, style}) => {
+import colors from '../../constants/colors';
+
+const Card = ({children, style, onPress}) => {
   return (
-    <View className="rounded-xl my-3" style={[styles.container, style]}>
+    <Pressable
+      onPress={onPress}
+      className="rounded-xl my-3 border-primary items-center justify-center"
+      style={[styles.container, style]}>
       {children}
-    </View>
+    </Pressable>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.card,
-
-    elevation: 1,
+    borderWidth: 4,
+    backgroundColor: 'rgba(39,47,48,.2)',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 2,
+      height: 0,
+    },
+    // elevation: 1,
   },
 });
 

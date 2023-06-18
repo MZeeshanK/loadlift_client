@@ -18,53 +18,56 @@ const UserType = ({navigation}) => {
     <Linear>
       <Header title="Register" />
 
-      <View className="items-center justify-between mb-6">
-        <Text className="text-xl font-bold text-white mb-4">Register As:</Text>
+      <View className="items-center justify-between mb-6 flex-1">
+        <Text className="text-xl font-bold text-white">Register As:</Text>
 
-        <Card
-          style={selectedUserType === 'user' ? styles.selectedUserType : {}}>
-          <Pressable
-            className="w-full px-20 py-12"
-            onPress={() => setSelectedUserType('user')}>
-            <Image
-              source={
-                selectedUserType === 'user'
-                  ? require('../../../assets/user-dark.png')
-                  : require('../../../assets/user-light.png')
-              }
-            />
-            <Text
-              className={textClasses}
-              style={
-                selectedUserType === 'user' ? styles.selectedUserText : {}
-              }>
-              User
-            </Text>
-          </Pressable>
-        </Card>
+        <View className="flex-1 items-center justify-center">
+          <Card
+            style={selectedUserType === 'user' ? styles.selectedUserType : {}}>
+            <Pressable
+              className="w-full px-20 py-12"
+              onPress={() => setSelectedUserType('user')}>
+              <Image
+                source={
+                  selectedUserType === 'user'
+                    ? require('../../../assets/user-dark.png')
+                    : require('../../../assets/user-light.png')
+                }
+              />
+              <Text
+                className={textClasses}
+                style={
+                  selectedUserType === 'user' ? styles.selectedUserText : {}
+                }>
+                User
+              </Text>
+            </Pressable>
+          </Card>
 
-        <Card
-          style={selectedUserType === 'driver' ? styles.selectedUserType : {}}>
-          <Pressable
-            className="w-full px-20 py-12"
-            onPress={() => setSelectedUserType('driver')}>
-            <Image
-              source={
-                selectedUserType === 'driver'
-                  ? require('../../../assets/driver-dark.png')
-                  : require('../../../assets/driver-light.png')
-              }
-            />
-            <Text
-              className={textClasses}
-              style={
-                selectedUserType === 'driver' ? styles.selectedUserText : {}
-              }>
-              Driver
-            </Text>
-          </Pressable>
-        </Card>
-
+          <Card
+            style={
+              selectedUserType === 'driver' ? styles.selectedUserType : {}
+            }>
+            <Pressable
+              className="w-full px-20 py-12"
+              onPress={() => setSelectedUserType('driver')}>
+              <Image
+                source={
+                  selectedUserType === 'driver'
+                    ? require('../../../assets/driver-dark.png')
+                    : require('../../../assets/driver-light.png')
+                }
+              />
+              <Text
+                className={textClasses}
+                style={
+                  selectedUserType === 'driver' ? styles.selectedUserText : {}
+                }>
+                Driver
+              </Text>
+            </Pressable>
+          </Card>
+        </View>
         <Button
           title="Next"
           onPress={() => navigation.navigate('CreateAccount')}

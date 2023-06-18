@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView, Dimensions} from 'react-native';
+import {SafeAreaView, Dimensions, StyleSheet} from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -17,7 +17,19 @@ const Linear = ({children, style}) => {
         {children}
       </SafeAreaView>
     </LinearGradient>
+
+    // <SafeAreaView
+    //   style={[styles.container, style]}
+    //   className="items-center justify-between p-5 bg-start">
+    //   {children}
+    // </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    height: height,
+  },
+});
 
 export default React.memo(Linear);

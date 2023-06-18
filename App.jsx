@@ -10,6 +10,8 @@ import OTP from './src/screens/auth/OTP';
 import UserType from './src/screens/auth/UserType';
 import CreateAccount from './src/screens/auth/CreateAccount';
 
+import Home from './src/screens/app/Home';
+
 const Stack = createStackNavigator();
 
 function App() {
@@ -21,6 +23,7 @@ function App() {
         <Stack.Screen name="OTP" component={OTP} />
         <Stack.Screen name="UserType" component={UserType} />
         <Stack.Screen name="CreateAccount" component={CreateAccount} />
+        <Stack.Screen name="Home" component={Home} />
       </Stack.Navigator>
     </NavigationContainer>
   );

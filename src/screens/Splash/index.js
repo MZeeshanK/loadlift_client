@@ -8,8 +8,8 @@ const Splash = ({navigation}) => {
   const next = () => navigation.navigate('Login');
 
   return (
-    <Linear style={{justifyContent: 'space-between'}}>
-      <View className="w-full items-center pt-24 justify-center">
+    <Linear>
+      <View className="items-center justify-between pt-24">
         <Text className="text-white text-2xl font-semibold text-center leading-8 tracking-wider">
           Delivering convenience to your doorstep
         </Text>
@@ -18,8 +18,11 @@ const Splash = ({navigation}) => {
           className="mt-16 opacity-50"
         />
       </View>
-
-      <Button title="Get Started" onPress={next} style={{marginBottom: 100}} />
+      <Button
+        title="Get Started"
+        onPress={next}
+        style={{marginBottom: 100, width: '75%'}}
+      />
     </Linear>
   );
 };

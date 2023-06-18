@@ -11,13 +11,13 @@ const Login = ({navigation}) => {
   const next = () => navigation.navigate('OTP');
 
   return (
-    <Linear style={{justifyContent: 'flex-start'}}>
+    <Linear>
       <Header title="Login" isBack={true} />
-      <View className="justify-between flex-1 w-full items-center mb-16">
+      <View className="items-center justify-between flex-1 w-full my-10">
         <Input
           placeholder="Please enter your mobile number"
-          style={{marginVertical: 60}}
-          keyboard="phone-pad"
+          style={{marginBottom: 60}}
+          keyboard="numeric"
         />
 
         <Button title="Next" onPress={next} />
@@ -26,4 +26,4 @@ const Login = ({navigation}) => {
   );
 };
 
-export default Login;
+export default React.memo(Login);
