@@ -7,11 +7,11 @@
 #define TIMEOUT_SECONDS 600
 #define TEXT_TO_LOOK_FOR @"Welcome to React"
 
-@interface loadlift_clientTests : XCTestCase
+@interface LoadLiftTests : XCTestCase
 
 @end
 
-@implementation loadlift_clientTests
+@implementation LoadLiftTests
 
 - (BOOL)findSubviewInView:(UIView *)view matching:(BOOL (^)(UIView *view))test
 {

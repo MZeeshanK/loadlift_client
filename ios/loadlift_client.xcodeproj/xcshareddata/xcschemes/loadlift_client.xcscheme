@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "loadlift_client.app"
-               BlueprintName = "loadlift_client"
-               ReferencedContainer = "container:loadlift_client.xcodeproj">
+               BuildableName = "LoadLift.app"
+               BlueprintName = "LoadLift"
+               ReferencedContainer = "container:LoadLift.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "loadlift_clientTests.xctest"
-               BlueprintName = "loadlift_clientTests"
-               ReferencedContainer = "container:loadlift_client.xcodeproj">
+               BuildableName = "LoadLiftTests.xctest"
+               BlueprintName = "LoadLiftTests"
+               ReferencedContainer = "container:LoadLift.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "loadlift_client.app"
-            BlueprintName = "loadlift_client"
-            ReferencedContainer = "container:loadlift_client.xcodeproj">
+            BuildableName = "LoadLift.app"
+            BlueprintName = "LoadLift"
+            ReferencedContainer = "container:LoadLift.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "loadlift_client.app"
-            BlueprintName = "loadlift_client"
-            ReferencedContainer = "container:loadlift_client.xcodeproj">
+            BuildableName = "LoadLift.app"
+            BlueprintName = "LoadLift"
+            ReferencedContainer = "container:LoadLift.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

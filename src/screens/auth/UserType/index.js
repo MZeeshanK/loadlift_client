@@ -1,12 +1,5 @@
 import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  Pressable,
-  Image,
-  StyleSheet,
-  Dimensions,
-} from 'react-native';
+import {View, Text, Image, StyleSheet, Dimensions} from 'react-native';
 
 import colors from '../../../constants/colors';
 
@@ -15,8 +8,6 @@ import Header from '../../../components/Header';
 import Button from '../../../components/Button';
 
 import CardButton from '../../../components/CardButton';
-
-const textClasses = 'font-bold pt-6 text-3xl text-center text-white';
 
 const UserType = ({navigation}) => {
   const [userType, setUserType] = useState('driver');
@@ -76,12 +67,12 @@ const UserType = ({navigation}) => {
   );
 };
 
-const {width} = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   card: {
     width: width * 0.8,
-    height: '40%',
+    height: height * 0.35,
     elevation: 5,
     shadowColor: '#000',
     gap: 10,
