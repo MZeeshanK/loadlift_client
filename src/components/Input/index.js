@@ -11,7 +11,7 @@ const Input = ({placeholder, isDisabled, style, keyboard, value}) => {
       }`}
       placeholderTextColor={colors.grey}
       placeholder={placeholder}
-      style={[{elevation: 10}, style]}
+      style={[{elevation: 3}, style]}
       keyboardType={keyboard}
       editable={!isDisabled}
     />
@@ -23,4 +23,4 @@ Input.defaultProps = {
   keyboard: 'default',
 };
 
-export default Input;
+export default React.memo(Input);

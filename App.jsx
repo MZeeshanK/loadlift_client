@@ -18,6 +18,8 @@ import Home from './src/screens/app/Home';
 import Activity from './src/screens/app/Activity';
 import Account from './src/screens/app/Account';
 
+import Booking from './src/screens/app/Booking';
+
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -122,6 +124,7 @@ function App() {
         <Stack.Screen name="UserType" component={UserType} />
         <Stack.Screen name="CreateAccount" component={CreateAccount} />
         <Stack.Screen name="Tabs" component={Tabs} />
+        <Stack.Screen name="Booking" component={Booking} />
       </Stack.Navigator>
     </NavigationContainer>
   );

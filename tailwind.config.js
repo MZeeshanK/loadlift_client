@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+
 module.exports = {
   content: ['./App.{js,jsx,ts,tsx}', './src/**/*.{js,jsx,ts,tsx}'],
   theme: {
@@ -9,8 +10,10 @@ module.exports = {
         start: '#1C3031',
         end: '#130B1C',
         card: '#272F30',
+        grey: '#888888',
+        tabs: '#1C1F2C',
+        background: '#161924',
         lightGrey: '#d9d9d9',
-        tabs: '#161421',
       },
       fontFamily: {
         sans: ['Poppins', 'sans-serif'],

@@ -10,7 +10,7 @@ import Button from '../../../components/Button';
 import CardButton from '../../../components/CardButton';
 
 const UserType = ({navigation}) => {
-  const [userType, setUserType] = useState('driver');
+  const [userType, setUserType] = useState('');
 
   return (
     <Linear>
@@ -71,20 +71,21 @@ const {width, height} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   card: {
-    width: width * 0.8,
-    height: height * 0.35,
-    elevation: 5,
+    width: width * 0.7,
+    height: height * 0.3,
+    marginBottom: 20,
     shadowColor: '#000',
     gap: 10,
+    elevation: 5,
   },
   selectedCard: {
     backgroundColor: colors.primary,
   },
   icon: {
-    width: 150,
-    height: 150,
+    width: 120,
+    height: 120,
     marginBottom: 10,
   },
 });
 
-export default UserType;
+export default React.memo(UserType);
