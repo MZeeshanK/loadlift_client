@@ -16,7 +16,7 @@ const Card = ({children, style, onPress}) => {
 
 const styles = StyleSheet.create({
   container: {
-    borderWidth: 4,
+    // borderWidth: 4,
     backgroundColor: 'rgba(39,47,48,.2)',
     shadowColor: '#000',
     shadowOffset: {

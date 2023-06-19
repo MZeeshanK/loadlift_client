@@ -1,6 +1,13 @@
 import React, {useState} from 'react';
 
-import {View, ScrollView, Text, FlatList} from 'react-native';
+import {
+  View,
+  ScrollView,
+  Text,
+  FlatList,
+  StyleSheet,
+  Image,
+} from 'react-native';
 
 import Linear from '../../../components/Linear';
 import Header from '../../../components/Header';
@@ -11,6 +18,7 @@ import Card from '../../../components/Card';
 
 import categories from '../../../data/categories';
 import colors from '../../../constants/colors';
+import CardButton from '../../../components/CardButton';
 
 const CreateAccount = ({navigation}) => {
   const [driver, setDriver] = useState(true);
@@ -45,48 +53,45 @@ const CreateAccount = ({navigation}) => {
                 <TextLabel title="Vehicle Number:" />
                 <Input placeholder="Please Enter your vehicle registration Number" />
 
+                {/* Category list for drivers */}
                 <TextLabel title="Category of Vehicle" />
-                {/* ** TODO FLATLIST OF CATEGORIES  ** */}
 
                 <FlatList
                   horizontal
-                  className="px-4 py-2 rounded-md"
-                  style={{backgroundColor: 'rgba(25,25,45,.5)'}}
+                  className="px-4 py-2 mt-2 rounded-xl"
+                  style={{backgroundColor: 'rgba(0,0,0,.3)'}}
                   showsHorizontalScrollIndicator={false}
                   data={categories}
                   keyExtractor={item => item?.id}
-                  renderItem={({item}) => (
-                    <Card
-                      style={
-                        category === item
-                          ? {
-                              borderWidth: 2,
-                              paddingVertical: 12,
-                              paddingHorizontal: 8,
-                              marginRight: 10,
-                              backgroundColor: colors.primary,
-                            }
-                          : {
-                              borderWidth: 2,
-                              paddingVertical: 12,
-                              paddingHorizontal: 8,
-                              marginRight: 10,
-                            }
-                      }
+                  renderItem={({item, index}) => (
+                    <CardButton
+                      style={[
+                        styles.cardButton,
+                        category === item && {backgroundColor: colors.primary},
+                        index === categories.length - 1 && {marginRight: 30},
+                      ]}
                       onPress={() => setCategory(item)}>
+                      {item?.icon && item?.darkIcon ? (
+                        <Image
+                          source={category === item ? item.darkIcon : item.icon}
+                          style={styles.icon}
+                        />
+                      ) : (
+                        <View style={styles.icon} />
+                      )}
                       <Text
-                        className={`text-lg font-semibold pb-1 ${
+                        className={`text-xs font-bold pt-2 tracking-wider ${
                           category === item ? 'text-black' : 'text-white'
                         } `}>
                         {item?.title}
                       </Text>
                       <Text
-                        className={`text-base font-bold pb-1 ${
+                        className={`text-xs font-bold ${
                           category === item ? 'text-black' : 'text-white'
                         } `}>
                         {item?.weight}T
                       </Text>
-                    </Card>
+                    </CardButton>
                   )}
                 />
               </>
@@ -102,5 +107,19 @@ const CreateAccount = ({navigation}) => {
     </Linear>
   );
 };
+
+const styles = StyleSheet.create({
+  cardButton: {
+    width: 100,
+    height: 90,
+    elevation: 5,
+    marginRight: 10,
+    elevation: 2,
+  },
+  icon: {
+    width: 60,
+    height: 30,
+  },
+});
 
 export default React.memo(CreateAccount);

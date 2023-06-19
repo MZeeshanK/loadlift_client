@@ -1,5 +1,12 @@
 import React, {useState} from 'react';
-import {View, Text, Pressable, Image, StyleSheet} from 'react-native';
+import {
+  View,
+  Text,
+  Pressable,
+  Image,
+  StyleSheet,
+  Dimensions,
+} from 'react-native';
 
 import colors from '../../../constants/colors';
 
@@ -7,12 +14,12 @@ import Linear from '../../../components/Linear';
 import Header from '../../../components/Header';
 import Button from '../../../components/Button';
 
-import Card from '../../../components/Card';
+import CardButton from '../../../components/CardButton';
 
 const textClasses = 'font-bold pt-6 text-3xl text-center text-white';
 
 const UserType = ({navigation}) => {
-  const [selectedUserType, setSelectedUserType] = useState('user');
+  const [userType, setUserType] = useState('driver');
 
   return (
     <Linear>
@@ -21,52 +28,43 @@ const UserType = ({navigation}) => {
       <View className="items-center justify-between mb-6 flex-1">
         <Text className="text-xl font-bold text-white">Register As:</Text>
 
-        <View className="flex-1 items-center justify-center">
-          <Card
-            style={selectedUserType === 'user' ? styles.selectedUserType : {}}>
-            <Pressable
-              className="w-full px-20 py-12"
-              onPress={() => setSelectedUserType('user')}>
-              <Image
-                source={
-                  selectedUserType === 'user'
-                    ? require('../../../assets/user-dark.png')
-                    : require('../../../assets/user-light.png')
-                }
-              />
-              <Text
-                className={textClasses}
-                style={
-                  selectedUserType === 'user' ? styles.selectedUserText : {}
-                }>
-                User
-              </Text>
-            </Pressable>
-          </Card>
-
-          <Card
-            style={
-              selectedUserType === 'driver' ? styles.selectedUserType : {}
-            }>
-            <Pressable
-              className="w-full px-20 py-12"
-              onPress={() => setSelectedUserType('driver')}>
-              <Image
-                source={
-                  selectedUserType === 'driver'
-                    ? require('../../../assets/driver-dark.png')
-                    : require('../../../assets/driver-light.png')
-                }
-              />
-              <Text
-                className={textClasses}
-                style={
-                  selectedUserType === 'driver' ? styles.selectedUserText : {}
-                }>
-                Driver
-              </Text>
-            </Pressable>
-          </Card>
+        <View className="items-center justify-center">
+          <CardButton
+            style={[styles.card, userType === 'user' && styles.selectedCard]}
+            onPress={() => setUserType('user')}>
+            <Image
+              style={styles.icon}
+              source={
+                userType === 'user'
+                  ? require('../../../assets/user-dark.png')
+                  : require('../../../assets/user-light.png')
+              }
+            />
+            <Text
+              className={`text-3xl font-bold text-white ${
+                userType === 'user' && 'text-black'
+              }`}>
+              User
+            </Text>
+          </CardButton>
+          <CardButton
+            style={[styles.card, userType === 'driver' && styles.selectedCard]}
+            onPress={() => setUserType('driver')}>
+            <Image
+              style={styles.icon}
+              source={
+                userType === 'driver'
+                  ? require('../../../assets/driver-dark.png')
+                  : require('../../../assets/driver-light.png')
+              }
+            />
+            <Text
+              className={`text-3xl font-bold text-white ${
+                userType === 'driver' && 'text-black'
+              }`}>
+              Driver
+            </Text>
+          </CardButton>
         </View>
         <Button
           title="Next"
@@ -78,16 +76,23 @@ const UserType = ({navigation}) => {
   );
 };
 
+const {width} = Dimensions.get('window');
+
 const styles = StyleSheet.create({
   card: {
-    paddingHorizontal: 75,
-    paddingVertical: 50,
+    width: width * 0.8,
+    height: '40%',
+    elevation: 5,
+    shadowColor: '#000',
+    gap: 10,
   },
-  selectedUserType: {
+  selectedCard: {
     backgroundColor: colors.primary,
   },
-  selectedUserText: {
-    color: '#000',
+  icon: {
+    width: 150,
+    height: 150,
+    marginBottom: 10,
   },
 });
 

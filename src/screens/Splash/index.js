@@ -9,20 +9,22 @@ const Splash = ({navigation}) => {
 
   return (
     <Linear>
-      <View className="items-center justify-between pt-24">
-        <Text className="text-white text-2xl font-semibold text-center leading-8 tracking-wider">
-          Delivering convenience to your doorstep
-        </Text>
-        <Image
-          source={require('../../assets/logo.png')}
-          className="mt-16 opacity-50"
+      <View className="flex-1 items-center justify-between">
+        <View className="items-center justify-center pt-24">
+          <Image
+            source={require('../../assets/logo.png')}
+            className="mb-16 opacity-50"
+          />
+          <Text className="text-white text-2xl font-bold text-center leading-8 tracking-wider">
+            Delivering convenience to your doorstep
+          </Text>
+        </View>
+        <Button
+          title="Get Started"
+          onPress={next}
+          style={{width: '75%', marginBottom: 100}}
         />
       </View>
-      <Button
-        title="Get Started"
-        onPress={next}
-        style={{marginBottom: 100, width: '75%'}}
-      />
     </Linear>
   );
 };
