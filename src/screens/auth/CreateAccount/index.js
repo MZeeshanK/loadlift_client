@@ -101,7 +101,7 @@ const CreateAccount = ({navigation}) => {
 
         <Button
           title="Create Account"
-          onPress={() => navigation.navigate('Home')}
+          onPress={() => navigation.navigate('Tabs')}
         />
       </View>
     </Linear>

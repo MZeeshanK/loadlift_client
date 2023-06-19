@@ -10,6 +10,7 @@ module.exports = {
         end: '#130B1C',
         card: '#272F30',
         lightGrey: '#d9d9d9',
+        tabs: '#161421',
       },
       fontFamily: {
         sans: ['Poppins', 'sans-serif'],

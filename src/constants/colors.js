@@ -5,4 +5,5 @@ export default colors = {
   end: '#130B1C',
   card: '#272F30',
   grey: '#888888',
+  tabs: '#161421',
 };
