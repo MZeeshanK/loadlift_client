@@ -1,0 +1,38 @@
+export default orders = [
+  {
+    id: '1',
+    userName: 'John Doe',
+    driverName: 'Ghulam Nabi',
+    typeOfVehicle: 'mini Truck',
+    price: 1200,
+    distance: 11.8,
+    vehicleNumber: 'JK01AA 1234',
+  },
+  {
+    id: '2',
+    userName: 'John Doe',
+    driverName: 'Ghulam Nabi',
+    typeOfVehicle: 'mini Truck',
+    price: 1200,
+    distance: 11.8,
+    vehicleNumber: 'JK01AA 1234',
+  },
+  {
+    id: '3',
+    userName: 'John Doe',
+    driverName: 'Ghulam Nabi',
+    typeOfVehicle: 'mini Truck',
+    price: 1200,
+    distance: 11.8,
+    vehicleNumber: 'JK01AA 1234',
+  },
+  {
+    id: '4',
+    userName: 'John Doe',
+    driverName: 'Ghulam Nabi',
+    typeOfVehicle: 'mini Truck',
+    price: 1200,
+    distance: 11.8,
+    vehicleNumber: 'JK01AA 1234',
+  },
+];

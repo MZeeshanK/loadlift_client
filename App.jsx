@@ -34,7 +34,7 @@ function App() {
             borderTopWidth: 0,
             backgroundColor: colors.tabs,
             borderTop: 'none',
-            height: 65,
+            height: 45,
             elevation: 5,
           },
           tabBarLabel: () => null,
@@ -54,7 +54,7 @@ function App() {
                   }
                 />
                 <Text
-                  className={`text-xs pt-1 ${
+                  className={`text-xs pt-0 ${
                     focused ? 'text-primary' : 'text-[#676767]'
                   }`}>
                   Home
@@ -78,7 +78,7 @@ function App() {
                   }
                 />
                 <Text
-                  className={`text-xs pt-1 ${
+                  className={`text-xs pt-0 ${
                     focused ? 'text-primary' : 'text-[#676767]'
                   }`}>
                   Activity
@@ -102,7 +102,7 @@ function App() {
                   }
                 />
                 <Text
-                  className={`text-xs pt-1 ${
+                  className={`text-xs pt-0 ${
                     focused ? 'text-primary' : 'text-[#676767]'
                   }`}>
                   Account
@@ -132,8 +132,8 @@ function App() {
 
 const styles = StyleSheet.create({
   icon: {
-    width: 24,
-    height: 24,
+    width: 20,
+    height: 20,
   },
 });
 

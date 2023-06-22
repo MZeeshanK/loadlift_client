@@ -5,7 +5,7 @@ import Button from '../../components/Button';
 import Linear from '../../components/Linear';
 
 const Splash = ({navigation}) => {
-  const next = () => navigation.navigate('Login');
+  const next = () => navigation.navigate('Tabs');
 
   return (
     <Linear>
