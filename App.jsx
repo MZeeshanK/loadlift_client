@@ -19,17 +19,20 @@ import Activity from './src/screens/app/Activity';
 import Account from './src/screens/app/Account';
 
 import Booking from './src/screens/app/Booking';
+import Order from './src/screens/app/Order';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function App() {
+  // Tab Navigator
   function Tabs() {
     return (
       <Tab.Navigator
         initialRouteName="Home"
         screenOptions={{
           headerShown: false,
+          // Tab Bar styles
           tabBarStyle: {
             borderTopWidth: 0,
             backgroundColor: colors.tabs,
@@ -39,6 +42,7 @@ function App() {
           },
           tabBarLabel: () => null,
         }}>
+        {/* Tab Screen */}
         <Tab.Screen
           name="Home"
           component={Home}
@@ -117,6 +121,7 @@ function App() {
 
   return (
     <NavigationContainer>
+      {/* Stack Navigtor */}
       <Stack.Navigator screenOptions={{headerShown: false}}>
         <Stack.Screen name="Splash" component={Splash} />
         <Stack.Screen name="Login" component={Login} />
@@ -125,6 +130,7 @@ function App() {
         <Stack.Screen name="CreateAccount" component={CreateAccount} />
         <Stack.Screen name="Tabs" component={Tabs} />
         <Stack.Screen name="Booking" component={Booking} />
+        <Stack.Screen name="Order" component={Order} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -7,23 +7,24 @@ import {
   Text,
   Dimensions,
 } from 'react-native';
-import colors from '../../constants/colors';
 import {useNavigation} from '@react-navigation/native';
 
 const HomeButton = () => {
   const navigation = useNavigation();
   return (
     <>
-      <View className="flex-1" />
+      <View className="" />
       <Pressable
-        className="flex-row items-center mt-3 mb-1 border-primary p-6 rounded-full"
+        className="flex-row items-center mt-3 mb-1 p-5 rounded-full border-y-2 border-primary"
         style={styles.button}
         onPress={() => navigation.navigate('Booking')}>
         <Image
           source={require('../../assets/Search-white.png')}
           className="h-5 w-5 mx-4"
         />
-        <Text className="text-primary font-bold text-xl tracking-wider">
+        <Text
+          className="text-primary font-bold tracking-wider"
+          style={{fontSize: 21}}>
           Choose your Destination...
         </Text>
       </Pressable>

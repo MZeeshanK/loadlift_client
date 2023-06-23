@@ -1,20 +1,12 @@
 import React from 'react';
-import {
-  View,
-  Image,
-  StyleSheet,
-  Text,
-  Pressable,
-  Dimensions,
-  FlatList,
-} from 'react-native';
+import {View, Image, StyleSheet, Dimensions} from 'react-native';
 
 import Linear from '../../../components/Linear';
 import Header from '../../../components/Header';
-import Card from '../../../components/Card';
 import orders from '../../../data/orders.js';
 import HomeButton from '../../../components/HomeButton';
-import HomeList from '../../../components/HomeList';
+import HomeList from '../../../components/OrderItem';
+import GFlatList from '../../../components/global/GFlatList';
 
 const {height} = Dimensions.get('window');
 
@@ -28,15 +20,7 @@ const Home = () => {
           source={require('../../../assets/logo.png')}
         />
         {/* 3 last orders list */}
-        <FlatList
-          className="rounded-xl absolute bottom-10 left-0 right-0 mt-16 mb-24"
-          style={{minHeight: height / 4, maxHeight: height / 1.7}}
-          data={orders}
-          inverted={true}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={(item, index) => String(item.id)}
-          renderItem={({item, index}) => <HomeList item={item} index={index} />}
-        />
+        <GFlatList inverted home />
 
         <HomeButton />
       </View>
