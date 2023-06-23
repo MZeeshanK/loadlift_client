@@ -70,8 +70,8 @@ const Rating = ({rating, style}) => {
 
 const styles = StyleSheet.create({
   icon: {
-    width: 20,
-    height: 20,
+    width: 22,
+    height: 22,
   },
 });
 

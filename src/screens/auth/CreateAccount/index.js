@@ -14,11 +14,10 @@ import Header from '../../../components/Header';
 import TextLabel from '../../../components/TextLabel';
 import Input from '../../../components/Input';
 import Button from '../../../components/Button';
-import Card from '../../../components/Card';
+import CardButton from '../../../components/CardButton';
 
 import categories from '../../../data/categories';
 import colors from '../../../constants/colors';
-import CardButton from '../../../components/CardButton';
 
 const CreateAccount = ({navigation}) => {
   const [driver, setDriver] = useState(true);
@@ -59,7 +58,7 @@ const CreateAccount = ({navigation}) => {
                 <FlatList
                   horizontal
                   className="px-4 py-2 mt-2 rounded-xl"
-                  style={{backgroundColor: 'rgba(0,0,0,.3)'}}
+                  style={{backgroundColor: colors.cardBackground}}
                   showsHorizontalScrollIndicator={false}
                   data={categories}
                   keyExtractor={item => item?.id}
@@ -112,7 +111,7 @@ const styles = StyleSheet.create({
   cardButton: {
     width: 100,
     height: 90,
-    elevation: 5,
+    elevation: 1,
     marginRight: 10,
     elevation: 2,
   },

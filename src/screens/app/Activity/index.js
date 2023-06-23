@@ -10,7 +10,6 @@ import {
 
 import Linear from '../../../components/Linear';
 import Header from '../../../components/Header';
-import Input from '../../../components/Input';
 import GFlatList from '../../../components/global/GFlatList';
 
 const Activity = () => {
@@ -46,7 +45,7 @@ const Activity = () => {
         </View>
       </View>
       {/* List */}
-      <GFlatList />
+      <GFlatList activity />
     </Linear>
   );
 };

@@ -4,7 +4,7 @@ export default categories = [
     title: 'Mini Truck',
     weight: 1,
     rate: 100,
-    icon: require('../assets/mini-truck.png'),
+    icon: require('../assets/mini-truck-light.png'),
     darkIcon: require('../assets/mini-truck-dark.png'),
   },
   {

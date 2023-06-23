@@ -1,9 +1,7 @@
 import React from 'react';
-import {Dimensions, StyleSheet, FlatList} from 'react-native';
+import {StyleSheet, FlatList} from 'react-native';
 import orders from '../../../data/orders';
 import OrderItem from '../../OrderItem';
-
-const {width, height} = Dimensions.get('window');
 
 const GFlatList = ({...props}) => {
   return (
@@ -12,13 +10,13 @@ const GFlatList = ({...props}) => {
       data={props.home ? orders.slice(0, 5) : orders}
       inverted={props.inverted || false}
       showsVerticalScrollIndicator={false}
-      keyExtractor={(item, index) => String(item?.id)}
+      keyExtractor={item => String(item?.id)}
       renderItem={({item, index}) => (
         <OrderItem
+          activity={props.activity}
           home={props.home}
           danger={item?.status === 'danger'}
           ongoing={item?.status === 'ongoing'}
-          success={item?.status === 'success'}
           item={item}
           index={index}
         />
@@ -28,5 +26,4 @@ const GFlatList = ({...props}) => {
 };
 
 const styles = StyleSheet.create({});
-
 export default React.memo(GFlatList);

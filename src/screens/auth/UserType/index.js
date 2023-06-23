@@ -71,7 +71,7 @@ const {width, height} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   card: {
-    width: width * 0.7,
+    width: width * 0.65,
     height: height * 0.3,
     marginBottom: 20,
     shadowColor: '#000',

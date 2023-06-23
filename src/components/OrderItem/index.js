@@ -1,32 +1,38 @@
 import React from 'react';
 import {View, StyleSheet, Text, Image, Pressable} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import colors from '../../constants/colors';
+
+const {dangerBackground, ongoingBackground, cardBackground} = colors;
 
 const OrderItem = ({...props}) => {
   const navigation = useNavigation();
+
   return (
     <Pressable
       onPress={() => navigation.navigate('Order')}
       style={[
         styles.order,
-        props.danger && {backgroundColor: 'rgba(238,24,24,.4)'},
+        props.danger && {backgroundColor: dangerBackground},
         props.ongoing && {
-          backgroundColor: 'rgba(67,83,85,.5)',
-        },
-        props.warning && {
-          backgroundColor: 'rgba(131,103,39,.4)',
+          backgroundColor: ongoingBackground,
+          borderColor: cardBackground,
         },
       ]}
       className={`rounded-2xl mb-5 items-center justify-between `}>
-      <View className="text-center border-b-2 w-[95%] border-primary pt-3 pb-1">
-        <Text className="text-base text-primary text-center font-bold tracking-wider">
-          The Driver has been alerted.
+      <View className="border-b-2 w-[95%] items-center justify-between flex-row border-primary py-2">
+        <Text className="text-sm text-primary font-light tracking-wider">
+          <Text className="font-bold">Status: </Text>
+          {props.danger ? 'Cancelled By the Driver' : 'In Transit'}
+        </Text>
+        <Text className="font-black tracking-wide text-base">
+          {props.ongoing ? 'Ongoing' : '02/11/2023'}
         </Text>
       </View>
       <View className="flex-1 w-full px-1 flex-row items-center justify-between">
         <View className="border-r border-primary items-center justify-start px-2 py-3">
           <Image
-            source={require('../../assets/mini-truck.png')}
+            source={require('../../assets/mini-truck-light.png')}
             style={styles.car}
           />
         </View>
@@ -62,14 +68,17 @@ const styles = StyleSheet.create({
   order: {
     width: '100%',
     alignSelf: 'center',
-    height: 110,
+    height: 105,
     elevation: 3,
     shadowColor: '#000',
-    backgroundColor: 'rgba(18,51,69,.5)',
+    backgroundColor: cardBackground,
+    borderWidth: 1,
+    borderColor: colors.ongoingBackground,
   },
   car: {
-    width: 55,
-    height: 28,
+    width: 50,
+    height: 18,
+    marginHorizontal: 5,
   },
 });
 

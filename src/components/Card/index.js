@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Pressable} from 'react-native';
+import {StyleSheet, Pressable, View} from 'react-native';
 
 import colors from '../../constants/colors';
 
@@ -7,7 +7,7 @@ const Card = ({children, style, onPress}) => {
   return (
     <Pressable
       onPress={onPress}
-      className="rounded-xl my-3 border-primary items-center justify-center"
+      className="rounded-xl p-4 my-3 items-center justify-center"
       style={[styles.container, style]}>
       {children}
     </Pressable>
@@ -16,14 +16,8 @@ const Card = ({children, style, onPress}) => {
 
 const styles = StyleSheet.create({
   container: {
-    // borderWidth: 4,
-    backgroundColor: 'rgba(106,129,120,.2)',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 2,
-      height: 0,
-    },
-    elevation: 4,
+    backgroundColor: colors.cardBackground,
+    elevation: 5,
   },
 });
 
