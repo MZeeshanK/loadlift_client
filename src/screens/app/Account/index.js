@@ -22,7 +22,7 @@ const accountOptions = [
     screen: 'Settings',
   },
   {
-    title: 'Switch to Driver_Account',
+    title: "Switch to Driver's Account",
     screen: 'AccountSwitch',
   },
   {

@@ -3,13 +3,13 @@ import {TextInput} from 'react-native';
 
 import colors from '../../constants/colors';
 
-const Input = ({placeholder, isDisabled, style, keyboard, value}) => {
+const Input = ({placeholder, isDisabled, style, keyboard, ...props}) => {
   return (
     <TextInput
-      className={`w-full mx-5 px-8 py-1 text-black mb-8 text-md font-semibold rounded-full ${
+      className={`w-full mx-5 px-8 py-1 text-black mb-8 text-sm font-medium tracking-wider rounded-full ${
         isDisabled ? 'bg-lightGrey' : 'bg-white'
       }`}
-      placeholderTextColor={colors.grey}
+      placeholderTextColor={colors.card}
       placeholder={placeholder}
       style={[{elevation: 3}, style]}
       keyboardType={keyboard}
