@@ -4,7 +4,7 @@ import {View, Image, StyleSheet, Dimensions} from 'react-native';
 import Linear from '../../../components/Linear';
 import Header from '../../../components/Header';
 import HomeButton from '../../../components/HomeButton';
-import GFlatList from '../../../components/global/GFlatList';
+import GFlatList from '../../../components/GFlatList';
 
 const Home = () => {
   return (
@@ -16,7 +16,7 @@ const Home = () => {
           source={require('../../../assets/logo.png')}
         />
         {/* 3 last orders list */}
-        <GFlatList inverted home />
+        <GFlatList home />
 
         <HomeButton />
       </View>

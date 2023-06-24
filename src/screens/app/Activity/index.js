@@ -10,7 +10,7 @@ import {
 
 import Linear from '../../../components/Linear';
 import Header from '../../../components/Header';
-import GFlatList from '../../../components/global/GFlatList';
+import GFlatList from '../../../components/GFlatList';
 
 const Activity = () => {
   const SearchButtons = ({...props}) => (

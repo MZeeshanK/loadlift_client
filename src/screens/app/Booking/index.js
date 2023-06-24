@@ -47,8 +47,14 @@ const Booking = ({navigation}) => {
     <Linear>
       <Header title="Booking" />
       <View className="w-full flex-1 items-center justify-start">
-        <InputButton title="Set pick-up location" />
-        <InputButton title="Set Destination location" />
+        <InputButton
+          title="Set pick-up location"
+          onPress={() => navigation.navigate('Map')}
+        />
+        <InputButton
+          title="Set Destination location"
+          onPress={() => navigation.navigate('Map')}
+        />
 
         <View className="w-full h-[1] bg-primary rounded-full my-5" />
 
@@ -97,7 +103,7 @@ const Booking = ({navigation}) => {
                         className={`text-lg font-semibold text-white ${
                           vehicle === item && 'text-black'
                         }`}>
-                        Mini Truck
+                        {item?.title}
                       </Text>
                       <View className="items-start justify-center gap-y-2 px-2">
                         <Text
@@ -105,13 +111,16 @@ const Booking = ({navigation}) => {
                             vehicle === item && 'text-black'
                           }`}>
                           Max Capacity:{' '}
-                          <Text className="font-normal">1.5T</Text>
+                          <Text className="font-normal">{item?.weight}T</Text>
                         </Text>
                         <Text
                           className={`text-xs font-bold text-white tracking-tighter ${
                             vehicle === item && 'text-black'
                           }`}>
-                          Rate: <Text className="font-normal">Rs. 200/km</Text>
+                          Rate:{' '}
+                          <Text className="font-normal">
+                            {'\u20b9'} {item?.rate} / km
+                          </Text>
                         </Text>
                       </View>
                     </View>

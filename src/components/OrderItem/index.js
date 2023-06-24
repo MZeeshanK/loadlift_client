@@ -1,12 +1,20 @@
 import React from 'react';
 import {View, StyleSheet, Text, Image, Pressable} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+
 import colors from '../../constants/colors';
+import styleConstants from '../../constants/styles';
+
+import categories from '../../data/categories';
 
 const {dangerBackground, ongoingBackground, cardBackground} = colors;
 
-const OrderItem = ({...props}) => {
+const OrderItem = ({item, ...props}) => {
   const navigation = useNavigation();
+
+  const image = categories.find(
+    category => category?.title === item?.typeOfVehicle,
+  )?.icon;
 
   return (
     <Pressable
@@ -21,41 +29,42 @@ const OrderItem = ({...props}) => {
       ]}
       className={`rounded-2xl mb-5 items-center justify-between `}>
       <View className="border-b-2 w-[95%] items-center justify-between flex-row border-primary py-2">
-        <Text className="text-sm text-primary font-light tracking-wider">
-          <Text className="font-bold">Status: </Text>
-          {props.danger ? 'Cancelled By the Driver' : 'In Transit'}
+        <Text className="text-sm text-white tracking-wider">
+          <Text className="font-bold text-primary">Status: </Text>
+          {props.danger
+            ? 'Cancelled By the Driver'
+            : props.ongoing
+            ? 'In Transit'
+            : 'Completed'}
         </Text>
-        <Text className="font-black tracking-wide text-base">
-          {props.ongoing ? 'Ongoing' : '02/11/2023'}
+        <Text className="font-bold text-white tracking-wide text-base">
+          {props.ongoing ? 'Ongoing' : item?.date}
         </Text>
       </View>
       <View className="flex-1 w-full px-1 flex-row items-center justify-between">
         <View className="border-r border-primary items-center justify-start px-2 py-3">
-          <Image
-            source={require('../../assets/mini-truck-light.png')}
-            style={styles.car}
-          />
+          <Image source={image} style={styles.car} />
         </View>
 
         <View className="flex-1 items-between justify-between py-2 px-2 h-[90%]">
           <View className="flex-row items-center justify-between">
             <Text className="text-white text-xs tracking-wide">
               <Text className="font-bold">Name: </Text>
-              Ghulam Nabi
+              {item?.driverName}
             </Text>
             <Text className="text-white text-xs tracking-wide">
               <Text className="font-bold">Number: </Text>
-              JK01AA 1234
+              {item?.vehicleNumber}
             </Text>
           </View>
           <View className="flex-row items-center justify-between">
             <Text className="text-white text-xs tracking-wide">
               <Text className="font-bold">Price: </Text>
-              Rs.1200
+              {'\u20b9'} {item?.price}
             </Text>
             <Text className="text-white text-xs tracking-wide">
               <Text className="font-bold">Distance: </Text>
-              12.8 km
+              {item?.distance} km
             </Text>
           </View>
         </View>
@@ -75,11 +84,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.ongoingBackground,
   },
-  car: {
-    width: 50,
-    height: 18,
-    marginHorizontal: 5,
-  },
+  car: {...styleConstants.icon, marginHorizontal: 5},
 });
 
 export default React.memo(OrderItem);

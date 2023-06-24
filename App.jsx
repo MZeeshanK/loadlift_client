@@ -27,6 +27,8 @@ import Settings from './src/screens/app/Settings';
 import AccountSwitch from './src/screens/app/AccountSwitch';
 import Payment from './src/screens/app/Payment';
 import Premium from './src/screens/app/Premium';
+import Map from './src/screens/app/Map';
+import DriverList from './src/screens/app/DriverList';
 import Logout from './src/screens/app/Logout';
 import PaymentMethod from './src/screens/app/PaymentMethod';
 
@@ -144,6 +146,8 @@ function App() {
         <Stack.Screen name="Payment" component={Payment} />
         <Stack.Screen name="PaymentMethod" component={PaymentMethod} />
         <Stack.Screen name="AccountSwitch" component={AccountSwitch} />
+        <Stack.Screen name="Map" component={Map} />
+        <Stack.Screen name="DriverList" component={DriverList} />
         <Stack.Screen name="Premium" component={Premium} />
         <Stack.Screen name="Logout" component={Logout} />
         <Stack.Screen name="NotFound" component={NotFound} />
