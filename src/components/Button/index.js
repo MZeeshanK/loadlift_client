@@ -7,11 +7,17 @@ const Button = ({title, onPress, style, ...props}) => {
     <TouchableOpacity
       className={`bg-primary rounded-full items-center justify-center px-20 py-1 ${
         props.mini && 'px-3'
-      } ${props.medium && 'px-6'}  ${props.green && 'bg-green-500'}`}
+      } ${props.medium && 'px-8'} ${props.half && 'w-[50%] px-1'}  ${
+        props.green && 'bg-green-500'
+      } `}
       style={[
         props.danger && {backgroundColor: colors.dangerButtonBackground},
-        props.card && {backgroundColor: colors.cardButtonBackground},
+        props.card && {backgroundColor: colors.cardBackground},
         props.success && {backgroundColor: colors.greenBackground},
+        props.border && {
+          borderWidth: 1,
+          borderColor: colors.cardBackground,
+        },
 
         style,
       ]}

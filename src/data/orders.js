@@ -9,6 +9,8 @@ export default orders = [
     status: 'ongoing',
     substatus: 'requesting payment',
     vehicleNumber: 'JK01AA 1234',
+    pickUp: '121, Hawaal, Srinagar, Jammu and Kashmir',
+    destination: '203, Rainawari, Srinagar, Jammu and Kashmir',
   },
   {
     id: '2',
@@ -20,6 +22,8 @@ export default orders = [
     distance: 11.8,
     vehicleNumber: 'JK01AA 1234',
     date: '02/11/2023',
+    pickUp: '121, Hawaal, Srinagar, Jammu and Kashmir',
+    destination: '203, Rainawari, Srinagar, Jammu and Kashmir',
   },
   {
     id: '3',
@@ -31,6 +35,8 @@ export default orders = [
     distance: 11.8,
     vehicleNumber: 'JK01AA 1234',
     date: '02/11/2023',
+    pickUp: '121, Hawaal, Srinagar, Jammu and Kashmir',
+    destination: '203, Rainawari, Srinagar, Jammu and Kashmir',
   },
   {
     id: '4',
@@ -43,6 +49,8 @@ export default orders = [
     distance: 11.8,
     vehicleNumber: 'JK01AA 1234',
     date: '02/11/2023',
+    pickUp: '121, Hawaal, Srinagar, Jammu and Kashmir',
+    destination: '203, Rainawari, Srinagar, Jammu and Kashmir',
   },
   {
     id: '5',
@@ -54,6 +62,8 @@ export default orders = [
     distance: 11.8,
     vehicleNumber: 'JK01AA 1234',
     date: '02/11/2023',
+    pickUp: '121, Hawaal, Srinagar, Jammu and Kashmir',
+    destination: '203, Rainawari, Srinagar, Jammu and Kashmir',
   },
   {
     id: '6',
@@ -66,6 +76,8 @@ export default orders = [
     distance: 11.8,
     vehicleNumber: 'JK01AA 1234',
     date: '02/11/2023',
+    pickUp: '121, Hawaal, Srinagar, Jammu and Kashmir',
+    destination: '203, Rainawari, Srinagar, Jammu and Kashmir',
   },
   {
     id: '7',
@@ -77,6 +89,8 @@ export default orders = [
     distance: 11.8,
     vehicleNumber: 'JK01AA 1234',
     date: '02/11/2023',
+    pickUp: '121, Hawaal, Srinagar, Jammu and Kashmir',
+    destination: '203, Rainawari, Srinagar, Jammu and Kashmir',
   },
   {
     id: '8',
@@ -87,5 +101,7 @@ export default orders = [
     distance: 11.8,
     vehicleNumber: 'JK01AA 1234',
     date: '02/11/2023',
+    pickUp: '121, Hawaal, Srinagar, Jammu and Kashmir',
+    destination: '203, Rainawari, Srinagar, Jammu and Kashmir',
   },
 ];

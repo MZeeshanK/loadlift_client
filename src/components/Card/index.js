@@ -7,7 +7,7 @@ const Card = ({children, style, onPress}) => {
   return (
     <Pressable
       onPress={onPress}
-      className="rounded-xl p-4 my-3 items-center justify-center"
+      className="rounded-xl p-4 my-3 items-center w-full justify-center"
       style={[styles.container, style]}>
       {children}
     </Pressable>

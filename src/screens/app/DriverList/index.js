@@ -12,7 +12,7 @@ import categories from '../../../data/categories';
 import colors from '../../../constants/colors';
 import styleConstants from '../../../constants/styles';
 
-const DriverList = () => {
+const DriverList = ({navigation}) => {
   const [driver, setDriver] = useState({});
 
   const Item = ({item}) => {
@@ -110,7 +110,11 @@ const DriverList = () => {
           </Card>
         </View>
         {/* <View className="flex-1" /> */}
-        <Button title="Book Vehicle" style={{marginVertical: 15}} />
+        <Button
+          title="Book Vehicle"
+          style={{marginVertical: 15}}
+          onPress={() => navigation.navigate('Order')}
+        />
       </View>
     </Linear>
   );
