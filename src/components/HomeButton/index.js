@@ -7,7 +7,7 @@ const HomeButton = () => {
   const navigation = useNavigation();
   return (
     <Pressable
-      className="flex-row items-center my-5 mt-10 p-5 rounded-full border-2 border-primary"
+      className="flex-row items-center my-5 mt-10 p-5 rounded-full"
       style={styles.button}
       onPress={() => navigation.navigate('Booking')}>
       <Image
@@ -28,8 +28,10 @@ const {width} = Dimensions.get('window');
 const styles = StyleSheet.create({
   button: {
     backgroundColor: colors.cardBackground,
-    elevation: 5,
+    elevation: 2,
     width: width - 32,
+    borderWidth: 3,
+    borderColor: colors.ongoingBackground,
   },
 });
 

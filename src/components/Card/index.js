@@ -17,7 +17,7 @@ const Card = ({children, style, onPress}) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.cardBackground,
-    elevation: 5,
+    elevation: 3,
   },
 });
 

@@ -13,7 +13,7 @@ export default colors = {
   cardBackground: 'rgba(39,47,48,.5)',
   cardButtonBackground: 'rgba(9,78,128,.7)',
   // cardButtonBackground: 'rgba(18,51,69,.5)',
-  dangerBackground: 'rgba(216,15,39,.7)',
+  dangerBackground: 'rgba(216,15,39,.4)',
   dangerButtonBackground: 'rgba(255,0,0,.5)',
   ongoingBackground: 'rgba(67,83,85,.7)',
 };

@@ -32,6 +32,8 @@ import Call from './src/screens/app/Call';
 import DriverList from './src/screens/app/DriverList';
 import Logout from './src/screens/app/Logout';
 import PaymentMethod from './src/screens/app/PaymentMethod';
+import IncomingCall from './src/screens/app/IncomingCall';
+import ComingSoon from './src/screens/ComingSoon';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -152,6 +154,8 @@ function App() {
         <Stack.Screen name="Premium" component={Premium} />
         <Stack.Screen name="Logout" component={Logout} />
         <Stack.Screen name="Call" component={Call} />
+        <Stack.Screen name="IncomingCall" component={IncomingCall} />
+        <Stack.Screen name="ComingSoon" component={ComingSoon} />
         <Stack.Screen name="NotFound" component={NotFound} />
       </Stack.Navigator>
     </NavigationContainer>

@@ -10,6 +10,7 @@ export default orders = [
     substatus: 'requesting payment',
     vehicleNumber: 'JK01AA 1234',
     pickUp: '121, Hawaal, Srinagar, Jammu and Kashmir',
+    date: '02/11/2023',
     destination: '203, Rainawari, Srinagar, Jammu and Kashmir',
   },
   {

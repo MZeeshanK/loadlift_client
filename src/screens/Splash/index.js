@@ -21,8 +21,9 @@ const Splash = ({navigation}) => {
         </View>
         <Button
           title="Get Started"
+          max
           onPress={next}
-          style={{width: '75%', marginBottom: 100}}
+          style={{marginBottom: 100}}
         />
       </View>
     </Linear>
