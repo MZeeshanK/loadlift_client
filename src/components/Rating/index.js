@@ -1,77 +1,48 @@
 import React from 'react';
 import {View, StyleSheet, Image, Pressable} from 'react-native';
 
-const Rating = ({rating, style}) => {
+const Rating = ({rating, setRating, style}) => {
+  const imageSource = level => {
+    if (rating <= level + 0.2) {
+      return require('../../assets/star-empty.png');
+    } else if (rating > level + 0.2 && rating <= level + 0.85) {
+      return require('../../assets/star-half.png');
+    } else {
+      return require('../../assets/star.png');
+    }
+  };
+
+  const onPress = level => setRating(level + 1);
+
   return (
     <View className="flex-row items-center justify-center">
-      <Pressable>
-        <Image
-          style={[styles.icon, style]}
-          source={
-            rating >= 0 && rating <= 0.2
-              ? require('../../assets/star-empty.png')
-              : rating <= 0.85
-              ? require('../../assets/star-half.png')
-              : require('../../assets/star.png')
-          }
-        />
+      <Pressable onPress={() => onPress(0)}>
+        <Image style={[styles.icon, style]} source={imageSource(0)} />
       </Pressable>
-      <Pressable>
-        <Image
-          style={[styles.icon, style]}
-          source={
-            rating >= 1 && rating <= 1.2
-              ? require('../../assets/star-empty.png')
-              : rating <= 1.85
-              ? require('../../assets/star-half.png')
-              : require('../../assets/star.png')
-          }
-        />
+      <Pressable onPress={() => onPress(1)}>
+        <Image style={[styles.icon, style]} source={imageSource(1)} />
       </Pressable>
-      <Pressable>
-        <Image
-          style={[styles.icon, style]}
-          source={
-            rating >= 2 && rating <= 2.2
-              ? require('../../assets/star-empty.png')
-              : rating <= 2.85
-              ? require('../../assets/star-half.png')
-              : require('../../assets/star.png')
-          }
-        />
+      <Pressable onPress={() => onPress(2)}>
+        <Image style={[styles.icon, style]} source={imageSource(2)} />
       </Pressable>
-      <Pressable>
-        <Image
-          style={[styles.icon, style]}
-          source={
-            rating >= 3 && rating <= 3.2
-              ? require('../../assets/star-empty.png')
-              : rating <= 3.85
-              ? require('../../assets/star-half.png')
-              : require('../../assets/star.png')
-          }
-        />
+      <Pressable onPress={() => onPress(3)}>
+        <Image style={[styles.icon, style]} source={imageSource(3)} />
       </Pressable>
-      <Pressable>
-        <Image
-          style={[styles.icon, style]}
-          source={
-            rating >= 4 && rating <= 4.2
-              ? require('../../assets/star-empty.png')
-              : rating <= 4.85
-              ? require('../../assets/star-half.png')
-              : require('../../assets/star.png')
-          }
-        />
+      <Pressable onPress={() => onPress(4)}>
+        <Image style={[styles.icon, style]} source={imageSource(4)} />
       </Pressable>
     </View>
   );
 };
 
+Rating.defaultProps = {
+  rating: 0,
+};
+
 const styles = StyleSheet.create({
   icon: {
-    width: 22,
     height: 22,
+    aspectRatio: 1,
   },
 });
 

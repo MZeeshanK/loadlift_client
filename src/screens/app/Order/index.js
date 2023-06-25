@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, StyleSheet, Text, Image} from 'react-native';
 
 import Linear from '../../../components/Linear';
@@ -12,6 +12,8 @@ import categories from '../../../data/categories';
 import styleConstants from '../../../constants/styles';
 
 const Order = ({navigation}) => {
+  const [rating, setRating] = useState(0);
+
   const order = orders[0];
 
   let imageSource = categories.find(
@@ -88,14 +90,24 @@ const Order = ({navigation}) => {
             </Card>
 
             <Card>
-              <View className="w-full items-center justify-center gap-y-4 mb-10">
-                <Text className="text-xl font-semibold text-white">
+              <View className="w-full items-center justify-center mb-10">
+                <Text className="text-xl font-semibold text-white mb-3">
                   Leave a Rating
                 </Text>
-                <Rating rating={4.5} style={{height: 32, aspectRatio: 1}} />
+                <Rating
+                  rating={rating}
+                  setRating={setRating}
+                  style={{height: 32, marginRight: 5}}
+                />
               </View>
               <View className="items-center justify-between gap-3 px-2 flex-row">
-                <Button title="Cancel" half card border />
+                <Button
+                  title="Cancel"
+                  half
+                  card
+                  border
+                  onPress={() => navigation.goBack('')}
+                />
                 <Button
                   title="Call"
                   half
