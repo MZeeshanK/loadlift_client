@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, Image, StyleSheet, Dimensions} from 'react-native';
+import {View, Image, StyleSheet, Dimensions} from 'react-native';
 
 import colors from '../../../constants/colors';
 
@@ -7,7 +7,8 @@ import Linear from '../../../components/Linear';
 import Header from '../../../components/Header';
 import Button from '../../../components/Button';
 
-import CardButton from '../../../components/CardButton';
+import Card from '../../../components/Card';
+import Title from '../../../components/Title';
 
 const UserType = ({navigation}) => {
   const [userType, setUserType] = useState('');
@@ -17,10 +18,12 @@ const UserType = ({navigation}) => {
       <Header title="Register" />
 
       <View className="items-center justify-between mb-6 flex-1">
-        <Text className="text-xl font-bold text-white">Register As:</Text>
+        <Title bold xl>
+          Register As:
+        </Title>
 
         <View className="items-center justify-center">
-          <CardButton
+          <Card
             style={[styles.card, userType === 'user' && styles.selectedCard]}
             onPress={() => setUserType('user')}>
             <Image
@@ -31,14 +34,11 @@ const UserType = ({navigation}) => {
                   : require('../../../assets/user-light.png')
               }
             />
-            <Text
-              className={`text-3xl font-bold text-white ${
-                userType === 'user' && 'text-black'
-              }`}>
+            <Title xxl bold black={userType === 'user'}>
               User
-            </Text>
-          </CardButton>
-          <CardButton
+            </Title>
+          </Card>
+          <Card
             style={[styles.card, userType === 'driver' && styles.selectedCard]}
             onPress={() => setUserType('driver')}>
             <Image
@@ -49,13 +49,10 @@ const UserType = ({navigation}) => {
                   : require('../../../assets/driver-light.png')
               }
             />
-            <Text
-              className={`text-3xl font-bold text-white ${
-                userType === 'driver' && 'text-black'
-              }`}>
+            <Title xxl bold black={userType === 'driver'}>
               Driver
-            </Text>
-          </CardButton>
+            </Title>
+          </Card>
         </View>
         <Button
           title="Next"
@@ -76,7 +73,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     shadowColor: '#000',
     gap: 10,
-    elevation: 5,
+    elevation: 2,
   },
   selectedCard: {
     backgroundColor: colors.primary,

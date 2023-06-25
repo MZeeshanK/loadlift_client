@@ -1,7 +1,8 @@
 import React from 'react';
-import {View, Text, Image, Pressable} from 'react-native';
+import {View, Image, Pressable} from 'react-native';
 
 import {useNavigation} from '@react-navigation/native';
+import Title from '../Title';
 
 const Header = ({isBack, title, style}) => {
   const navigation = useNavigation();
@@ -19,7 +20,9 @@ const Header = ({isBack, title, style}) => {
           />
         </Pressable>
       )}
-      <Text className={`text-base font-bold text-primary`}>{title}</Text>
+      <Title lg bold primary>
+        {title}
+      </Title>
     </View>
   );
 };

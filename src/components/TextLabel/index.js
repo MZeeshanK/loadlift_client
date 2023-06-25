@@ -1,13 +1,11 @@
 import React from 'react';
-import {Text} from 'react-native';
+import Title from '../Title';
 
 const TextLabel = ({title, style}) => {
   return (
-    <Text
-      className="text-white w-full  text-left px-2 font-semibold mb-1"
-      style={style}>
+    <Title className="w-full px-4 mb-1" left semibold style={style}>
       {title}
-    </Text>
+    </Title>
   );
 };
 

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, FlatList, Pressable, Text, Image} from 'react-native';
+import {View, StyleSheet, FlatList, Pressable, Image} from 'react-native';
 
 import Linear from '../../../components/Linear';
 import Header from '../../../components/Header';
@@ -8,7 +8,7 @@ import Input from '../../../components/Input';
 import Button from '../../../components/Button';
 import Card from '../../../components/Card';
 import categories from '../../../data/categories';
-import CardButton from '../../../components/CardButton';
+import Title from '../../../components/Title';
 
 const Booking = ({navigation}) => {
   const [weight, setWeight] = useState(true);
@@ -22,25 +22,87 @@ const Booking = ({navigation}) => {
         className={`flex-1 bg-transparent rounded-full items-center justify-center ${
           weight && 'bg-primary'
         }`}>
-        <Text
-          className={`text-primary font-semibold text-base ${
-            weight && 'text-black'
-          }`}>
+        <Title primary={!weight} black={weight} bold>
           Weight
-        </Text>
+        </Title>
       </View>
       <View
         className={`flex-1 bg-transparent rounded-full items-center justify-center ${
           !weight && 'bg-primary'
         }`}>
-        <Text
-          className={`text-primary font-semibold text-base ${
-            !weight && 'text-black'
-          }`}>
+        <Title primary={weight} black={!weight} bold>
           Vehicle
-        </Text>
+        </Title>
       </View>
     </Pressable>
+  );
+
+  const VehicleCard = () => (
+    <Card className="w-full mb-10 py-2">
+      <Title primary xxl bold className="pb-2">
+        Categories
+      </Title>
+      <FlatList
+        className="w-full"
+        showsVerticalScrollIndicator={false}
+        data={categories}
+        keyExtractor={item => item?.id}
+        renderItem={({item}) => {
+          return (
+            <Card
+              alt
+              onPress={() => setVehicle(item)}
+              style={[
+                {
+                  backgroundColor:
+                    vehicle === item ? colors.primary : colors.ongoing,
+                  width: '100%',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                },
+              ]}>
+              <View
+                className={`border-r-2 h-[44] my-2 border-primary items-center justify-center px-3 ${
+                  vehicle === item && 'border-black'
+                }`}>
+                <Image
+                  source={vehicle === item ? item?.darkIcon : item?.icon}
+                  style={styles.icon}
+                />
+              </View>
+              <View className="flex-row flex-1 px-2 items-center justify-between">
+                <Title lg bold black={vehicle === item}>
+                  {item?.title}
+                </Title>
+                <View className="items-start justify-center gap-y-2 px-2">
+                  <Title
+                    className="tracking-tighter"
+                    xs
+                    bold
+                    black={vehicle === item}>
+                    Max Capacity:{' '}
+                    <Title xs medium black={vehicle === item}>
+                      {item?.weight}T
+                    </Title>
+                  </Title>
+                  <Title
+                    className="tracking-tighter"
+                    xs
+                    bold
+                    black={vehicle === item}>
+                    Rate:{' '}
+                    <Title xs medium black={vehicle === item}>
+                      {'\u20b9'} {item?.rate} / km
+                    </Title>
+                  </Title>
+                </View>
+              </View>
+            </Card>
+          );
+        }}
+      />
+    </Card>
   );
 
   return (
@@ -67,68 +129,7 @@ const Booking = ({navigation}) => {
             style={{marginTop: 20}}
           />
         ) : (
-          <Card className="w-full mb-10 py-2">
-            <Text className="text-primary text-2xl text-center font-bold pb-2">
-              Categories
-            </Text>
-            <FlatList
-              className="w-full"
-              showsVerticalScrollIndicator={false}
-              data={categories}
-              keyExtractor={item => item?.id}
-              renderItem={({item}) => {
-                return (
-                  <CardButton
-                    onPress={() => setVehicle(item)}
-                    selected={vehicle === item}
-                    style={[
-                      {
-                        width: '100%',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                      },
-                    ]}>
-                    <View
-                      className={`border-r-2 h-[44] my-2 border-primary items-center justify-center px-3 ${
-                        vehicle === item && 'border-black'
-                      }`}>
-                      <Image
-                        source={vehicle === item ? item?.darkIcon : item?.icon}
-                        style={styles.icon}
-                      />
-                    </View>
-                    <View className="flex-row flex-1 px-2 items-center justify-between">
-                      <Text
-                        className={`text-lg font-semibold text-white ${
-                          vehicle === item && 'text-black'
-                        }`}>
-                        {item?.title}
-                      </Text>
-                      <View className="items-start justify-center gap-y-2 px-2">
-                        <Text
-                          className={`text-xs font-bold text-white tracking-tighter ${
-                            vehicle === item && 'text-black'
-                          }`}>
-                          Max Capacity:{' '}
-                          <Text className="font-normal">{item?.weight}T</Text>
-                        </Text>
-                        <Text
-                          className={`text-xs font-bold text-white tracking-tighter ${
-                            vehicle === item && 'text-black'
-                          }`}>
-                          Rate:{' '}
-                          <Text className="font-normal">
-                            {'\u20b9'} {item?.rate} / km
-                          </Text>
-                        </Text>
-                      </View>
-                    </View>
-                  </CardButton>
-                );
-              }}
-            />
-          </Card>
+          <VehicleCard />
         )}
       </View>
       <Button

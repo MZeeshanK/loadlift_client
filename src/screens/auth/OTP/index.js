@@ -6,6 +6,7 @@ import Header from '../../../components/Header';
 import Input from '../../../components/Input';
 import Button from '../../../components/Button';
 import TextLabel from '../../../components/TextLabel';
+import Title from '../../../components/Title';
 
 const OTP = ({navigation}) => {
   return (
@@ -13,16 +14,16 @@ const OTP = ({navigation}) => {
       <Header title="Login" />
 
       <View className="w-full items-center justify-between flex-1 my-10">
-        <View className="w-full items-center justify-between -mt-10">
-          <Input isDisabled={true} placeholder="123" style={{marginTop: 32}} />
+        <View className="w-full items-center justify-between ">
+          <Input isDisabled placeholder="+91 94190 12345" />
 
-          <TextLabel title="Enter the 6 digit otp sent to your mobile number" />
+          <TextLabel title="Please Enter the 6 digit OTP" />
 
           <Input placeholder="XXXXXX" keyboard="numeric" />
-          <TouchableOpacity className="w-full px-2 -mt-3">
-            <Text className="text-primary font-bold text-left">
+          <TouchableOpacity className="w-full px-2">
+            <Title primary bold sm left>
               Resend OTP in 0:59
-            </Text>
+            </Title>
           </TouchableOpacity>
         </View>
         <Button

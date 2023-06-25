@@ -2,23 +2,23 @@ import React from 'react';
 import {StyleSheet, Pressable, Image, Text, Dimensions} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import colors from '../../constants/colors';
+import Title from '../Title';
 
 const HomeButton = () => {
   const navigation = useNavigation();
   return (
     <Pressable
-      className="flex-row items-center my-5 mt-10 p-5 rounded-full"
+      className="flex-row items-center justify-start my-5 mt-10 px-5 py-2 rounded-full"
       style={styles.button}
       onPress={() => navigation.navigate('Booking')}>
       <Image
-        source={require('../../assets/Search-white.png')}
-        className="h-5 w-5 mx-4"
+        source={require('../../assets/search-dark.png')}
+        className="mr-3"
+        style={styles.search}
       />
-      <Text
-        className="text-white font-bold tracking-wider"
-        style={{fontSize: 21}}>
+      <Title xl semibold black>
         Choose your Destination...
-      </Text>
+      </Title>
     </Pressable>
   );
 };
@@ -27,11 +27,15 @@ const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: colors.cardBackground,
-    elevation: 2,
+    backgroundColor: colors.white,
+    elevation: 3,
     width: width - 32,
     borderWidth: 3,
-    borderColor: colors.ongoingBackground,
+    borderColor: colors.ongoing,
+  },
+  search: {
+    height: 20,
+    width: 20,
   },
 });
 

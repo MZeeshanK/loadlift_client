@@ -1,20 +1,12 @@
 import React from 'react';
-import {
-  Text,
-  StyleSheet,
-  ScrollView,
-  View,
-  Image,
-  Pressable,
-} from 'react-native';
+import {Text, ScrollView, View, Image, Pressable} from 'react-native';
 
 import Linear from '../../../components/Linear';
 import Header from '../../../components/Header';
 import Card from '../../../components/Card';
 import Rating from '../../../components/Rating';
 import Button from '../../../components/Button';
-import {useNavigation} from '@react-navigation/native';
-import colors from '../../../constants/colors';
+import Title from '../../../components/Title';
 
 const accountOptions = [
   {
@@ -39,9 +31,7 @@ const accountOptions = [
   },
 ];
 
-const Account = () => {
-  const navigation = useNavigation();
-
+const Account = ({navigation}) => {
   return (
     <Linear>
       <Header title="Account" isBack={false} />
@@ -49,11 +39,13 @@ const Account = () => {
         <Card onPress={() => navigation.navigate('Profile')}>
           <View className=" w-full flex-row justify-between items-center">
             <View className="flex-1 items-start justify-around">
-              <Text
+              <Title
                 numberOfLines={1}
-                className="text-white text-2xl font-semibold tracking-wider mb-2">
+                className="tracking-wider mb-2"
+                xxl
+                semibold>
                 John Doe
-              </Text>
+              </Title>
               <Rating rating={4} />
             </View>
             <Image
@@ -62,9 +54,9 @@ const Account = () => {
             />
           </View>
           <View className="flex-row items-center justify-between mt-5 mb-2 w-full">
-            <Text className="font-bold text-white text-lg tracking-tighter">
+            <Title className="tracking-tighter" lg bold>
               +91 94190 12345
-            </Text>
+            </Title>
             <Button
               title="Update Profile"
               mini
@@ -79,11 +71,11 @@ const Account = () => {
             className="flex-1 mr-3">
             <Image
               source={require('../../../assets/wallet.png')}
-              className="h-[35] w-[40]"
+              className="h-[30] w-[34]"
             />
-            <Text className="text-white font-semibold text-base pt-2 tracking-wider">
+            <Title className="pt-2 tracking-wider" semibold>
               Payment
-            </Text>
+            </Title>
           </Card>
 
           <Card
@@ -91,11 +83,11 @@ const Account = () => {
             className="flex-1 ml-3">
             <Image
               source={require('../../../assets/premium.png')}
-              className="h-[35] w-[40]"
+              className="h-[30] w-[34]"
             />
-            <Text className="text-white font-semibold text-base pt-2 tracking-wider">
+            <Title className="pt-2 tracking-wider" semibold>
               Premium
-            </Text>
+            </Title>
           </Card>
         </View>
         <Card>
@@ -109,10 +101,10 @@ const Account = () => {
               }
               className={`w-full items-start border-primary ${
                 index !== accountOptions.length - 1 && 'border-b-2'
-              } p-2 justify-center`}>
-              <Text className="text-lg py-1 font-black text-white tracking-wider">
+              } p-1 px-2 justify-center`}>
+              <Title className="py-1 tracking-wider" lg bold>
                 {item.title}
-              </Text>
+              </Title>
             </Pressable>
           ))}
         </Card>
@@ -120,7 +112,5 @@ const Account = () => {
     </Linear>
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default React.memo(Account);

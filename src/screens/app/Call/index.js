@@ -21,11 +21,11 @@ const Call = ({navigation}) => {
       icon === 'mic' && mic
         ? colors.primary
         : icon === 'mic' && !mic
-        ? colors.ongoingBackground
+        ? colors.ongoing
         : icon === 'speaker' && speaker
         ? colors.primary
         : icon === 'speaker' && !speaker
-        ? colors.ongoingBackground
+        ? colors.ongoing
         : null;
 
     const onPress = () => {
@@ -44,6 +44,7 @@ const Call = ({navigation}) => {
           styles.buttons,
           {
             backgroundColor: backgroundStyles,
+            elevation: 1,
           },
         ]}>
         <Image

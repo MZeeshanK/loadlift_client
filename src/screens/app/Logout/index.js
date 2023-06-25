@@ -19,7 +19,8 @@ const Logout = ({navigation}) => {
               title="No"
               medium
               card
-              success
+              alt
+              border
               style={{
                 flex: 1,
                 elevation: 2,
@@ -30,6 +31,7 @@ const Logout = ({navigation}) => {
               title="Yes"
               medium
               danger
+              border
               style={{
                 flex: 1,
                 elevation: 2,

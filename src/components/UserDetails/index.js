@@ -9,11 +9,17 @@ import {
 } from 'react-native';
 import TextLabel from '../TextLabel';
 import Input from '../Input';
-import CardButton from '../CardButton';
+import Card from '../Card';
 
 import categories from '../../data/categories';
+import Title from '../Title';
+import Button from '../Button';
+
+import {useNavigation} from '@react-navigation/native';
 
 const UserDetails = ({user, ...props}) => {
+  const navigation = useNavigation();
+
   const [driver, setDriver] = useState(true);
   const [category, setCategory] = useState(
     user
@@ -33,7 +39,7 @@ const UserDetails = ({user, ...props}) => {
         />
 
         {/* Divide Bar */}
-        <View className="w-[95%] mb-8 h-[1] bg-primary" />
+        <View className="w-[95%] mb-4 mt-2 h-[1] bg-primary" />
 
         <TextLabel title="First Name:" />
         <Input placeholder={user ? user?.firstName : 'Enter your First Name'} />
@@ -44,29 +50,29 @@ const UserDetails = ({user, ...props}) => {
         {driver && (
           <>
             {/* Divide Bar */}
-            <View className="w-[95%] mb-5 h-[1] bg-primary" />
+            <View className="w-[95%] mb-4 mt-2 h-[1] bg-primary" />
 
             <TextLabel title="Vehicle Number:" />
             <Input
               placeholder={
                 user
                   ? user?.vehicleNumber
-                  : 'Please Enter your vehicle registration Number'
+                  : 'Enter your vehicle registration Number'
               }
             />
 
             {/* Category list for drivers */}
             <TextLabel title="Category of Vehicle" />
-
             <FlatList
               horizontal
-              className="px-4 py-2 mt-2 rounded-xl"
-              style={{backgroundColor: colors.cardBackground}}
+              className="px-4 py-2 mt-2 rounded-xl bg-card"
               showsHorizontalScrollIndicator={false}
               data={categories}
               keyExtractor={item => item?.id}
               renderItem={({item, index}) => (
-                <CardButton
+                <Card
+                  alt
+                  border
                   style={[
                     styles.cardButton,
                     category === item && {backgroundColor: colors.primary},
@@ -81,32 +87,40 @@ const UserDetails = ({user, ...props}) => {
                   ) : (
                     <View style={styles.icon} />
                   )}
-                  <Text
-                    className={`text-xs font-bold pt-2 tracking-wider ${
-                      category === item ? 'text-black' : 'text-white'
-                    } `}>
+                  <Title
+                    className="pt-3 leading-3 tracking-wider"
+                    xxsm
+                    semibold
+                    black={category === item}>
                     {item?.title}
-                  </Text>
-                  <Text
-                    className={`text-xs font-bold ${
-                      category === item ? 'text-black' : 'text-white'
-                    } `}>
+                  </Title>
+                  <Title
+                    className="leading-3"
+                    xxsm
+                    semibold
+                    black={category === item}>
                     {item?.weight}T
-                  </Text>
-                </CardButton>
+                  </Title>
+                </Card>
               )}
             />
           </>
         )}
       </View>
+      <Button
+        title={user ? 'Update Profile' : 'Create Account'}
+        onPress={() => navigation.navigate(user ? 'Account' : 'Tabs')}
+        style={{marginTop: 50, width: '65%', alignSelf: 'center'}}
+      />
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   cardButton: {
-    width: 100,
-    height: 90,
+    backgroundColor: colors.ongoing,
+    width: 105,
+    height: 100,
     elevation: 1,
     marginRight: 10,
     elevation: 2,

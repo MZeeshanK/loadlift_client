@@ -12,7 +12,7 @@ const Rating = ({rating, setRating, style}) => {
     }
   };
 
-  const onPress = level => setRating(level + 1);
+  const onPress = setRating ? level => setRating(level + 1) : () => null;
 
   return (
     <View className="flex-row items-center justify-center">

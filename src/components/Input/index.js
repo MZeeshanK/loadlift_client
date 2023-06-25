@@ -1,17 +1,26 @@
 import React from 'react';
-import {TextInput} from 'react-native';
+import {TextInput, TouchableOpacity} from 'react-native';
 
 import colors from '../../constants/colors';
+import fonts from '../../constants/fonts';
 
 const Input = ({placeholder, isDisabled, style, keyboard, ...props}) => {
   return (
     <TextInput
-      className={`w-full mx-5 px-8 py-1 text-black mb-8 text-sm font-medium tracking-wider rounded-full ${
-        isDisabled ? 'bg-lightGrey' : 'bg-white'
-      }`}
-      placeholderTextColor={colors.card}
+      value={props.value}
+      onChangeText={props.onChangeText}
+      className="w-full mx-5 text-black mb-4 px-4 py-1 pt-2 rounded-full"
+      placeholderTextColor={isDisabled ? colors.white : colors.darkGrey}
       placeholder={placeholder}
-      style={[{elevation: 3}, style]}
+      style={[
+        {
+          elevation: 3,
+          fontFamily: fonts.semibold,
+          fontSize: 12,
+          backgroundColor: isDisabled ? colors.grey : colors.white,
+        },
+        style,
+      ]}
       keyboardType={keyboard}
       editable={!isDisabled}
     />

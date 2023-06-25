@@ -1,11 +1,12 @@
 import React from 'react';
-import {View, Image, Text} from 'react-native';
+import {View, Image, Text, StyleSheet} from 'react-native';
 
 import Button from '../../components/Button';
 import Linear from '../../components/Linear';
+import Title from '../../components/Title';
 
 const Splash = ({navigation}) => {
-  const next = () => navigation.navigate('Login');
+  const next = () => navigation.navigate('Tabs');
 
   return (
     <Linear>
@@ -15,9 +16,9 @@ const Splash = ({navigation}) => {
             source={require('../../assets/logo.png')}
             className="mb-16 opacity-50"
           />
-          <Text className="text-white text-2xl font-bold text-center leading-8 tracking-wider">
+          <Title bold xxl>
             Delivering convenience to your doorstep
-          </Text>
+          </Title>
         </View>
         <Button
           title="Get Started"

@@ -34,6 +34,7 @@ import Logout from './src/screens/app/Logout';
 import PaymentMethod from './src/screens/app/PaymentMethod';
 import IncomingCall from './src/screens/app/IncomingCall';
 import ComingSoon from './src/screens/ComingSoon';
+import Title from './src/components/Title';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -49,9 +50,9 @@ function App() {
           // Tab Bar styles
           tabBarStyle: {
             borderTopWidth: 0,
-            backgroundColor: colors.tabBackground,
+            backgroundColor: colors.tab,
             borderTop: 'none',
-            height: 45,
+            height: 50,
           },
           tabBarLabel: () => null,
         }}>
@@ -70,12 +71,9 @@ function App() {
                       : require('./src/assets/home.png')
                   }
                 />
-                <Text
-                  className={`text-xs pt-0 ${
-                    focused ? 'text-primary' : 'text-[#676767]'
-                  }`}>
+                <Title className="text-xs" xs primary={focused} grey={!focused}>
                   Home
-                </Text>
+                </Title>
               </View>
             ),
           }}
@@ -94,12 +92,9 @@ function App() {
                       : require('./src/assets/activity.png')
                   }
                 />
-                <Text
-                  className={`text-xs pt-0 ${
-                    focused ? 'text-primary' : 'text-[#676767]'
-                  }`}>
+                <Title className="text-xs" xs primary={focused} grey={!focused}>
                   Activity
-                </Text>
+                </Title>
               </View>
             ),
           }}
@@ -118,12 +113,9 @@ function App() {
                       : require('./src/assets/account.png')
                   }
                 />
-                <Text
-                  className={`text-xs pt-0 ${
-                    focused ? 'text-primary' : 'text-[#676767]'
-                  }`}>
+                <Title className="text-xs" xs primary={focused} grey={!focused}>
                   Account
-                </Text>
+                </Title>
               </View>
             ),
           }}
@@ -164,8 +156,8 @@ function App() {
 
 const styles = StyleSheet.create({
   icon: {
-    width: 20,
-    height: 20,
+    width: 22,
+    height: 22,
   },
 });
 

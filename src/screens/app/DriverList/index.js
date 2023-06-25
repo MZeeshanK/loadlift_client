@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Text, FlatList, Image, Pressable} from 'react-native';
+import {View, StyleSheet, FlatList, Image, Pressable} from 'react-native';
 
 import Linear from '../../../components/Linear';
 import Header from '../../../components/Header';
@@ -11,6 +11,7 @@ import categories from '../../../data/categories';
 
 import colors from '../../../constants/colors';
 import styleConstants from '../../../constants/styles';
+import Title from '../../../components/Title';
 
 const DriverList = ({navigation}) => {
   const [driver, setDriver] = useState({});
@@ -24,41 +25,38 @@ const DriverList = ({navigation}) => {
         onPress={() => setDriver(item)}
         className="flex-1 flex-row items-center justify-center mb-5 rounded-xl py-4"
         style={{
-          backgroundColor:
-            driver === item ? colors.primary : colors.ongoingBackground,
-          elevation: 3,
+          backgroundColor: driver === item ? colors.primary : colors.ongoing,
+          elevation: 2,
         }}>
         <View
-          className={`items-center justify-center border-r-2 border-primary ${
+          className={`items-center justify-center border-r-2 w-16 border-primary ${
             driver === item && 'border-black'
-          } px-2 h-full`}>
+          } h-full`}>
           <Image
             source={driver === item ? image?.darkIcon : image?.icon}
             style={styles.icon}
           />
-          <Text
-            className={`text-white ${
-              driver === item && 'text-black'
-            } font-semibold tracking-tighter mt-2`}
-            style={{fontSize: 9}}>
+          <Title className="tracking-tighter" xxs black={driver === item}>
             {item?.typeOfVehicle}
-          </Text>
+          </Title>
         </View>
-        <View className="flex-1 flex-row items-center justify-between px-2">
-          <View className="items-start justify-center gap-y-1">
-            <Text
-              className={`text-white ${
-                driver === item && 'text-black'
-              } text-xs font-semibold tracking-tighter`}>
+        <View className="flex-1 flex-row items-center justify-between px-1">
+          <View>
+            <Title
+              className="tracking-tighter leading-5 "
+              semibold
+              sm
+              black={driver === item}>
               {item?.driverName}
-            </Text>
-            <View className="flex-row items-center gap-x-1">
-              <Text
-                className={`text-white ${
-                  driver === item && 'text-black'
-                } text-xs text-semibold tracking-tighter`}>
+            </Title>
+            <View className="flex-row items-center">
+              <Title
+                className="tracking-tighter leading-4 "
+                xxs
+                semibold
+                black={driver === item}>
                 {item?.driverRating}
-              </Text>
+              </Title>
               <Image
                 source={
                   driver === item
@@ -69,23 +67,21 @@ const DriverList = ({navigation}) => {
               />
             </View>
           </View>
-          <Text
-            className={`text-sm text-white ${
-              driver === item && 'text-black'
-            } font-bold tracking-tighter`}>
+          <Title className="tracking-tighter" bold xsm black={driver === item}>
             {item?.vehicleNumber}
-          </Text>
+          </Title>
         </View>
         <View
           className={`items-center justify-center border-l-2 h-full border-primary ${
             driver === item && 'border-black'
           } px-2`}>
-          <Text
-            className={`text-white ${
-              driver === item && 'text-black'
-            } font-semibold text-sm tracking-tighter`}>
+          <Title
+            className="tracking-tighter"
+            xxsm
+            semibold
+            black={driver === item}>
             {item?.distance}m away
-          </Text>
+          </Title>
         </View>
       </Pressable>
     );
@@ -97,9 +93,9 @@ const DriverList = ({navigation}) => {
       <View className="w-full flex-1 items-center justify-center">
         <View className="w-full flex-1 mb-5">
           <Card style={{width: '100%', flex: 1}}>
-            <Text className="text-white font-bold text-xl tracking-wider my-2 mb-8">
+            <Title className="tracking-wider my-2 mb-8" xl bold>
               Choose a driver from the list.
-            </Text>
+            </Title>
             <FlatList
               // showsVerticalScrollIndicator={false}
               className="flex-1 w-full"
@@ -127,6 +123,8 @@ const styles = StyleSheet.create({
   star: {
     width: 10,
     height: 10,
+    marginLeft: 2,
+    marginTop: 1,
   },
 });
 

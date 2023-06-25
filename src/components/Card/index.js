@@ -1,14 +1,14 @@
 import React from 'react';
-import {StyleSheet, Pressable, View} from 'react-native';
+import {StyleSheet, Pressable} from 'react-native';
 
-import colors from '../../constants/colors';
-
-const Card = ({children, style, onPress}) => {
+const Card = ({children, style, onPress, ...props}) => {
   return (
     <Pressable
       onPress={onPress}
-      className="rounded-xl p-4 my-3 items-center w-full justify-center"
-      style={[styles.container, style]}>
+      className={`rounded-xl p-4 my-3 items-center w-full justify-center bg-card ${
+        props.alt && 'p-0'
+      } ${props.border && 'border border-card'}`}
+      style={[styles.container, Array.isArray(style) ? [...style] : style]}>
       {children}
     </Pressable>
   );
@@ -16,8 +16,7 @@ const Card = ({children, style, onPress}) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.cardBackground,
-    elevation: 3,
+    elevation: 2,
   },
 });
 
