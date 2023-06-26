@@ -67,7 +67,7 @@ const Account = ({navigation}) => {
 
         <View className="w-full flex-row items-center justify-between">
           <Card
-            onPress={() => navigation.navigate('PaymentMethod')}
+            onPress={() => navigation.navigate('Payment')}
             className="flex-1 mr-3">
             <Image
               source={require('../../../assets/wallet.png')}

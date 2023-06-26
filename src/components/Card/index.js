@@ -5,9 +5,9 @@ const Card = ({children, style, onPress, ...props}) => {
   return (
     <Pressable
       onPress={onPress}
-      className={`rounded-xl p-4 my-3 items-center w-full justify-center bg-card ${
+      className={`rounded-xl p-4 my-3 items-center w-full justify-center bg-card border border-ongoing ${
         props.alt && 'p-0'
-      } ${props.border && 'border border-card'}`}
+      }`}
       style={[styles.container, Array.isArray(style) ? [...style] : style]}>
       {children}
     </Pressable>
