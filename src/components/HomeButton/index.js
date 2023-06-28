@@ -27,11 +27,12 @@ const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.primary,
     elevation: 3,
+    shadowColor: colors.ongoing,
     width: width - 32,
-    borderWidth: 3,
-    borderColor: colors.ongoing,
+    borderWidth: 2,
+    borderColor: colors.card,
   },
   search: {
     height: 20,

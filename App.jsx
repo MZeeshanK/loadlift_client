@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 import React from 'react';
 
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, StyleSheet, View} from 'react-native';
 import colors from './src/constants/colors';
 
 import {NavigationContainer} from '@react-navigation/native';
@@ -26,12 +26,13 @@ import Profile from './src/screens/app/Profile';
 import Settings from './src/screens/app/Settings';
 import AccountSwitch from './src/screens/app/AccountSwitch';
 import Payment from './src/screens/app/Payment';
+import PaymentMethod from './src/screens/app/PaymentMethod';
 import Premium from './src/screens/app/Premium';
 import Map from './src/screens/app/Map';
 import Call from './src/screens/app/Call';
 import DriverList from './src/screens/app/DriverList';
+import PaymentDone from './src/screens/app/PaymentDone';
 import Logout from './src/screens/app/Logout';
-import PaymentMethod from './src/screens/app/PaymentMethod';
 import IncomingCall from './src/screens/app/IncomingCall';
 import ComingSoon from './src/screens/ComingSoon';
 import Title from './src/components/Title';
@@ -146,6 +147,7 @@ function App() {
         <Stack.Screen name="Premium" component={Premium} />
         <Stack.Screen name="Logout" component={Logout} />
         <Stack.Screen name="Call" component={Call} />
+        <Stack.Screen name="PaymentDone" component={PaymentDone} />
         <Stack.Screen name="IncomingCall" component={IncomingCall} />
         <Stack.Screen name="ComingSoon" component={ComingSoon} />
         <Stack.Screen name="NotFound" component={NotFound} />

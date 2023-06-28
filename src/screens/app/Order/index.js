@@ -28,7 +28,7 @@ const Order = ({navigation}) => {
       <View className="flex-1 w-full -mt-5">
         <View className="flex-row items-center justify-between">
           <View className="flex-1" />
-          <Button title="Report" mini />
+          <Button title="Report" danger mini />
         </View>
         <View className="w-full items-center justify-between flex-1 mt-0 ">
           <Card>
@@ -41,13 +41,13 @@ const Order = ({navigation}) => {
                 <Title lg bold>
                   {order?.date}
                 </Title>
-                <Title xsm bold>
+                <Title xsm bold primary>
                   Status: <Title xsm>{order?.substatus}</Title>
                 </Title>
               </View>
             </View>
             <View className="w-full items-center justify-between flex-row py-5 border-b border-primary px-1">
-              <Title sm bold left>
+              <Title sm bold left primary>
                 Name: <Title sm>{order?.driverName}</Title>
               </Title>
               <Title bold right>
@@ -61,6 +61,7 @@ const Order = ({navigation}) => {
                 press
                 left
                 bold
+                primary
                 sm>
                 Pick Up Location: <Title sm>{order?.pickUp}</Title>
               </Title>
@@ -71,12 +72,13 @@ const Order = ({navigation}) => {
                 press
                 left
                 bold
+                primary
                 sm>
                 Destination Location: <Title sm>{order?.destination}</Title>
               </Title>
             </View>
             <View className="w-full pt-6 pb-3 flex-row items-center justify-between px-1">
-              <Title className="tracking-widest" bold>
+              <Title className="tracking-widest" bold primary>
                 Price:{' '}
                 <Title>
                   {' '}
@@ -85,7 +87,7 @@ const Order = ({navigation}) => {
                 </Title>
               </Title>
 
-              <Title className="tracking-widest" bold>
+              <Title className="tracking-widest" bold primary>
                 Distance: <Title>{order?.distance} km</Title>
               </Title>
             </View>
@@ -93,7 +95,7 @@ const Order = ({navigation}) => {
 
           <Card>
             <View className="w-full items-center justify-center mb-8">
-              <Title className="mb-2" xl semibold>
+              <Title className="mb-2" xl semibold primary>
                 Leave a Rating
               </Title>
               <Rating
@@ -113,7 +115,7 @@ const Order = ({navigation}) => {
               <Button
                 title="Call"
                 half
-                onPress={() => navigation.navigate('Call')}
+                onPress={() => navigation.navigate('Payment')}
               />
             </View>
           </Card>

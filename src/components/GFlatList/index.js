@@ -1,5 +1,6 @@
 import React from 'react';
-import {StyleSheet, FlatList} from 'react-native';
+import {FlatList} from 'react-native';
+
 import orders from '../../data/orders';
 import OrderItem from '../OrderItem';
 
@@ -17,7 +18,6 @@ const GFlatList = ({...props}) => {
       renderItem={({item, index}) => (
         <OrderItem
           activity={props.activity}
-          home={props.home}
           danger={item?.status === 'danger'}
           ongoing={item?.status === 'ongoing'}
           item={item}
@@ -28,5 +28,4 @@ const GFlatList = ({...props}) => {
   );
 };
 
-const styles = StyleSheet.create({});
 export default React.memo(GFlatList);

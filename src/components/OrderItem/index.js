@@ -7,6 +7,7 @@ import styleConstants from '../../constants/styles';
 
 import categories from '../../data/categories';
 import Title from '../Title';
+import Card from '../Card';
 
 const OrderItem = ({item, ...props}) => {
   const navigation = useNavigation();
@@ -16,17 +17,12 @@ const OrderItem = ({item, ...props}) => {
   )?.icon;
 
   return (
-    <Pressable
+    <Card
       onPress={() => navigation.navigate('Order')}
-      style={[
-        styles.order,
-        props.danger && {backgroundColor: colors.danger},
-        props.ongoing && {
-          backgroundColor: colors.ongoing,
-          borderColor: colors.card,
-        },
-      ]}
-      className={`rounded-2xl mb-5 py-1 px-1 items-center justify-between`}>
+      className={`rounded-2xl mb-3 py-1 px-1 items-center justify-between`}
+      style={styles.order}
+      ongoing={props.ongoing}
+      danger={props.danger}>
       <View className="border-b-2 w-[95%] items-center justify-between flex-row border-primary py-2">
         <Title className="tracking-wider" sm>
           <Title bold primary>
@@ -78,7 +74,7 @@ const OrderItem = ({item, ...props}) => {
           </View>
         </View>
       </View>
-    </Pressable>
+    </Card>
   );
 };
 
@@ -86,11 +82,6 @@ const styles = StyleSheet.create({
   order: {
     width: '100%',
     alignSelf: 'center',
-    elevation: 3,
-    shadowColor: '#000',
-    backgroundColor: colors.card,
-    borderWidth: 1,
-    borderColor: colors.ongoing,
   },
   car: {...styleConstants.icon, marginHorizontal: 5},
 });

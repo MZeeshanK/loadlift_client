@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {ScrollView, View} from 'react-native';
 
 import Linear from '../../../components/Linear';
 import Header from '../../../components/Header';
@@ -25,20 +25,22 @@ const Premium = () => {
   return (
     <Linear>
       <Header title="Premium" />
-      <View className="w-full flex-1 items-center justify-between">
+      <ScrollView className="w-full flex-1">
         <View className="w-full">
-          <Card className="pb-10">
+          <Card className="pb-10 px-2">
             <Title xl semibold className="mb-5">
               Benifits of Premium
             </Title>
             {/* Table */}
             <View className="w-full items-center justify-center">
               {/* Header */}
-              <View className="w-full flex-row items-center justify-center border border-primary rounded-tr-md rounded-tl-md ">
+              <View className="w-full flex-row items-center justify-center border border-primary rounded-tr-md rounded-tl">
                 {header.map((head, index) => (
                   <Title
+                    key={index}
                     semibold
-                    className={`flex-1 px-3 py-2 ${
+                    lg
+                    className={`flex-1 p-4 ${
                       index === 0 && 'border-r border-primary'
                     }`}>
                     {head}
@@ -48,14 +50,17 @@ const Premium = () => {
               {/* Table data */}
               {data.map((d, index) => (
                 <View
-                  className={`w-full flex-row items-center justify-center border-b border-r border-l border-primary ${
+                  key={index}
+                  className={`w-full flex-row items-center justify-center border-b border-l border-r border-primary ${
                     index === data.length - 1 && 'rounded-br-md rounded-bl-md'
                   }`}>
                   {d.map((item, index) => (
                     <Title
-                      sm
-                      left
-                      className={`flex-1 h-full px-3 py-2 ${
+                      key={index}
+                      base
+                      light
+                      center
+                      className={`flex-1 h-full p-3 ${
                         index === 0 && 'border-r border-primary'
                       }`}>
                       {item}
@@ -85,7 +90,7 @@ const Premium = () => {
             </Card>
           </View>
         </View>
-      </View>
+      </ScrollView>
       <Button title="Go for Premium" className="mb-10" />
     </Linear>
   );

@@ -1,5 +1,5 @@
-import React from 'react';
-import {Text, ScrollView, View, Image, Pressable} from 'react-native';
+import React, {useState} from 'react';
+import {ScrollView, View, Image, Pressable} from 'react-native';
 
 import Linear from '../../../components/Linear';
 import Header from '../../../components/Header';
@@ -15,7 +15,6 @@ const accountOptions = [
   },
   {
     title: "Switch to Driver's Account",
-    screen: 'AccountSwitch',
   },
   {
     title: 'Rate Us',
@@ -32,10 +31,36 @@ const accountOptions = [
 ];
 
 const Account = ({navigation}) => {
+  const [driver, setDriver] = useState(true);
+
   return (
     <Linear>
       <Header title="Account" isBack={false} />
-      <ScrollView className="w-full flex-1">
+      <ScrollView
+        className="w-full flex-1"
+        showsVerticalScrollIndicator={false}>
+        {driver && (
+          <Card>
+            <View className="items-center justify-center w-full pb-5 ">
+              <Image
+                source={require('../../../assets/mini-truck-light.png')}
+                style={{
+                  width: 100,
+                  height: 37,
+                }}
+              />
+            </View>
+            <View className="w-full flex-row items-center justify-between">
+              <Title semibold lg>
+                Mini Truck
+              </Title>
+              <Title semibold lg>
+                JK01AA 1234
+              </Title>
+            </View>
+          </Card>
+        )}
+
         <Card onPress={() => navigation.navigate('Profile')}>
           <View className=" w-full flex-row justify-between items-center">
             <View className="flex-1 items-start justify-around">
@@ -67,7 +92,7 @@ const Account = ({navigation}) => {
 
         <View className="w-full flex-row items-center justify-between">
           <Card
-            onPress={() => navigation.navigate('Payment')}
+            onPress={() => navigation.navigate('PaymentMethod')}
             className="flex-1 mr-3">
             <Image
               source={require('../../../assets/wallet.png')}
@@ -90,7 +115,7 @@ const Account = ({navigation}) => {
             </Title>
           </Card>
         </View>
-        <Card>
+        <Card className="py-1">
           {accountOptions.map((item, index) => (
             <Pressable
               key={index}
@@ -100,8 +125,8 @@ const Account = ({navigation}) => {
                   : () => navigation.navigate('NotFound')
               }
               className={`w-full items-start border-primary ${
-                index !== accountOptions.length - 1 && 'border-b-2'
-              } p-1 px-2 justify-center`}>
+                index !== accountOptions.length - 1 && 'border-b'
+              } p-2 px-2 justify-center`}>
               <Title className="py-1 tracking-wider" lg bold>
                 {item.title}
               </Title>

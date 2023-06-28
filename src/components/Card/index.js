@@ -5,10 +5,18 @@ const Card = ({children, style, onPress, ...props}) => {
   return (
     <Pressable
       onPress={onPress}
-      className={`rounded-xl p-4 my-3 items-center w-full justify-center bg-card border border-ongoing ${
-        props.alt && 'p-0'
-      }`}
-      style={[styles.container, Array.isArray(style) ? [...style] : style]}>
+      className={`rounded-xl p-4 my-3 items-center w-full justify-center`}
+      style={[
+        styles.container,
+        {
+          backgroundColor: props.ongoing
+            ? colors.ongoing
+            : props.danger
+            ? colors.danger
+            : colors.card,
+        },
+        Array.isArray(style) ? [...style] : style,
+      ]}>
       {children}
     </Pressable>
   );
@@ -16,7 +24,10 @@ const Card = ({children, style, onPress, ...props}) => {
 
 const styles = StyleSheet.create({
   container: {
-    elevation: 2,
+    borderWidth: 2,
+    borderColor: colors.ongoing,
+    elevation: 3,
+    shadowColor: colors.ongoing,
   },
 });
 

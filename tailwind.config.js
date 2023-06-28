@@ -11,7 +11,7 @@ module.exports = {
         white: '#ffffff',
         start: '#1C3031',
         end: '#130B1C',
-        card: '#191C26',
+        card: '#1D292D',
         grey: '#676767',
         darkGrey: '#1C1C1C',
         tab: '#161421',
