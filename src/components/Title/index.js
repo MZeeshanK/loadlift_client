@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Text, Pressable} from 'react-native';
+import {Text} from 'react-native';
 import colors from '../../constants/colors';
 
 const Title = ({children, style, ...props}) => {

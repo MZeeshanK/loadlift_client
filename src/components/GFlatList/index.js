@@ -11,7 +11,7 @@ const GFlatList = ({...props}) => {
 
   return (
     <FlatList
-      className={`flex-1 rounded-xl w-full mt-2 ${props.home && 'mt-32'}`}
+      className={`flex-1 rounded-xl w-full mt-2 ${props.home && 'mt-5'} `}
       data={props.home ? homeOrders : orders}
       showsVerticalScrollIndicator={false}
       keyExtractor={item => String(item?.id)}

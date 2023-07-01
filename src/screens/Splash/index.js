@@ -1,12 +1,12 @@
 import React from 'react';
-import {View, Image, Text, StyleSheet} from 'react-native';
+import {View, Image} from 'react-native';
 
 import Button from '../../components/Button';
 import Linear from '../../components/Linear';
 import Title from '../../components/Title';
 
 const Splash = ({navigation}) => {
-  const next = () => navigation.navigate('Tabs');
+  const next = () => navigation.navigate('CreateAccount');
 
   return (
     <Linear>

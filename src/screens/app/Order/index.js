@@ -14,6 +14,7 @@ import Title from '../../../components/Title';
 
 const Order = ({navigation}) => {
   const [rating, setRating] = useState(0);
+  const [driver, setDriver] = useState(true);
 
   const order = orders[0];
 
@@ -33,31 +34,42 @@ const Order = ({navigation}) => {
         <View className="w-full items-center justify-between flex-1 mt-0 ">
           <Card>
             <View className="w-full flex-row items-center justify-between border-b border-primary pb-5 pt-2 px-1">
-              <View className="items-start justify-center">
-                <Image source={imageSource} style={styleConstants.icon} />
-                <Title xsm>{order?.typeOfVehicle}</Title>
-              </View>
-              <View className="items-end justify-center">
+              {driver ? (
+                <View className="items-start">
+                  <Title className="pb-1" bold primary>
+                    Name: <Title>John Doe</Title>
+                  </Title>
+                  <Rating rating={4.5} style={{width: 15, height: 15}} />
+                </View>
+              ) : (
+                <View className="items-start justify-center">
+                  <Image source={imageSource} style={styleConstants.icon} />
+                  <Title xsm>{order?.typeOfVehicle}</Title>
+                </View>
+              )}
+              <View className="items-end  justify-center">
                 <Title lg bold>
                   {order?.date}
                 </Title>
-                <Title xsm bold primary>
+                <Title className="pt-0 mt-0" xsm bold primary>
                   Status: <Title xsm>{order?.substatus}</Title>
                 </Title>
               </View>
             </View>
-            <View className="w-full items-center justify-between flex-row py-5 border-b border-primary px-1">
-              <Title sm bold left primary>
-                Name: <Title sm>{order?.driverName}</Title>
-              </Title>
-              <Title bold right>
-                {order?.vehicleNumber}
-              </Title>
-            </View>
+            {!driver && (
+              <View className="w-full items-center justify-between flex-row py-5 border-b border-primary px-1">
+                <Title sm bold left primary>
+                  Name: <Title sm>{order?.driverName}</Title>
+                </Title>
+                <Title bold right>
+                  {order?.vehicleNumber}
+                </Title>
+              </View>
+            )}
             <View className="w-full items-start justify-center py-8 border-b border-primary gap-y-6 px-1 ">
               <Title
                 className="tracking-wide leading-5"
-                numberOfLines={2}
+                numberOfLines={3}
                 press
                 left
                 bold
@@ -68,7 +80,7 @@ const Order = ({navigation}) => {
 
               <Title
                 className="tracking-wide leading-5"
-                numberOfLines={2}
+                numberOfLines={3}
                 press
                 left
                 bold

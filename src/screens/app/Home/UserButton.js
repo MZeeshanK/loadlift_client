@@ -1,18 +1,19 @@
 import React from 'react';
-import {StyleSheet, Pressable, Image, Text, Dimensions} from 'react-native';
+import {StyleSheet, Pressable, Image, Dimensions} from 'react-native';
+import colors from '../../../constants/colors';
+import Title from '../../../components/Title';
 import {useNavigation} from '@react-navigation/native';
-import colors from '../../constants/colors';
-import Title from '../Title';
 
 const HomeButton = () => {
   const navigation = useNavigation();
+
   return (
     <Pressable
       className="flex-row items-center justify-start my-5 mt-10 px-5 py-2 rounded-full"
       style={styles.button}
       onPress={() => navigation.navigate('Booking')}>
       <Image
-        source={require('../../assets/search-dark.png')}
+        source={require('../../../assets/search-dark.png')}
         className="mr-3"
         style={styles.search}
       />

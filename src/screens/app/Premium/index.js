@@ -27,21 +27,21 @@ const Premium = () => {
       <Header title="Premium" />
       <ScrollView className="w-full flex-1">
         <View className="w-full">
-          <Card className="pb-10 px-2">
-            <Title xl semibold className="mb-5">
+          <Card className="pb-10">
+            <Title xl semibold primary className="mb-4">
               Benifits of Premium
             </Title>
             {/* Table */}
             <View className="w-full items-center justify-center">
               {/* Header */}
-              <View className="w-full flex-row items-center justify-center border border-primary rounded-tr-md rounded-tl">
+              <View className="w-full flex-row items-center justify-center border-2 border-primary rounded-tr-xl rounded-tl-xl">
                 {header.map((head, index) => (
                   <Title
                     key={index}
                     semibold
-                    lg
-                    className={`flex-1 p-4 ${
-                      index === 0 && 'border-r border-primary'
+                    base
+                    className={`flex-1 py-1 ${
+                      index === 0 && 'border-r-2 border-primary'
                     }`}>
                     {head}
                   </Title>
@@ -51,17 +51,16 @@ const Premium = () => {
               {data.map((d, index) => (
                 <View
                   key={index}
-                  className={`w-full flex-row items-center justify-center border-b border-l border-r border-primary ${
-                    index === data.length - 1 && 'rounded-br-md rounded-bl-md'
+                  className={`w-full flex-row items-center justify-center border-primary ${
+                    index === 0 && ''
                   }`}>
                   {d.map((item, index) => (
                     <Title
                       key={index}
-                      base
                       light
-                      center
+                      left
                       className={`flex-1 h-full p-3 ${
-                        index === 0 && 'border-r border-primary'
+                        index === 0 && 'border-r-2 border-primary'
                       }`}>
                       {item}
                     </Title>

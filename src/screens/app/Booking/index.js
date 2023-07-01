@@ -1,5 +1,12 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, FlatList, Pressable, Image} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  Pressable,
+  Image,
+  Dimensions,
+} from 'react-native';
 
 import Linear from '../../../components/Linear';
 import Header from '../../../components/Header';
@@ -9,6 +16,8 @@ import Button from '../../../components/Button';
 import Card from '../../../components/Card';
 import categories from '../../../data/categories';
 import Title from '../../../components/Title';
+
+const {height} = Dimensions.get('window');
 
 const Booking = ({navigation}) => {
   const [weight, setWeight] = useState(true);
@@ -44,13 +53,13 @@ const Booking = ({navigation}) => {
       </Title>
       <FlatList
         className="w-full"
+        style={{height: height / 3}}
         showsVerticalScrollIndicator={false}
         data={categories}
         keyExtractor={item => item?.id}
-        renderItem={({item}) => {
+        renderItem={({item, index}) => {
           return (
             <Card
-              alt
               onPress={() => setVehicle(item)}
               style={[
                 {
@@ -58,12 +67,11 @@ const Booking = ({navigation}) => {
                     vehicle === item ? colors.primary : colors.ongoing,
                   width: '100%',
                   flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
                 },
+                index === categories.length - 1 && {marginBottom: 50},
               ]}>
               <View
-                className={`border-r-2 h-[44] my-2 border-primary items-center justify-center px-3 ${
+                className={`border-r-2 border-primary pr-3 h-12 items-center justify-center ${
                   vehicle === item && 'border-black'
                 }`}>
                 <Image
@@ -72,27 +80,27 @@ const Booking = ({navigation}) => {
                 />
               </View>
               <View className="flex-row flex-1 px-2 items-center justify-between">
-                <Title lg bold black={vehicle === item}>
+                <Title base bold black={vehicle === item}>
                   {item?.title}
                 </Title>
-                <View className="items-start justify-center gap-y-2 px-2">
+                <View className="items-start justify-center px-2">
                   <Title
                     className="tracking-tighter"
-                    xs
+                    xsm
                     bold
                     black={vehicle === item}>
                     Max Capacity:{' '}
-                    <Title xs medium black={vehicle === item}>
+                    <Title xsm medium black={vehicle === item}>
                       {item?.weight}T
                     </Title>
                   </Title>
                   <Title
                     className="tracking-tighter"
-                    xs
+                    xsm
                     bold
                     black={vehicle === item}>
                     Rate:{' '}
-                    <Title xs medium black={vehicle === item}>
+                    <Title xsm medium black={vehicle === item}>
                       {'\u20b9'} {item?.rate} / km
                     </Title>
                   </Title>
@@ -129,7 +137,10 @@ const Booking = ({navigation}) => {
             style={{marginTop: 20}}
           />
         ) : (
-          <VehicleCard />
+          <>
+            <VehicleCard />
+            <View className="flex-1" />
+          </>
         )}
       </View>
       <Button

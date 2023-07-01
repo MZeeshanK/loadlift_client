@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
   View,
-  StyleSheet,
   Pressable,
   Image,
   TextInput,
@@ -35,10 +34,10 @@ const Activity = () => {
 
   return (
     <Linear>
-      <Header title="Activity" isBack={false} />
+      {/* <Header title="Activity" isBack={false} /> */}
       {/* Search */}
       <View
-        className="flex-row items-center bg-card -mt-5 justify-between py-1 mb-3 pl-1 rounded-xl"
+        className="flex-row items-center bg-card mt-3 justify-between py-1 mb-3 pl-1 rounded-xl"
         style={{elevation: 3}}>
         <View className="flex-row items-center justify-between flex-1 mx-1 my-2 bg-white rounded-full border border-card">
           <TextInput

@@ -26,6 +26,7 @@ export default orders = [
     pickUp: '121, Hawaal, Srinagar, Jammu and Kashmir',
     destination: '203, Rainawari, Srinagar, Jammu and Kashmir',
   },
+
   {
     id: '3',
     userName: 'John Doe',

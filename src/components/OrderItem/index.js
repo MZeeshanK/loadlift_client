@@ -1,8 +1,7 @@
-import React from 'react';
-import {View, StyleSheet, Image, Pressable} from 'react-native';
+import React, {useState} from 'react';
+import {View, StyleSheet, Image} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
-import colors from '../../constants/colors';
 import styleConstants from '../../constants/styles';
 
 import categories from '../../data/categories';
@@ -12,33 +11,37 @@ import Card from '../Card';
 const OrderItem = ({item, ...props}) => {
   const navigation = useNavigation();
 
+  const [driver, setDriver] = useState(true);
+
   const image = categories.find(
     category => category?.title === item?.typeOfVehicle,
   )?.icon;
 
-  return (
-    <Card
-      onPress={() => navigation.navigate('Order')}
-      className={`rounded-2xl mb-3 py-1 px-1 items-center justify-between`}
-      style={styles.order}
-      ongoing={props.ongoing}
-      danger={props.danger}>
-      <View className="border-b-2 w-[95%] items-center justify-between flex-row border-primary py-2">
-        <Title className="tracking-wider" sm>
-          <Title bold primary>
-            Status:{' '}
+  const DriverOrderItem = () => {
+    return (
+      <View className="flex-1 justify-center px-2">
+        <View className="w-full flex-row items-center pt-1 justify-between">
+          <Title primary bold left>
+            Name: <Title>John Doe</Title>
           </Title>
-          {props.danger
-            ? 'Cancelled By the Driver'
-            : props.ongoing
-            ? 'In Transit'
-            : 'Completed'}
-        </Title>
-        <Title className="tracking-wide" bold>
-          {props.ongoing ? 'Ongoing' : item?.date}
-        </Title>
+
+          <Title primary bold right>
+            Price: <Title>{'\u20b9'} 1200</Title>
+          </Title>
+        </View>
+        <View className="w-full flex-1 pb-2">
+          <Title numberOfLines={2} bold primary left>
+            Destination:{' '}
+            <Title>203, Rainawari, Srinagar, Jammu and Kashmir</Title>
+          </Title>
+        </View>
       </View>
-      <View className="flex-1 w-full px-1 flex-row items-center justify-between">
+    );
+  };
+
+  const UserOrderItem = () => {
+    return (
+      <>
         <View className="border-r border-primary items-center justify-start px-1 py-3">
           <Image source={image} style={styles.car} />
         </View>
@@ -73,6 +76,35 @@ const OrderItem = ({item, ...props}) => {
             </Title>
           </View>
         </View>
+      </>
+    );
+  };
+
+  return (
+    <Card
+      onPress={() => navigation.navigate('Order')}
+      className={`rounded-2xl mb-3 py-1 px-1 items-center justify-between`}
+      style={styles.order}
+      ongoing={props.ongoing}
+      danger={props.danger}>
+      <View className="border-b-2 w-[95%] items-center justify-between flex-row border-primary py-2">
+        <Title className="tracking-wider" sm>
+          <Title bold primary>
+            Status:{' '}
+          </Title>
+          {props.danger
+            ? 'Cancelled By the Driver'
+            : props.ongoing
+            ? 'In Transit'
+            : 'Completed'}
+        </Title>
+        <Title className="tracking-wide" bold>
+          {props.ongoing ? 'Ongoing' : item?.date}
+        </Title>
+      </View>
+
+      <View className="flex-1 w-full px-1 flex-row items-center justify-between">
+        {driver ? <DriverOrderItem /> : <UserOrderItem />}
       </View>
     </Card>
   );

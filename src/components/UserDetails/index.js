@@ -1,12 +1,5 @@
 import React, {useState} from 'react';
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  FlatList,
-  Image,
-  Text,
-} from 'react-native';
+import {View, StyleSheet, ScrollView, FlatList, Image} from 'react-native';
 import TextLabel from '../TextLabel';
 import Input from '../Input';
 import Card from '../Card';
@@ -37,15 +30,20 @@ const UserDetails = ({user, ...props}) => {
           placeholder={user ? `+91 ${user?.phone}` : '+91 94190 09876'}
           isDisabled={true}
         />
-
         {/* Divide Bar */}
         <View className="w-[95%] mb-4 mt-2 h-[1] bg-primary" />
 
         <TextLabel title="First Name:" />
-        <Input placeholder={user ? user?.firstName : 'Enter your First Name'} />
+        <Input
+          returnKeyType="next"
+          placeholder={user ? user?.firstName : 'Enter your First Name'}
+        />
 
         <TextLabel title="Last Name:" />
-        <Input placeholder={user ? user?.lastName : 'Enter your Last Name'} />
+        <Input
+          returnKeyType="next"
+          placeholder={user ? user?.lastName : 'Enter your Last Name'}
+        />
 
         {driver && (
           <>

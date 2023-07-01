@@ -14,6 +14,8 @@ const Card = ({children, style, onPress, ...props}) => {
             : props.danger
             ? colors.danger
             : colors.card,
+          borderWidth: 2,
+          borderColor: props.ongoing ? colors.card : colors.ongoing,
         },
         Array.isArray(style) ? [...style] : style,
       ]}>
@@ -24,8 +26,6 @@ const Card = ({children, style, onPress, ...props}) => {
 
 const styles = StyleSheet.create({
   container: {
-    borderWidth: 2,
-    borderColor: colors.ongoing,
     elevation: 3,
     shadowColor: colors.ongoing,
   },

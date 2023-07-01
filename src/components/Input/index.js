@@ -1,14 +1,23 @@
 import React from 'react';
-import {TextInput, TouchableOpacity} from 'react-native';
+import {TextInput} from 'react-native';
 
 import colors from '../../constants/colors';
 import fonts from '../../constants/fonts';
 
-const Input = ({placeholder, isDisabled, style, keyboard, ...props}) => {
+const Input = ({
+  value,
+  onChangeText,
+  keyboard,
+  style,
+  isDisabled,
+  placeholder,
+  ...props
+}) => {
   return (
     <TextInput
-      value={props.value}
-      onChangeText={props.onChangeText}
+      value={value}
+      onChangeText={onChangeText}
+      returnKeyType={props.returnKeyType}
       className="w-full mx-5 text-black mb-4 px-4 py-1 pt-2 rounded-full"
       placeholderTextColor={isDisabled ? colors.white : colors.darkGrey}
       placeholder={placeholder}

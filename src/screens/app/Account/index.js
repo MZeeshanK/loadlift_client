@@ -8,30 +8,46 @@ import Rating from '../../../components/Rating';
 import Button from '../../../components/Button';
 import Title from '../../../components/Title';
 
-const accountOptions = [
-  {
-    title: 'Settings',
-    screen: 'Settings',
-  },
-  {
-    title: "Switch to Driver's Account",
-  },
-  {
-    title: 'Rate Us',
-    //  Todo
-  },
-  {
-    title: 'Contact Us',
-    //  TODO
-  },
-  {
-    title: 'Logout',
-    screen: 'Logout',
-  },
-];
-
 const Account = ({navigation}) => {
-  const [driver, setDriver] = useState(true);
+  const [driver] = useState(true);
+
+  const accountOptions = [
+    {
+      title: 'Settings',
+      screen: 'Settings',
+    },
+    {
+      title: "Switch to Driver's Account",
+      screen: 'AccountSwitch',
+      userOnly: true,
+    },
+    {
+      title: "Switch to User's Account",
+      screen: 'AccountSwitch',
+      driverOnly: true,
+    },
+    {
+      title: 'Rate Us',
+      //  Todo
+    },
+    {
+      title: 'Contact Us',
+      //  TODO
+    },
+    {
+      title: 'Logout',
+      screen: 'Logout',
+    },
+  ];
+
+  const userAccountOptions = accountOptions.filter(
+    option => !option.driverOnly,
+  );
+  const driverAccountOptions = accountOptions.filter(
+    option => !option.userOnly,
+  );
+
+  const selectedOptions = driver ? driverAccountOptions : userAccountOptions;
 
   return (
     <Linear>
@@ -116,7 +132,7 @@ const Account = ({navigation}) => {
           </Card>
         </View>
         <Card className="py-1">
-          {accountOptions.map((item, index) => (
+          {selectedOptions.map((item, index) => (
             <Pressable
               key={index}
               onPress={
@@ -125,7 +141,7 @@ const Account = ({navigation}) => {
                   : () => navigation.navigate('NotFound')
               }
               className={`w-full items-start border-primary ${
-                index !== accountOptions.length - 1 && 'border-b'
+                index !== selectedOptions.length - 1 && 'border-b'
               } p-2 px-2 justify-center`}>
               <Title className="py-1 tracking-wider" lg bold>
                 {item.title}
