@@ -52,10 +52,7 @@ const Account = ({navigation}) => {
 
   const Modal = () => {
     return (
-      <CustomModal
-        className="absolute bottom-0"
-        visible={modalVisible}
-        setVisible={setModalVisible}>
+      <CustomModal visible={modalVisible} setVisible={setModalVisible}>
         <Title xxl bold className="mt-2 leading-8">
           Are You Sure you want to logout?
         </Title>

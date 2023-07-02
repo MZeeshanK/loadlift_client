@@ -18,6 +18,8 @@ const Order = ({navigation}) => {
   const [driver] = useState(true);
   const [picked, setPicked] = useState(false);
   const [ratingModalVisible, setRatingModalVisible] = useState(false);
+  const [pickUpModalVisible, setPickUpModalVisible] = useState(false);
+  const [deliveredModalVisible, setDeliveredModalVisible] = useState(false);
 
   const order = orders[0];
 
@@ -54,10 +56,62 @@ const Order = ({navigation}) => {
     );
   };
 
+  const PickUpModal = () => {
+    const onPress = bool => {
+      setPicked(bool);
+      setPickUpModalVisible(false);
+    };
+
+    return (
+      <CustomModal
+        visible={pickUpModalVisible}
+        setVisible={setPickUpModalVisible}>
+        <Title bold xxl className="tracking-tighter mb-4">
+          Are you Sure?
+        </Title>
+        <View className="w-full flex-row items-center justify-between">
+          <Button onPress={() => onPress(false)} title="No" danger half />
+          <Button onPress={() => onPress(true)} title="Yes" half />
+        </View>
+      </CustomModal>
+    );
+  };
+
+  const DeliveredModal = () => {
+    return (
+      <CustomModal
+        visible={deliveredModalVisible}
+        setVisible={setDeliveredModalVisible}>
+        <Title className="my-10 text-justify">
+          Make sure you have successfully delivered the package to the
+          destination, if so the user will be notified with the success of the
+          delivery and request will be sent to him/her for payment
+        </Title>
+        <View className="w-full flex-row items-center justify-between">
+          <Button
+            half
+            danger
+            onPress={() => setDeliveredModalVisible(false)}
+            title="Go Back"
+          />
+          <Button
+            half
+            className="flex-1 ml-2"
+            onPress={() => setRatingModalVisible(true)}
+            title="Delivered"
+          />
+        </View>
+      </CustomModal>
+    );
+  };
+
   return (
     <Linear>
       <Header title="Order" />
       <View className="flex-1 w-full -mt-5">
+        <PickUpModal />
+        <DeliveredModal />
+
         <View className="flex-row items-center justify-between">
           <View className="flex-1" />
           <Button title="Report" danger mini />
@@ -138,14 +192,14 @@ const Order = ({navigation}) => {
               <Button
                 className="my-2 w-full"
                 title="Confirm PickUp"
-                onPress={() => setPicked(true)}
+                onPress={() => setPickUpModalVisible(true)}
               />
             )}
           </Card>
 
           <Card>
             {ratingModalVisible && <RatingModal />}
-            <View className="items-center justify-between flex-row">
+            <View className="items-center justify-between w-full flex-row">
               {!picked && (
                 <Button
                   title="Cancel"
@@ -166,7 +220,7 @@ const Order = ({navigation}) => {
                   half
                   success
                   className="flex-1 ml-2"
-                  onPress={() => setRatingModalVisible(true)}
+                  onPress={() => setDeliveredModalVisible(true)}
                 />
               )}
             </View>
