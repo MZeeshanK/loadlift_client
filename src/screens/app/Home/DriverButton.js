@@ -9,23 +9,30 @@ const {width} = Dimensions.get('window');
 
 const DriverHomeButton = ({isActive, setIsActive, isDelivering}) => {
   return (
-    <Pressable
-      onPress={!isDelivering ? () => setIsActive(!isActive) : null}
-      className={`aspect-square items-center justify-center rounded-full border-4 border-primary mb-5 ${
-        isActive && 'bg-primary'
-      }`}
-      style={[
-        {width: width - 220},
-        isActive &&
-          isDelivering && {
-            elevation: 10,
-            shadowColor: colors.ongoing,
-          },
-      ]}>
-      <Title xxl bold primary={!isActive} black={isActive}>
-        {isActive ? 'Active' : isDelivering ? 'Delivering' : 'InActive'}
-      </Title>
-    </Pressable>
+    <>
+      {isActive && (
+        <Title className="my-3 tracking-wider" lg bold>
+          You are now visible to customers
+        </Title>
+      )}
+      <Pressable
+        onPress={!isDelivering ? () => setIsActive(!isActive) : null}
+        className={`aspect-square items-center justify-center rounded-full border-4 border-primary mb-5 ${
+          isActive && 'bg-primary'
+        }`}
+        style={[
+          {width: width - 220},
+          isActive &&
+            isDelivering && {
+              elevation: 10,
+              shadowColor: colors.ongoing,
+            },
+        ]}>
+        <Title xxl bold primary={!isActive} black={isActive}>
+          {isActive ? 'Active' : isDelivering ? 'Delivering' : 'InActive'}
+        </Title>
+      </Pressable>
+    </>
   );
 };
 

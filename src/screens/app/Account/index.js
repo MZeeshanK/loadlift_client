@@ -7,9 +7,11 @@ import Card from '../../../components/Card';
 import Rating from '../../../components/Rating';
 import Button from '../../../components/Button';
 import Title from '../../../components/Title';
+import CustomModal from '../../../components/CustomModal';
 
 const Account = ({navigation}) => {
   const [driver] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const accountOptions = [
     {
@@ -36,7 +38,6 @@ const Account = ({navigation}) => {
     },
     {
       title: 'Logout',
-      screen: 'Logout',
     },
   ];
 
@@ -49,9 +50,39 @@ const Account = ({navigation}) => {
 
   const selectedOptions = driver ? driverAccountOptions : userAccountOptions;
 
+  const Modal = () => {
+    return (
+      <CustomModal
+        className="absolute bottom-0"
+        visible={modalVisible}
+        setVisible={setModalVisible}>
+        <Title xxl bold className="mt-2 leading-8">
+          Are You Sure you want to logout?
+        </Title>
+        <View className="w-full h-[1] bg-primary my-5 " />
+        <View className="w-full px-2 mt-2 mb-5 flex-row items-center justify-center">
+          <Button
+            title="No"
+            className="mr-2"
+            half
+            onPress={() => setModalVisible(false)}
+          />
+          <Button
+            title="Yes"
+            className="ml-2"
+            danger
+            half
+            onPress={() => navigation.navigate('Login')}
+          />
+        </View>
+      </CustomModal>
+    );
+  };
+
   return (
     <Linear>
       <Header title="Account" isBack={false} />
+
       <ScrollView
         className="w-full flex-1"
         showsVerticalScrollIndicator={false}>
@@ -119,6 +150,8 @@ const Account = ({navigation}) => {
             </Title>
           </Card>
 
+          {modalVisible && <Modal />}
+
           <Card
             onPress={() => navigation.navigate('Premium')}
             className="flex-1 ml-3">
@@ -138,6 +171,8 @@ const Account = ({navigation}) => {
               onPress={
                 item?.screen
                   ? () => navigation.navigate(item?.screen)
+                  : item?.title === 'Logout'
+                  ? () => setModalVisible(true)
                   : () => navigation.navigate('NotFound')
               }
               className={`w-full items-start border-primary ${

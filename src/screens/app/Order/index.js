@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {View, StyleSheet, Image} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, Image} from 'react-native';
 
 import Linear from '../../../components/Linear';
 import Header from '../../../components/Header';
@@ -11,10 +11,13 @@ import orders from '../../../data/orders';
 import categories from '../../../data/categories';
 import styleConstants from '../../../constants/styles';
 import Title from '../../../components/Title';
+import CustomModal from '../../../components/CustomModal';
 
 const Order = ({navigation}) => {
   const [rating, setRating] = useState(0);
-  const [driver, setDriver] = useState(true);
+  const [driver] = useState(true);
+  const [picked, setPicked] = useState(false);
+  const [ratingModalVisible, setRatingModalVisible] = useState(false);
 
   const order = orders[0];
 
@@ -22,6 +25,34 @@ const Order = ({navigation}) => {
     category => category?.title === order.typeOfVehicle,
   );
   imageSource = imageSource?.icon;
+
+  const RatingModal = () => {
+    return (
+      <CustomModal
+        visible={ratingModalVisible}
+        setVisible={setRatingModalVisible}>
+        <View className="w-full items-center justify-center mb-4">
+          <Title className="mb-2" xl semibold primary>
+            Leave a Rating
+          </Title>
+          <Rating
+            className="mb-10"
+            rating={rating}
+            setRating={setRating}
+            style={{height: 32, marginRight: 5}}
+          />
+          <Button
+            half
+            title="Done"
+            onPress={() => {
+              navigation.navigate('Home');
+              setRatingModalVisible(false);
+            }}
+          />
+        </View>
+      </CustomModal>
+    );
+  };
 
   return (
     <Linear>
@@ -47,7 +78,7 @@ const Order = ({navigation}) => {
                   <Title xsm>{order?.typeOfVehicle}</Title>
                 </View>
               )}
-              <View className="items-end  justify-center">
+              <View className="items-end justify-center">
                 <Title lg bold>
                   {order?.date}
                 </Title>
@@ -103,32 +134,41 @@ const Order = ({navigation}) => {
                 Distance: <Title>{order?.distance} km</Title>
               </Title>
             </View>
+            {!picked && (
+              <Button
+                className="my-2 w-full"
+                title="Confirm PickUp"
+                onPress={() => setPicked(true)}
+              />
+            )}
           </Card>
 
           <Card>
-            <View className="w-full items-center justify-center mb-8">
-              <Title className="mb-2" xl semibold primary>
-                Leave a Rating
-              </Title>
-              <Rating
-                rating={rating}
-                setRating={setRating}
-                style={{height: 32, marginRight: 5}}
-              />
-            </View>
-            <View className="items-center justify-between gap-3 px-2 flex-row">
-              <Button
-                title="Cancel"
-                half
-                card
-                border
-                onPress={() => navigation.goBack('')}
-              />
+            {ratingModalVisible && <RatingModal />}
+            <View className="items-center justify-between flex-row">
+              {!picked && (
+                <Button
+                  title="Cancel"
+                  half
+                  card
+                  border
+                  onPress={() => navigation.goBack('')}
+                />
+              )}
               <Button
                 title="Call"
                 half
-                onPress={() => navigation.navigate('Payment')}
+                onPress={() => navigation.navigate('Call')}
               />
+              {picked && driver && (
+                <Button
+                  title="Delivered"
+                  half
+                  success
+                  className="flex-1 ml-2"
+                  onPress={() => setRatingModalVisible(true)}
+                />
+              )}
             </View>
           </Card>
         </View>
@@ -136,7 +176,5 @@ const Order = ({navigation}) => {
     </Linear>
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default React.memo(Order);

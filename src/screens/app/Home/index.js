@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Image, StyleSheet} from 'react-native';
 
 import Linear from '../../../components/Linear';
@@ -8,30 +8,47 @@ import GFlatList from '../../../components/GFlatList';
 import Title from '../../../components/Title';
 import DriverButton from './DriverButton';
 import DriverCard from './DriverCard';
+import CustomModal from '../../../components/CustomModal';
+import Card from '../../../components/Card';
 
-const Home = ({navigation}) => {
-  const [driver] = useState(false);
+const Home = () => {
+  const [driver] = useState(true);
   const [isActive, setIsActive] = useState(false);
   const [isDelivering, setIsDelivering] = useState(false);
+  const [deliveryModalVisible, setDeliveryModalVisible] = useState(false);
+
+  useEffect(() => {
+    isActive ? setDeliveryModalVisible(true) : setDeliveryModalVisible(false);
+  }, [isActive]);
 
   const Driver = () => (
     <View className="flex-1 w-full items-center justify-between -mt-8">
-      {isActive || isDelivering ? (
+      <CustomModal
+        visible={deliveryModalVisible}
+        setVisible={setDeliveryModalVisible}>
         <DriverCard
+          deliveryModalVisible={deliveryModalVisible}
+          setDeliveryModalVisible={setDeliveryModalVisible}
           isActive={isActive}
           isDelivering={isDelivering}
           setIsActive={setIsActive}
           setIsDelivering={setIsDelivering}
         />
-      ) : (
-        <View className="flex-1" />
-      )}
+      </CustomModal>
 
-      {isActive && (
-        <Title className="my-3 tracking-wider" lg bold>
-          You are now visible to customers
-        </Title>
+      {isDelivering && (
+        <Card>
+          <DriverCard
+            deliveryModalVisible={deliveryModalVisible}
+            setDeliveryModalVisible={setDeliveryModalVisible}
+            isActive={isActive}
+            isDelivering={isDelivering}
+            setIsActive={setIsActive}
+            setIsDelivering={setIsDelivering}
+          />
+        </Card>
       )}
+      <View className="flex-1" />
 
       <DriverButton
         isActive={isActive}

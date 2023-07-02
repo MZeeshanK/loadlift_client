@@ -9,7 +9,7 @@ const Button = ({title, onPress, style, ...props}) => {
       className={`bg-primary rounded-full items-center justify-center px-10 py-1 ${
         props.mini && 'px-3'
       } ${props.medium && 'px-8'} ${props.max && 'px-16'} ${
-        props.half && 'w-[50%] px-1'
+        props.half && 'w-[48%]'
       }`}
       style={[
         props.danger && {backgroundColor: colors.danger},
@@ -20,7 +20,7 @@ const Button = ({title, onPress, style, ...props}) => {
         },
         props.success && {backgroundColor: colors.green},
         {
-          elevation: !props.mini ? 2 : 1,
+          elevation: !props.mini && !props.half ? 2 : 1,
         },
         style,
       ]}
@@ -34,7 +34,7 @@ const Button = ({title, onPress, style, ...props}) => {
         xl={props.max}
         className={`tracking-wider pt-1 ${props.card && 'text-primary'} ${
           props.danger && 'text-white'
-        } ${props.mini && 'tracking-normal'} `}>
+        }  ${props.mini && 'tracking-normal'} `}>
         {title}
       </Title>
     </TouchableOpacity>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View} from 'react-native';
+import {Pressable, View} from 'react-native';
 import Card from '../../../components/Card';
 
 import {useNavigation} from '@react-navigation/native';
@@ -7,11 +7,17 @@ import Title from '../../../components/Title';
 import Rating from '../../../components/Rating';
 import Button from '../../../components/Button';
 
-const DriverCard = ({isActive, isDelivering, setIsActive, setIsDelivering}) => {
+const DriverCard = ({
+  deliveryModalVisible,
+  setDeliveryModalVisible,
+  isDelivering,
+  setIsActive,
+  setIsDelivering,
+}) => {
   const navigation = useNavigation();
 
   return (
-    <Card onPress={() => navigation.navigate('Order')} className="mb-10">
+    <Pressable className="w-full">
       <View className="w-full items-start justify-center border-b border-primary pb-3">
         <View className="w-full justify-center">
           <View className="w-full flex-row items-center justify-between">
@@ -47,7 +53,7 @@ const DriverCard = ({isActive, isDelivering, setIsActive, setIsDelivering}) => {
         </Title>
       </View>
 
-      {isActive && (
+      {deliveryModalVisible && (
         <View className="w-full mb-5">
           <Button
             title="Details"
@@ -61,26 +67,32 @@ const DriverCard = ({isActive, isDelivering, setIsActive, setIsDelivering}) => {
         {isDelivering ? (
           <>
             <Button
-              onPress={() => navigation.navigate('Map')}
-              title="Map"
-              className="w-[48%]"
-              card
-            />
-            <Button
               onPress={() => {
                 navigation.navigate('Order');
               }}
+              card
               title="Details"
-              className="w-[48%]"
+              half
+            />
+            <Button
+              onPress={() => navigation.navigate('Map')}
+              title="Map"
+              half
             />
           </>
         ) : (
           <>
-            <Button title="Cancel" className="w-[48%]" danger />
+            <Button
+              title="Cancel"
+              onPress={() => setDeliveryModalVisible(false)}
+              className="w-[48%]"
+              danger
+            />
             <Button
               onPress={() => {
                 setIsDelivering(true);
                 setIsActive(false);
+                setDeliveryModalVisible(false);
               }}
               title="Accept"
               className="w-[48%]"
@@ -88,7 +100,7 @@ const DriverCard = ({isActive, isDelivering, setIsActive, setIsDelivering}) => {
           </>
         )}
       </View>
-    </Card>
+    </Pressable>
   );
 };
 

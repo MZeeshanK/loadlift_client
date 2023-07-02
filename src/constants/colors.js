@@ -10,7 +10,7 @@ export default colors = {
   darkGrey: '#1C1C1C',
   tab: '#161421',
   background: '#161622',
-  green: '#153829',
+  green: '#21A797',
   danger: '#9E1427',
   ongoing: '#2F3C40',
 };
