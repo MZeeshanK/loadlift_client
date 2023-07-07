@@ -97,7 +97,10 @@ const Order = ({navigation}) => {
           <Button
             half
             className="flex-1 ml-2"
-            onPress={() => setRatingModalVisible(true)}
+            onPress={() => {
+              setDeliveredModalVisible(false);
+              setRatingModalVisible(true);
+            }}
             title="Delivered"
           />
         </View>

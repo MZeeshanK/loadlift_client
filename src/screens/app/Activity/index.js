@@ -10,6 +10,7 @@ import {
 import Linear from '../../../components/Linear';
 import Header from '../../../components/Header';
 import GFlatList from '../../../components/GFlatList';
+import Card from '../../../components/Card';
 
 const Activity = () => {
   const [text, setText] = useState('');
@@ -34,11 +35,7 @@ const Activity = () => {
 
   return (
     <Linear>
-      {/* <Header title="Activity" isBack={false} /> */}
-      {/* Search */}
-      <View
-        className="flex-row items-center bg-card mt-3 justify-between py-1 mb-3 pl-1 rounded-xl"
-        style={{elevation: 3}}>
+      <Card className="flex-row items-center mt-3 justify-between py-1 px-1">
         <View className="flex-row items-center justify-between flex-1 mx-1 my-2 bg-white rounded-full border border-card">
           <TextInput
             value={text}
@@ -65,7 +62,7 @@ const Activity = () => {
           <SearchButtons />
           <SearchButtons image="filter" />
         </View>
-      </View>
+      </Card>
       {/* List */}
       <GFlatList activity />
     </Linear>

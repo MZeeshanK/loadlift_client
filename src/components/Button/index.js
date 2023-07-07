@@ -1,22 +1,23 @@
-import React from 'react';
-import {TouchableOpacity} from 'react-native';
+import React, {Children} from 'react';
+import {Image, TouchableOpacity} from 'react-native';
 import colors from '../../constants/colors';
 import Title from '../Title';
 
-const Button = ({title, onPress, style, ...props}) => {
+const Button = ({title, onPress, source, style, ...props}) => {
   return (
     <TouchableOpacity
-      className={`bg-primary rounded-full items-center justify-center px-10 py-1 ${
-        props.mini && 'px-3'
-      } ${props.medium && 'px-8'} ${props.max && 'px-16'} ${
-        props.half && 'w-[48%]'
-      }`}
+      className={`bg-primary flex-row rounded-full items-center justify-center px-10 py-1 ${
+        source && 'gap-x-1'
+      } ${props.mini && 'px-3'} ${props.medium && 'px-8'} ${
+        props.max && 'px-16'
+      } ${props.half && 'w-[48%]'}`}
       style={[
         props.danger && {backgroundColor: colors.danger},
         props.card && {
-          backgroundColor: colors.ongoing,
+          backgroundColor: colors.card,
+          elevation: 7,
           borderWidth: 1,
-          borderColor: colors.primary,
+          borderColor: colors.ongoing,
         },
         props.success && {backgroundColor: colors.green},
         {
@@ -25,6 +26,7 @@ const Button = ({title, onPress, style, ...props}) => {
         style,
       ]}
       onPress={onPress}>
+      {source && <Image className="w-[16] h-[16]" source={source} />}
       <Title
         bold={!props.mini}
         semibold={props.mini}

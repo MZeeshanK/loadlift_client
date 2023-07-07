@@ -6,7 +6,7 @@ import Linear from '../../components/Linear';
 import Title from '../../components/Title';
 
 const Splash = ({navigation}) => {
-  const next = () => navigation.navigate('CreateAccount');
+  const next = () => navigation.navigate('Map');
 
   return (
     <Linear>

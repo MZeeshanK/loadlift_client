@@ -69,7 +69,10 @@ const Account = ({navigation}) => {
             className="ml-2"
             danger
             half
-            onPress={() => navigation.navigate('Login')}
+            onPress={() => {
+              setModalVisible(false);
+              navigation.navigate('Login');
+            }}
           />
         </View>
       </CustomModal>
@@ -161,7 +164,7 @@ const Account = ({navigation}) => {
             </Title>
           </Card>
         </View>
-        <Card className="py-1">
+        <Card className="py-1 px-0">
           {selectedOptions.map((item, index) => (
             <Pressable
               key={index}
@@ -174,7 +177,7 @@ const Account = ({navigation}) => {
               }
               className={`w-full items-start border-primary ${
                 index !== selectedOptions.length - 1 && 'border-b'
-              } p-2 px-2 justify-center`}>
+              } p-2 px-5 justify-center`}>
               <Title className="py-1 tracking-wider" lg bold>
                 {item.title}
               </Title>
