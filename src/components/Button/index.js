@@ -14,10 +14,8 @@ const Button = ({title, onPress, source, style, ...props}) => {
       style={[
         props.danger && {backgroundColor: colors.danger},
         props.card && {
-          backgroundColor: colors.card,
+          backgroundColor: colors.ongoing,
           elevation: 7,
-          borderWidth: 1,
-          borderColor: colors.ongoing,
         },
         props.success && {backgroundColor: colors.green},
         {

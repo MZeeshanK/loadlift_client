@@ -9,11 +9,13 @@ import Title from '../Title';
 import Button from '../Button';
 
 import {useNavigation} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
 
-const UserDetails = ({user, ...props}) => {
+const UserDetails = ({user}) => {
   const navigation = useNavigation();
 
-  const [driver, setDriver] = useState(true);
+  const userType = useSelector(state => state.user.data);
+
   const [category, setCategory] = useState(
     user
       ? categories.find(category => user?.typeOfVehicle === category?.title)
@@ -45,7 +47,7 @@ const UserDetails = ({user, ...props}) => {
           placeholder={user ? user?.lastName : 'Enter your Last Name'}
         />
 
-        {driver && (
+        {userType === 'driver' && (
           <>
             {/* Divide Bar */}
             <View className="w-[95%] mb-4 mt-2 h-[1] bg-primary" />

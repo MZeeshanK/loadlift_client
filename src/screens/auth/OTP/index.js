@@ -7,15 +7,27 @@ import Input from '../../../components/Input';
 import Button from '../../../components/Button';
 import TextLabel from '../../../components/TextLabel';
 import Title from '../../../components/Title';
+import {useNavigation} from '@react-navigation/native';
 
-const OTP = ({navigation}) => {
+const OTP = ({route}) => {
+  const navigation = useNavigation();
+
+  const {phone} = route?.params;
+
+  const login = async () => {
+    const data = await fetch('http://localhost:3000/api/login', {
+      method: 'POST',
+      body: JSON.stringify(phone),
+    });
+  };
+
   return (
     <Linear style={{justifyContent: 'flex-start'}}>
       <Header title="Login" />
 
       <View className="w-full items-center justify-between flex-1 my-10">
         <View className="w-full items-center justify-between ">
-          <Input isDisabled placeholder="+91 94190 12345" />
+          <Input isDisabled placeholder={phone} />
 
           <TextLabel title="Please Enter the 6 digit OTP" />
 
@@ -28,7 +40,10 @@ const OTP = ({navigation}) => {
         </View>
         <Button
           title="Verify"
-          onPress={() => navigation.navigate('UserType')}
+          onPress={() => {
+            login();
+            navigation.navigate('UserType');
+          }}
         />
       </View>
     </Linear>

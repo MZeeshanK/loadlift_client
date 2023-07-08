@@ -37,6 +37,9 @@ import IncomingCall from './src/screens/app/IncomingCall';
 import ComingSoon from './src/screens/ComingSoon';
 import Title from './src/components/Title';
 
+import {Provider} from 'react-redux';
+import store from './src/store';
+
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -126,33 +129,35 @@ function App() {
   }
 
   return (
-    <NavigationContainer>
-      {/* Stack Navigtor */}
-      <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen name="Splash" component={Splash} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="OTP" component={OTP} />
-        <Stack.Screen name="UserType" component={UserType} />
-        <Stack.Screen name="CreateAccount" component={CreateAccount} />
-        <Stack.Screen name="Tabs" component={Tabs} />
-        <Stack.Screen name="Booking" component={Booking} />
-        <Stack.Screen name="Order" component={Order} />
-        <Stack.Screen name="Profile" component={Profile} />
-        <Stack.Screen name="Settings" component={Settings} />
-        <Stack.Screen name="Payment" component={Payment} />
-        <Stack.Screen name="PaymentMethod" component={PaymentMethod} />
-        <Stack.Screen name="AccountSwitch" component={AccountSwitch} />
-        <Stack.Screen name="Map" component={Map} />
-        <Stack.Screen name="DriverList" component={DriverList} />
-        <Stack.Screen name="Premium" component={Premium} />
-        <Stack.Screen name="Logout" component={Logout} />
-        <Stack.Screen name="Call" component={Call} />
-        <Stack.Screen name="PaymentDone" component={PaymentDone} />
-        <Stack.Screen name="IncomingCall" component={IncomingCall} />
-        <Stack.Screen name="ComingSoon" component={ComingSoon} />
-        <Stack.Screen name="NotFound" component={NotFound} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        {/* Stack Navigtor */}
+        <Stack.Navigator screenOptions={{headerShown: false}}>
+          <Stack.Screen name="Splash" component={Splash} />
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="OTP" component={OTP} />
+          <Stack.Screen name="UserType" component={UserType} />
+          <Stack.Screen name="CreateAccount" component={CreateAccount} />
+          <Stack.Screen name="Tabs" component={Tabs} />
+          <Stack.Screen name="Booking" component={Booking} />
+          <Stack.Screen name="Order" component={Order} />
+          <Stack.Screen name="Profile" component={Profile} />
+          <Stack.Screen name="Settings" component={Settings} />
+          <Stack.Screen name="Payment" component={Payment} />
+          <Stack.Screen name="PaymentMethod" component={PaymentMethod} />
+          <Stack.Screen name="AccountSwitch" component={AccountSwitch} />
+          <Stack.Screen name="Map" component={Map} />
+          <Stack.Screen name="DriverList" component={DriverList} />
+          <Stack.Screen name="Premium" component={Premium} />
+          <Stack.Screen name="Logout" component={Logout} />
+          <Stack.Screen name="Call" component={Call} />
+          <Stack.Screen name="PaymentDone" component={PaymentDone} />
+          <Stack.Screen name="IncomingCall" component={IncomingCall} />
+          <Stack.Screen name="ComingSoon" component={ComingSoon} />
+          <Stack.Screen name="NotFound" component={NotFound} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 }
 

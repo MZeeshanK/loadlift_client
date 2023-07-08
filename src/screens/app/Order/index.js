@@ -12,14 +12,16 @@ import categories from '../../../data/categories';
 import styleConstants from '../../../constants/styles';
 import Title from '../../../components/Title';
 import CustomModal from '../../../components/CustomModal';
+import {useSelector} from 'react-redux';
 
 const Order = ({navigation}) => {
   const [rating, setRating] = useState(0);
-  const [driver] = useState(true);
   const [picked, setPicked] = useState(false);
   const [ratingModalVisible, setRatingModalVisible] = useState(false);
   const [pickUpModalVisible, setPickUpModalVisible] = useState(false);
   const [deliveredModalVisible, setDeliveredModalVisible] = useState(false);
+
+  const userType = useSelector(state => state.user.data);
 
   const order = orders[0];
 
@@ -116,13 +118,21 @@ const Order = ({navigation}) => {
         <DeliveredModal />
 
         <View className="flex-row items-center justify-between">
-          <View className="flex-1" />
-          <Button title="Report" danger mini />
+          {userType === 'driver' ? (
+            <Button
+              title="Map"
+              className="flex-1 mx-2"
+              onPress={() => navigation.navigate('Map')}
+            />
+          ) : (
+            <View className="flex-1" />
+          )}
+          <Button title="Report" danger />
         </View>
         <View className="w-full items-center justify-between flex-1 mt-0 ">
           <Card>
             <View className="w-full flex-row items-center justify-between border-b border-primary pb-5 pt-2 px-1">
-              {driver ? (
+              {userType === 'driver' ? (
                 <View className="items-start">
                   <Title className="pb-1" bold primary>
                     Name: <Title>John Doe</Title>
@@ -144,7 +154,7 @@ const Order = ({navigation}) => {
                 </Title>
               </View>
             </View>
-            {!driver && (
+            {userType === 'user' && (
               <View className="w-full items-center justify-between flex-row py-5 border-b border-primary px-1">
                 <Title sm bold left primary>
                   Name: <Title sm>{order?.driverName}</Title>
@@ -191,7 +201,7 @@ const Order = ({navigation}) => {
                 Distance: <Title>{order?.distance} km</Title>
               </Title>
             </View>
-            {!picked && (
+            {!picked && userType === 'driver' && (
               <Button
                 className="my-2 w-full"
                 title="Confirm PickUp"
@@ -217,7 +227,7 @@ const Order = ({navigation}) => {
                 half
                 onPress={() => navigation.navigate('Call')}
               />
-              {picked && driver && (
+              {picked && userType === 'driver' && (
                 <Button
                   title="Delivered"
                   half

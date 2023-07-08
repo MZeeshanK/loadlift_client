@@ -9,9 +9,13 @@ import Button from '../../../components/Button';
 
 import Card from '../../../components/Card';
 import Title from '../../../components/Title';
+import {useSelector, useDispatch} from 'react-redux';
+import {changeUser} from '../../../store/user';
 
 const UserType = ({navigation}) => {
-  const [userType, setUserType] = useState('');
+  const dispatch = useDispatch();
+
+  const userType = useSelector(state => state.user.data);
 
   return (
     <Linear>
@@ -25,7 +29,7 @@ const UserType = ({navigation}) => {
         <View className="items-center justify-center">
           <Card
             style={[styles.card, userType === 'user' && styles.selectedCard]}
-            onPress={() => setUserType('user')}>
+            onPress={() => dispatch(changeUser('user'))}>
             <Image
               style={styles.icon}
               source={
@@ -40,7 +44,7 @@ const UserType = ({navigation}) => {
           </Card>
           <Card
             style={[styles.card, userType === 'driver' && styles.selectedCard]}
-            onPress={() => setUserType('driver')}>
+            onPress={() => dispatch(changeUser('driver'))}>
             <Image
               style={styles.icon}
               source={

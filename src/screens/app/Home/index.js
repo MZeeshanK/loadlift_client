@@ -5,17 +5,18 @@ import Linear from '../../../components/Linear';
 import Header from '../../../components/Header';
 import HomeButton from './UserButton';
 import GFlatList from '../../../components/GFlatList';
-import Title from '../../../components/Title';
 import DriverButton from './DriverButton';
 import DriverCard from './DriverCard';
 import CustomModal from '../../../components/CustomModal';
 import Card from '../../../components/Card';
+import {useSelector} from 'react-redux';
 
 const Home = () => {
-  const [driver] = useState(true);
   const [isActive, setIsActive] = useState(false);
   const [isDelivering, setIsDelivering] = useState(false);
   const [deliveryModalVisible, setDeliveryModalVisible] = useState(false);
+
+  const userType = useSelector(state => state.user.data);
 
   useEffect(() => {
     isActive ? setDeliveryModalVisible(true) : setDeliveryModalVisible(false);
@@ -67,7 +68,7 @@ const Home = () => {
           style={styles.logo}
           source={require('../../../assets/logo.png')}
         />
-        {driver ? (
+        {userType === 'driver' ? (
           <Driver />
         ) : (
           <>

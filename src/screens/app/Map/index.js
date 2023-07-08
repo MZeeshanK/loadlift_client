@@ -29,7 +29,7 @@ const Map = () => {
   return (
     <SafeAreaView style={{height: height, width: width}}>
       <View
-        className="px-4 w-full items-center justify-center"
+        className="px-4 w-full items-center justify-center rounded-b-xl"
         style={{
           backgroundColor: colors.background,
           elevation: 10,

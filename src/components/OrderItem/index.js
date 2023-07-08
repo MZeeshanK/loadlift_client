@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {View, StyleSheet, Image} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
@@ -7,11 +7,12 @@ import styleConstants from '../../constants/styles';
 import categories from '../../data/categories';
 import Title from '../Title';
 import Card from '../Card';
+import {useSelector} from 'react-redux';
 
 const OrderItem = ({item, ...props}) => {
   const navigation = useNavigation();
 
-  const [driver, setDriver] = useState(true);
+  const userType = useSelector(state => state.user.data);
 
   const image = categories.find(
     category => category?.title === item?.typeOfVehicle,
@@ -104,7 +105,7 @@ const OrderItem = ({item, ...props}) => {
       </View>
 
       <View className="flex-1 w-full px-1 flex-row items-center justify-between">
-        {driver ? <DriverOrderItem /> : <UserOrderItem />}
+        {userType === 'driver' ? <DriverOrderItem /> : <UserOrderItem />}
       </View>
     </Card>
   );

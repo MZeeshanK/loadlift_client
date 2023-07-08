@@ -51,17 +51,19 @@ const Premium = () => {
               {data.map((d, index) => (
                 <View
                   key={index}
-                  className={`w-full flex-row items-center justify-center border-primary ${
-                    index === 0 && ''
-                  }`}>
+                  className={`w-full flex-row items-center justify-center border-l-2 border-r-2 border-primary ${
+                    index === data.length - 1 &&
+                    'rounded-br-xl rounded-bl-xl border-b-2'
+                  }`}
+                  style={{borderWidth: 0.2}}>
                   {d.map((item, index) => (
                     <Title
                       key={index}
                       light
                       left
-                      className={`flex-1 h-full p-3 ${
-                        index === 0 && 'border-r-2 border-primary'
-                      }`}>
+                      className={`flex-1 h-full p-3 border-primary ${
+                        index === 0 && 'border-r-2'
+                      } `}>
                       {item}
                     </Title>
                   ))}
@@ -70,18 +72,18 @@ const Premium = () => {
             </View>
           </Card>
 
-          <View className="w-full flex-row justify-between items-center">
+          <View className="w-full flex-row justify-center gap-x-2 items-center">
             <Card
-              className="w-[45%]"
-              style={{backgroundColor: !pack ? colors.primary : colors.card}}
+              className="flex-1 h-32"
+              style={{backgroundColor: !pack ? colors.primary : colors.ongoing}}
               onPress={() => setPack(false)}>
               <Title className="py-4 px-2" base black={!pack} semibold>
                 {'\u20b9'}199 for 1 month
               </Title>
             </Card>
             <Card
-              className="w-[45%]"
-              style={{backgroundColor: pack ? colors.primary : colors.card}}
+              className="flex-1 h-32"
+              style={{backgroundColor: pack ? colors.primary : colors.ongoing}}
               onPress={() => setPack(true)}>
               <Title className="py-4 px-2" black={pack} base semibold>
                 {'\u20b9'}499 for 3 month

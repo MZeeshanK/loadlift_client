@@ -9,8 +9,14 @@ import details from '../../../data/switchDetails';
 import Button from '../../../components/Button';
 import CustomModal from '../../../components/CustomModal';
 
+import {useSelector, useDispatch} from 'react-redux';
+import {changeUser} from '../../../store/user';
+
 const AccountSwitch = ({navigation}) => {
+  const dispatch = useDispatch();
   const [modalVisible, setModalVisible] = useState(false);
+
+  const userType = useSelector(state => state.user.data);
 
   return (
     <Linear>
@@ -30,6 +36,7 @@ const AccountSwitch = ({navigation}) => {
           <Button
             onPress={() => {
               setModalVisible(false);
+              dispatch(changeUser(userType === 'driver' ? 'user' : 'driver'));
               navigation.navigate('Home');
             }}
             title="Yes"

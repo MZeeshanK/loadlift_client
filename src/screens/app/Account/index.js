@@ -9,9 +9,12 @@ import Button from '../../../components/Button';
 import Title from '../../../components/Title';
 import CustomModal from '../../../components/CustomModal';
 
+import {useSelector} from 'react-redux';
+
 const Account = ({navigation}) => {
-  const [driver] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
+
+  const userType = useSelector(state => state.user.data);
 
   const accountOptions = [
     {
@@ -48,7 +51,8 @@ const Account = ({navigation}) => {
     option => !option.userOnly,
   );
 
-  const selectedOptions = driver ? driverAccountOptions : userAccountOptions;
+  const selectedOptions =
+    userType === 'driver' ? driverAccountOptions : userAccountOptions;
 
   const Modal = () => {
     return (
@@ -83,10 +87,12 @@ const Account = ({navigation}) => {
     <Linear>
       <Header title="Account" isBack={false} />
 
+      <Modal />
+
       <ScrollView
         className="w-full flex-1"
         showsVerticalScrollIndicator={false}>
-        {driver && (
+        {userType === 'driver' && (
           <Card>
             <View className="items-center justify-center w-full pb-5 ">
               <Image
@@ -137,10 +143,10 @@ const Account = ({navigation}) => {
           </View>
         </Card>
 
-        <View className="w-full flex-row items-center justify-between">
+        <View className="w-full flex-row items-center justify-center space-x-4">
           <Card
             onPress={() => navigation.navigate('PaymentMethod')}
-            className="flex-1 mr-3">
+            className="flex-1">
             <Image
               source={require('../../../assets/wallet.png')}
               className="h-[30] w-[34]"
@@ -150,19 +156,19 @@ const Account = ({navigation}) => {
             </Title>
           </Card>
 
-          {modalVisible && <Modal />}
-
-          <Card
-            onPress={() => navigation.navigate('Premium')}
-            className="flex-1 ml-3">
-            <Image
-              source={require('../../../assets/premium.png')}
-              className="h-[30] w-[34]"
-            />
-            <Title className="pt-2 tracking-wider" semibold>
-              Premium
-            </Title>
-          </Card>
+          {userType === 'user' && (
+            <Card
+              onPress={() => navigation.navigate('Premium')}
+              className="flex-1">
+              <Image
+                source={require('../../../assets/premium.png')}
+                className="h-[30] w-[34]"
+              />
+              <Title className="pt-2 tracking-wider" semibold>
+                Premium
+              </Title>
+            </Card>
+          )}
         </View>
         <Card className="py-1 px-0">
           {selectedOptions.map((item, index) => (
