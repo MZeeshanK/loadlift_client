@@ -18,6 +18,7 @@ const classNames = 'py-1 rounded-md mx-1 px-3';
 
 const Map = () => {
   const navigation = useNavigation();
+
   const [expanded, setExpanded] = useState(false);
   const [center, setCenter] = useState({
     latitude: 34.108756,

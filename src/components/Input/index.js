@@ -15,10 +15,11 @@ const Input = ({
 }) => {
   return (
     <TextInput
+      maxLength={props.maxLength}
       value={value}
       onChangeText={onChangeText}
       returnKeyType={props.returnKeyType}
-      className="w-full mx-5 text-black mb-4 px-4 py-1 pt-2 rounded-full"
+      className="w-full mx-5 text-black px-5 mb-4 py-1 rounded-full"
       placeholderTextColor={isDisabled ? colors.white : colors.darkGrey}
       placeholder={placeholder}
       style={[

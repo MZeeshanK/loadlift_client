@@ -4,10 +4,11 @@ import {FlatList, View} from 'react-native';
 import Linear from '../../../components/Linear';
 import Header from '../../../components/Header';
 import Title from '../../../components/Title';
-
-import details from '../../../data/switchDetails';
 import Button from '../../../components/Button';
 import CustomModal from '../../../components/CustomModal';
+import Loader from '../../../components/Loader';
+
+import details from '../../../data/switchDetails';
 
 import {useSelector, useDispatch} from 'react-redux';
 import {changeUser} from '../../../store/user';

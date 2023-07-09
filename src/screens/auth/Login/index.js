@@ -6,30 +6,32 @@ import Linear from '../../../components/Linear';
 import Header from '../../../components/Header';
 import Input from '../../../components/Input';
 import Button from '../../../components/Button';
+import Alert from '../../../components/Alert';
 
 const Login = ({navigation}) => {
   const [phone, setPhone] = useState('');
-
-  const login = async () => {
-    const data = await fetch('http://localhost:3000/api/login', {
-      method: 'POST',
-      body: JSON.stringify(phone),
-    });
-
-    const response = await data.json();
-    console.log(response);
-  };
+  const [errorModal, setErrorModal] = useState(false);
 
   const next = () => {
-    login();
+    // if (phone.length < 10) {
+    //   setErrorModal(true);
+    //   return;
+    // }
     navigation.navigate('OTP', {phone});
   };
 
   return (
     <Linear>
+      <Alert
+        message="Please enter a valid contact number"
+        visible={errorModal}
+        setVisible={setErrorModal}
+      />
       <Header title="Login" isBack={true} />
       <View className="items-center justify-between flex-1 w-full my-10">
         <Input
+          phone
+          maxLength={10}
           placeholder="Please enter your mobile number"
           style={{marginBottom: 60}}
           keyboard="numeric"

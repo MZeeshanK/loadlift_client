@@ -1,13 +1,41 @@
-import React, {useState} from 'react';
-import {View, StyleSheet, Text, Image, Pressable} from 'react-native';
+import React, {useState, useRef, useEffect} from 'react';
+import {View, StyleSheet, Text, Image, Pressable, Animated} from 'react-native';
+
 import Linear from '../../../components/Linear';
 import Header from '../../../components/Header';
 import colors from '../../../constants/colors';
 import Card from '../../../components/Card';
 
-const Call = ({navigation}) => {
+import {useNavigation} from '@react-navigation/native';
+
+const Call = () => {
+  const navigation = useNavigation();
+
+  const animationDuration = 1000;
+
   const [mic, setMic] = useState(false);
   const [speaker, setSpeaker] = useState(false);
+  const [incoming, setIncoming] = useState(true);
+
+  const [animationOptions, setAnimationOptions] = useState(false);
+
+  const animation = useRef(new Animated.Value(0)).current;
+
+  const startAnimation = () => {
+    Animated.timing(animation, {
+      toValue: animationOptions ? 0 : 1,
+      duration: animationDuration,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      setAnimationOptions(animationOptions => !animationOptions);
+    }, animationDuration);
+
+    startAnimation();
+  }, [animationOptions]);
 
   const Buttons = ({icon}) => {
     const imageSource =
@@ -57,6 +85,53 @@ const Call = ({navigation}) => {
     );
   };
 
+  const IncomingOptions = () => {
+    return (
+      <View className="w-full items-center justify-center space-y-4">
+        <Animated.Image
+          source={require('../../../assets/calling-green.png')}
+          style={[
+            styles.arrows,
+            {
+              opacity: animation.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0.3, 0.6],
+              }),
+            },
+          ]}
+        />
+        <Animated.Image
+          source={require('../../../assets/call.png')}
+          style={[
+            styles.button2,
+            {
+              transform: [
+                {
+                  translateY: animation.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0, -10],
+                  }),
+                },
+              ],
+            },
+          ]}
+        />
+        <Animated.Image
+          source={require('../../../assets/calling-red.png')}
+          style={[
+            styles.arrows,
+            {
+              opacity: animation.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0.6, 0.3],
+              }),
+            },
+          ]}
+        />
+      </View>
+    );
+  };
+
   return (
     <Linear>
       <Header />
@@ -72,13 +147,17 @@ const Call = ({navigation}) => {
           <Text className="text-white text-sm mt-4">Calling</Text>
         </View>
 
-        <Card style={{elevation: 2}}>
-          <View className="w-full items-center justify-between flex-row px-5">
-            <Buttons icon="mic" />
-            <Buttons icon="callend" />
-            <Buttons icon="speaker" />
-          </View>
-        </Card>
+        {incoming ? (
+          <IncomingOptions />
+        ) : (
+          <Card style={{elevation: 2}}>
+            <View className="w-full items-center justify-between flex-row px-5">
+              <Buttons icon="mic" />
+              <Buttons icon="callend" />
+              <Buttons icon="speaker" />
+            </View>
+          </Card>
+        )}
       </View>
     </Linear>
   );
@@ -88,6 +167,17 @@ const styles = StyleSheet.create({
   buttons: {
     width: 45,
     height: 45,
+  },
+  button2: {
+    width: 60,
+    height: 60,
+    opacity: 0.6,
+    alignSelf: 'center',
+  },
+  arrows: {
+    width: 33,
+    height: 60,
+    marginVertical: 20,
   },
 });
 

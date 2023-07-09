@@ -1,4 +1,4 @@
-import React, {Children} from 'react';
+import React from 'react';
 import {Image, TouchableOpacity} from 'react-native';
 import colors from '../../constants/colors';
 import Title from '../Title';
@@ -21,6 +21,9 @@ const Button = ({title, onPress, source, style, ...props}) => {
         {
           elevation: !props.mini && !props.half ? 2 : 1,
         },
+        props.isDisabled && {
+          backgroundColor: '#3d3d3d',
+        },
         style,
       ]}
       onPress={onPress}>
@@ -33,7 +36,7 @@ const Button = ({title, onPress, source, style, ...props}) => {
         base={props.medium}
         xl={props.max}
         className={`tracking-wider pt-1 ${props.card && 'text-primary'} ${
-          props.danger && 'text-white'
+          (props.danger || props.isDisabled) && 'text-white'
         }  ${props.mini && 'tracking-normal'} `}>
         {title}
       </Title>
