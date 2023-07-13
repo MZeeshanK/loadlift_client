@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, ScrollView} from 'react-native';
+
 import Linear from '../../../components/Linear';
 import Header from '../../../components/Header';
 import Title from '../../../components/Title';
@@ -7,7 +8,10 @@ import Card from '../../../components/Card';
 import Button from '../../../components/Button';
 import PaymentDetails from '../../../components/PaymentDetails';
 
-const Payment = ({navigation}) => {
+import {useNavigation} from '@react-navigation/native';
+
+const Payment = () => {
+  const navigation = useNavigation();
   return (
     <Linear>
       <Header title="Payment" />

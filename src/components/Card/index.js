@@ -1,7 +1,13 @@
 import React from 'react';
-import {StyleSheet, Pressable} from 'react-native';
+import {StyleSheet, Pressable, useColorScheme} from 'react-native';
 
 const Card = ({children, style, onPress, ...props}) => {
+  const colorScheme = useColorScheme();
+
+  const card = colorScheme === 'dark' ? colors.card : colors.lightCard;
+  const ongoing = colorScheme === 'dark' ? colors.ongoing : colors.lightOngoing;
+  const danger = colorScheme === 'dark' ? colors.danger : colors.lightDanger;
+
   return (
     <Pressable
       onPress={onPress}
@@ -10,12 +16,10 @@ const Card = ({children, style, onPress, ...props}) => {
         styles.container,
         {
           backgroundColor: props.ongoing
-            ? colors.ongoing
+            ? ongoing
             : props.danger
-            ? colors.danger
-            : colors.card,
-          borderWidth: 1,
-          borderColor: props.ongoing ? colors.card : colors.ongoing,
+            ? danger
+            : card,
         },
         Array.isArray(style) ? [...style] : style,
       ]}>
@@ -26,7 +30,7 @@ const Card = ({children, style, onPress, ...props}) => {
 
 const styles = StyleSheet.create({
   container: {
-    elevation: 3,
+    elevation: 4,
     // shadowColor: colors.black,
   },
 });

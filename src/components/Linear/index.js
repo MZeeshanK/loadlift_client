@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Keyboard,
   TouchableWithoutFeedback,
+  useColorScheme,
 } from 'react-native';
 // import LinearGradient from 'react-native-linear-gradient';
 
@@ -30,11 +31,22 @@ const {height} = Dimensions.get('window');
 // };
 
 const Linear = ({children, style}) => {
+  const colorScheme = useColorScheme();
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <SafeAreaView
         className="flex-1 h-full p-3"
-        style={[styles.container, style]}>
+        style={[
+          {
+            height: height,
+            backgroundColor:
+              colorScheme === 'dark'
+                ? colors.background
+                : colors.lightBackground,
+          },
+          style,
+        ]}>
         {children}
       </SafeAreaView>
     </TouchableWithoutFeedback>

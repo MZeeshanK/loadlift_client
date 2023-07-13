@@ -1,14 +1,28 @@
 import React from 'react';
-import {View, StyleSheet, Image, Pressable} from 'react-native';
+import {View, StyleSheet, Image, Pressable, useColorScheme} from 'react-native';
 
 const Rating = ({rating, setRating, style}) => {
+  const colorScheme = useColorScheme();
+
   const imageSource = level => {
     if (rating <= level + 0.2) {
-      return require('../../assets/star-empty.png');
+      if (colorScheme === 'dark') {
+        return require('../../assets/star-empty.png');
+      } else {
+        return require('../../assets/star-empty-light.png');
+      }
     } else if (rating > level + 0.2 && rating <= level + 0.85) {
-      return require('../../assets/star-half.png');
+      if (colorScheme === 'dark') {
+        return require('../../assets/star-half.png');
+      } else {
+        return require('../../assets/star-half-light.png');
+      }
     } else {
-      return require('../../assets/star.png');
+      if (colorScheme === 'dark') {
+        return require('../../assets/star.png');
+      } else {
+        return require('../../assets/star-light-primary.png');
+      }
     }
   };
 

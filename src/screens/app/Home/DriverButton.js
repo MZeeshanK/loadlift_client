@@ -1,5 +1,5 @@
 import React from 'react';
-import {Pressable, Dimensions} from 'react-native';
+import {Pressable, Dimensions, useColorScheme} from 'react-native';
 
 import Title from '../../../components/Title';
 
@@ -8,6 +8,9 @@ import colors from '../../../constants/colors';
 const {width} = Dimensions.get('window');
 
 const DriverHomeButton = ({isActive, setIsActive, isDelivering}) => {
+  const colorScheme = useColorScheme();
+
+  const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
   return (
     <>
       {isActive && (
@@ -17,11 +20,13 @@ const DriverHomeButton = ({isActive, setIsActive, isDelivering}) => {
       )}
       <Pressable
         onPress={!isDelivering ? () => setIsActive(!isActive) : null}
-        className={`aspect-square items-center justify-center rounded-full border-4 border-primary mb-5 ${
-          isActive && 'bg-primary'
-        }`}
+        className={`aspect-square items-center justify-center rounded-full border-4  mb-5 `}
         style={[
-          {width: width - 220},
+          {
+            width: width - 220,
+            backgroundColor: isActive && primary,
+            borderColor: primary,
+          },
           isActive &&
             isDelivering && {
               elevation: 10,

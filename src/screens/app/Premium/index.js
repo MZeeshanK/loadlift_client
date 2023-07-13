@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {ScrollView, View} from 'react-native';
+import {ScrollView, View, useColorScheme} from 'react-native';
 
 import Linear from '../../../components/Linear';
 import Header from '../../../components/Header';
@@ -10,6 +10,7 @@ import Button from '../../../components/Button';
 
 const Premium = () => {
   const [pack, setPack] = useState(false);
+  const colorScheme = useColorScheme();
 
   const header = ['Basic', 'Premium'];
 
@@ -21,6 +22,9 @@ const Premium = () => {
       'get 5 loadcoins for every kilometer of delivery',
     ],
   ];
+
+  const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
+  const ongoing = colorScheme === 'dark' ? colors.ongoing : colors.lightOngoing;
 
   return (
     <Linear>
@@ -34,15 +38,16 @@ const Premium = () => {
             {/* Table */}
             <View className="w-full items-center justify-center">
               {/* Header */}
-              <View className="w-full flex-row items-center justify-center border-2 border-primary rounded-tr-xl rounded-tl-xl">
+              <View
+                className="w-full flex-row items-center justify-center border-2 rounded-tr-xl rounded-tl-xl"
+                style={{borderColor: primary}}>
                 {header.map((head, index) => (
                   <Title
                     key={index}
                     semibold
                     base
-                    className={`flex-1 py-1 ${
-                      index === 0 && 'border-r-2 border-primary'
-                    }`}>
+                    className={`flex-1 py-1 ${index === 0 && 'border-r-2'}`}
+                    style={{borderColor: primary}}>
                     {head}
                   </Title>
                 ))}
@@ -51,19 +56,20 @@ const Premium = () => {
               {data.map((d, index) => (
                 <View
                   key={index}
-                  className={`w-full flex-row items-center justify-center border-l-2 border-r-2 border-primary ${
+                  className={`w-full flex-row items-center justify-center border-l-2 border-r-2 ${
                     index === data.length - 1 &&
                     'rounded-br-xl rounded-bl-xl border-b-2'
                   }`}
-                  style={{borderWidth: 0.2}}>
+                  style={{borderWidth: 0.2, borderColor: primary}}>
                   {d.map((item, index) => (
                     <Title
                       key={index}
                       light
                       left
-                      className={`flex-1 h-full p-3 border-primary ${
+                      className={`flex-1 h-full p-3 ${
                         index === 0 && 'border-r-2'
-                      } `}>
+                      } `}
+                      style={{borderColor: primary}}>
                       {item}
                     </Title>
                   ))}
@@ -75,7 +81,7 @@ const Premium = () => {
           <View className="w-full flex-row justify-center gap-x-2 items-center">
             <Card
               className="flex-1 h-32"
-              style={{backgroundColor: !pack ? colors.primary : colors.ongoing}}
+              style={{backgroundColor: !pack ? primary : ongoing}}
               onPress={() => setPack(false)}>
               <Title className="py-4 px-2" base black={!pack} semibold>
                 {'\u20b9'}199 for 1 month
@@ -83,7 +89,7 @@ const Premium = () => {
             </Card>
             <Card
               className="flex-1 h-32"
-              style={{backgroundColor: pack ? colors.primary : colors.ongoing}}
+              style={{backgroundColor: pack ? primary : ongoing}}
               onPress={() => setPack(true)}>
               <Title className="py-4 px-2" black={pack} base semibold>
                 {'\u20b9'}499 for 3 month

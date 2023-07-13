@@ -1,5 +1,12 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, FlatList, Image, Pressable} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  Image,
+  Pressable,
+  useColorScheme,
+} from 'react-native';
 
 import Linear from '../../../components/Linear';
 import Header from '../../../components/Header';
@@ -14,26 +21,49 @@ import styleConstants from '../../../constants/styles';
 import Title from '../../../components/Title';
 
 const DriverList = ({navigation}) => {
+  const colorScheme = useColorScheme();
+
+  const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
+  const card = colorScheme === 'dark' ? colors.card : colors.lightCard;
+  const ongoing = colorScheme === 'dark' ? colors.ongoing : colors.lightOngoing;
+
   const [driver, setDriver] = useState({});
 
   const Item = ({item}) => {
     const image = categories.find(
       category => category?.title === item?.typeOfVehicle,
     );
+
     return (
       <Pressable
         onPress={() => setDriver(item)}
         className="flex-1 flex-row items-center justify-center mb-5 rounded-xl py-4"
         style={{
-          backgroundColor: driver === item ? colors.primary : colors.ongoing,
+          backgroundColor: driver === item ? primary : ongoing,
           elevation: 2,
         }}>
         <View
-          className={`items-center justify-center border-r-2 w-16 border-primary ${
-            driver === item && 'border-black'
-          } h-full`}>
+          className="items-center justify-center border-r-2 w-16 h-full"
+          style={{
+            borderColor:
+              driver === item && colorScheme === 'dark'
+                ? colors.black
+                : driver === item && colorScheme !== 'dark'
+                ? colors.white
+                : colorScheme === 'dark'
+                ? colors.white
+                : colors.black,
+          }}>
           <Image
-            source={driver === item ? image?.darkIcon : image?.icon}
+            source={
+              driver === item && colorScheme === 'dark'
+                ? image?.darkIcon
+                : driver === item && colorScheme === 'light'
+                ? image?.icon
+                : colorScheme !== 'dark'
+                ? image?.darkIcon
+                : image?.icon
+            }
             style={styles.icon}
           />
           <Title className="tracking-tighter" xxs black={driver === item}>
@@ -59,7 +89,11 @@ const DriverList = ({navigation}) => {
               </Title>
               <Image
                 source={
-                  driver === item
+                  driver === item && colorScheme === 'dark'
+                    ? require('../../../assets/star-dark.png')
+                    : driver === item && colorScheme === 'light'
+                    ? require('../../../assets/star-light.png')
+                    : colorScheme !== 'dark'
                     ? require('../../../assets/star-dark.png')
                     : require('../../../assets/star-light.png')
                 }
@@ -74,7 +108,17 @@ const DriverList = ({navigation}) => {
         <View
           className={`items-center justify-center border-l-2 h-full border-primary ${
             driver === item && 'border-black'
-          } px-2`}>
+          } px-2`}
+          style={{
+            borderColor:
+              driver === item && colorScheme === 'dark'
+                ? colors.black
+                : driver === item && colorScheme === 'light'
+                ? colors.white
+                : colorScheme === 'dark'
+                ? colors.white
+                : colors.black,
+          }}>
           <Title
             className="tracking-tighter"
             xxsm

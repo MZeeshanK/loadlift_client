@@ -1,11 +1,12 @@
 import React from 'react';
-import {View, Image} from 'react-native';
+import {View, Image, useColorScheme} from 'react-native';
 
 import Button from '../../components/Button';
 import Linear from '../../components/Linear';
 import Title from '../../components/Title';
 
 const Splash = ({navigation}) => {
+  const colorScheme = useColorScheme();
   const next = () => navigation.navigate('Tabs');
 
   return (
@@ -13,7 +14,11 @@ const Splash = ({navigation}) => {
       <View className="flex-1 items-center justify-between">
         <View className="items-center justify-center pt-24">
           <Image
-            source={require('../../assets/logo.png')}
+            source={
+              colorScheme === 'dark'
+                ? require('../../assets/logo.png')
+                : require('../../assets/logo-light.png')
+            }
             className="mb-16 opacity-50"
           />
           <Title bold xxl>

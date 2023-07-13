@@ -1,10 +1,16 @@
 import React, {useState} from 'react';
-import {Dimensions, Image, SafeAreaView, View} from 'react-native';
+import {
+  Dimensions,
+  Image,
+  SafeAreaView,
+  View,
+  useColorScheme,
+} from 'react-native';
 
 import Header from '../../../components/Header';
 import InputButton from '../../../components/InputButton';
 
-import MapView, {Marker} from 'react-native-maps';
+import MapView from 'react-native-maps';
 import Button from '../../../components/Button';
 
 import mapStyle from '../../../data/mapStyle';
@@ -17,9 +23,10 @@ const {width, height} = Dimensions.get('window');
 const classNames = 'py-1 rounded-md mx-1 px-3';
 
 const Map = () => {
+  const colorScheme = useColorScheme();
   const navigation = useNavigation();
 
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(true);
   const [center, setCenter] = useState({
     latitude: 34.108756,
     longitude: 74.808197,
@@ -32,7 +39,8 @@ const Map = () => {
       <View
         className="px-4 w-full items-center justify-center rounded-b-xl"
         style={{
-          backgroundColor: colors.background,
+          backgroundColor:
+            colorScheme === 'dark' ? colors.background : colors.lightBackground,
           elevation: 10,
         }}>
         <Header
@@ -50,19 +58,31 @@ const Map = () => {
             />
             <View className="flex-row w-full justify-between my-2 mb-6">
               <Button
-                source={require('../../../assets/home-focused.png')}
+                source={
+                  colorScheme === 'dark'
+                    ? require('../../../assets/home-focused.png')
+                    : require('../../../assets/home-light.png')
+                }
                 title="Home"
                 card
                 className={classNames}
               />
               <Button
-                source={require('../../../assets/activity-focused.png')}
+                source={
+                  colorScheme === 'dark'
+                    ? require('../../../assets/activity-focused.png')
+                    : require('../../../assets/activity-light.png')
+                }
                 title="Previous"
                 card
                 className={classNames}
               />
               <Button
-                source={require('../../../assets/current.png')}
+                source={
+                  colorScheme === 'dark'
+                    ? require('../../../assets/current.png')
+                    : require('../../../assets/current-light.png')
+                }
                 title="Current"
                 card
                 className={classNames}
@@ -76,7 +96,7 @@ const Map = () => {
           setExpanded(false);
           setCenter(region);
         }}
-        customMapStyle={mapStyle}
+        customMapStyle={colorScheme === 'dark' && mapStyle}
         style={{
           width: '100%',
           height: '100%',

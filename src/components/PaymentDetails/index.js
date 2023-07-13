@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Image, Pressable, View} from 'react-native';
+import {Image, Pressable, View, useColorScheme} from 'react-native';
 
 import Card from '../Card';
 import Title from '../Title';
@@ -7,10 +7,19 @@ import Title from '../Title';
 import upi from '../../data/upi';
 import userCards from '../../data/userCards';
 import Button from '../Button';
+import colors from '../../constants/colors';
 
 const PaymentDetails = () => {
+  const colorScheme = useColorScheme();
+
   const [cards] = useState(userCards);
   const [cardOptions, setCardOptions] = useState(false);
+
+  const ongoing =
+    colorScheme === 'dark' ? colors.ongoing : colors.lightSecondary;
+  const secondary =
+    colorScheme === 'dark' ? colors.secondary : colors.lightOngoing;
+
   return (
     <>
       <Card className="flex-row px-6 py-2 justify-between items-center">
@@ -19,7 +28,11 @@ const PaymentDetails = () => {
         </Title>
         <View className="flex-row items-center justify-center">
           <Image
-            source={require('../../assets/loadcoin.png')}
+            source={
+              colorScheme === 'dark'
+                ? require('../../assets/loadcoin.png')
+                : require('../../assets/loadcoin-light.png')
+            }
             className="w-6 h-6 mr-3"
           />
           <Title lg semibold>
@@ -35,8 +48,8 @@ const PaymentDetails = () => {
           {upi.map(item => (
             <Pressable
               key={item.title}
-              className="p-1 mr-5 rounded-md bg-ongoing"
-              style={{elevation: 1}}>
+              className="p-1 mr-5 rounded-md"
+              style={{elevation: 1, backgroundColor: ongoing}}>
               <Image
                 key={item.title}
                 className="h-10 w-10"
@@ -57,9 +70,8 @@ const PaymentDetails = () => {
             <Pressable
               onPress={() => setCardOptions(true)}
               key={card.number}
-              className={`bg-ongoing ${
-                index === 0 && 'bg-secondary'
-              }  my-2 flex-row items-center justify-between w-full px-3 py-1 rounded-full`}>
+              className="my-2 flex-row items-center justify-between w-full px-3 py-1 rounded-full"
+              style={{backgroundColor: index === 0 ? secondary : ongoing}}>
               <Title lg bold left>
                 {card.name}
               </Title>

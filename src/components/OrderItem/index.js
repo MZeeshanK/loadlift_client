@@ -1,8 +1,9 @@
 import React from 'react';
-import {View, StyleSheet, Image} from 'react-native';
+import {View, StyleSheet, Image, useColorScheme} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 import styleConstants from '../../constants/styles';
+import colors from '../../constants/colors';
 
 import categories from '../../data/categories';
 import Title from '../Title';
@@ -11,12 +12,18 @@ import {useSelector} from 'react-redux';
 
 const OrderItem = ({item, ...props}) => {
   const navigation = useNavigation();
+  const colorScheme = useColorScheme();
 
   const userType = useSelector(state => state.user.data);
 
-  const image = categories.find(
+  const imageSource = categories.find(
     category => category?.title === item?.typeOfVehicle,
-  )?.icon;
+  );
+
+  const image =
+    colorScheme === 'dark' ? imageSource?.icon : imageSource?.darkIcon;
+
+  const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
 
   const DriverOrderItem = () => {
     return (
@@ -43,7 +50,9 @@ const OrderItem = ({item, ...props}) => {
   const UserOrderItem = () => {
     return (
       <>
-        <View className="border-r border-primary items-center justify-start px-1 py-3">
+        <View
+          className="border-r items-center justify-start px-1 py-3"
+          style={{borderColor: primary}}>
           <Image source={image} style={styles.car} />
         </View>
 
@@ -88,7 +97,9 @@ const OrderItem = ({item, ...props}) => {
       style={styles.order}
       ongoing={props.ongoing}
       danger={props.danger}>
-      <View className="border-b-2 w-[95%] items-center justify-between flex-row border-primary py-2">
+      <View
+        className="border-b-2 w-[95%] items-center justify-between flex-row py-2"
+        style={{borderColor: primary}}>
         <Title className="tracking-wider" sm>
           <Title bold primary>
             Status:{' '}

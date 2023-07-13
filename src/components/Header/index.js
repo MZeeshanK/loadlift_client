@@ -1,11 +1,29 @@
-import React from 'react';
-import {Image, Pressable} from 'react-native';
+import React, {useRef, useEffect} from 'react';
+import {Image, Pressable, useColorScheme, Animated} from 'react-native';
 
 import {useNavigation} from '@react-navigation/native';
 import Title from '../Title';
 
 const Header = ({isBack, expand, isInverted, title, style, onPress}) => {
   const navigation = useNavigation();
+  const colorScheme = useColorScheme();
+
+  const animation = useRef(new Animated.Value(0)).current;
+
+  const startAnimation = () => {
+    Animated.timing(animation, {
+      toValue: isInverted ? 1 : 0,
+      duration: 100,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  useEffect(() => {
+    if (onPress) {
+      startAnimation();
+    }
+  }, [isInverted]);
+
   return (
     <Pressable
       onPress={expand && onPress}
@@ -17,7 +35,11 @@ const Header = ({isBack, expand, isInverted, title, style, onPress}) => {
           onPress={() => navigation.goBack()}>
           <Image
             className="w-5 h-5"
-            source={require('../../assets/back.png')}
+            source={
+              colorScheme === 'dark'
+                ? require('../../assets/back.png')
+                : require('../../assets/back-light.png')
+            }
           />
         </Pressable>
       )}
@@ -29,9 +51,23 @@ const Header = ({isBack, expand, isInverted, title, style, onPress}) => {
         <Pressable
           className="absolute right-0 h-full justify-center"
           onPress={onPress}>
-          <Image
-            className={`w-5 h-3 ${isInverted && 'rotate-180'}`}
-            source={require('../../assets/chevron.png')}
+          <Animated.Image
+            className="w-5 h-3"
+            style={{
+              transform: [
+                {
+                  rotate: animation.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ['0deg', '180deg'],
+                  }),
+                },
+              ],
+            }}
+            source={
+              colorScheme === 'dark'
+                ? require('../../assets/chevron.png')
+                : require('../../assets/chevron-light.png')
+            }
           />
         </Pressable>
       )}

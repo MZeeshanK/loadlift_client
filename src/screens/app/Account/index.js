@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {ScrollView, View, Image, Pressable} from 'react-native';
+import {ScrollView, View, Image, Pressable, useColorScheme} from 'react-native';
 
 import Linear from '../../../components/Linear';
 import Header from '../../../components/Header';
@@ -9,9 +9,16 @@ import Button from '../../../components/Button';
 import Title from '../../../components/Title';
 import CustomModal from '../../../components/CustomModal';
 
+import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
+import colors from '../../../constants/colors';
 
-const Account = ({navigation}) => {
+const Account = ({}) => {
+  const navigation = useNavigation();
+  const colorScheme = useColorScheme();
+
+  const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
+
   const [modalVisible, setModalVisible] = useState(false);
 
   const userType = useSelector(state => state.user.data);
@@ -60,7 +67,10 @@ const Account = ({navigation}) => {
         <Title xxl bold className="mt-2 leading-8">
           Are You Sure you want to logout?
         </Title>
-        <View className="w-full h-[1] bg-primary my-5 " />
+        <View
+          className="w-full h-[1] my-5 "
+          style={{backgroundColor: primary}}
+        />
         <View className="w-full px-2 mt-2 mb-5 flex-row items-center justify-center">
           <Button
             title="No"
@@ -96,7 +106,11 @@ const Account = ({navigation}) => {
           <Card>
             <View className="items-center justify-center w-full pb-5 ">
               <Image
-                source={require('../../../assets/mini-truck-light.png')}
+                source={
+                  colorScheme === 'dark'
+                    ? require('../../../assets/mini-truck-light.png')
+                    : require('../../../assets/mini-truck-dark.png')
+                }
                 style={{
                   width: 100,
                   height: 37,
@@ -127,7 +141,11 @@ const Account = ({navigation}) => {
               <Rating rating={4} />
             </View>
             <Image
-              source={require('../../../assets/account-focused.png')}
+              source={
+                colorScheme === 'dark'
+                  ? require('../../../assets/account-focused.png')
+                  : require('../../../assets/account-light.png')
+              }
               className="w-16 h-16"
             />
           </View>
@@ -148,8 +166,12 @@ const Account = ({navigation}) => {
             onPress={() => navigation.navigate('PaymentMethod')}
             className="flex-1">
             <Image
-              source={require('../../../assets/wallet.png')}
-              className="h-[30] w-[34]"
+              source={
+                colorScheme === 'dark'
+                  ? require('../../../assets/wallet.png')
+                  : require('../../../assets/wallet-light.png')
+              }
+              className="h-[36] w-[39]"
             />
             <Title className="pt-2 tracking-wider" semibold>
               Payment
@@ -161,8 +183,12 @@ const Account = ({navigation}) => {
               onPress={() => navigation.navigate('Premium')}
               className="flex-1">
               <Image
-                source={require('../../../assets/premium.png')}
-                className="h-[30] w-[34]"
+                source={
+                  colorScheme === 'dark'
+                    ? require('../../../assets/premium.png')
+                    : require('../../../assets/premium-light.png')
+                }
+                className={`h-[36] w-[36] `}
               />
               <Title className="pt-2 tracking-wider" semibold>
                 Premium
@@ -181,9 +207,10 @@ const Account = ({navigation}) => {
                   ? () => setModalVisible(true)
                   : () => navigation.navigate('NotFound')
               }
-              className={`w-full items-start border-primary ${
+              className={`w-full items-start ${
                 index !== selectedOptions.length - 1 && 'border-b'
-              } p-2 px-5 justify-center`}>
+              } p-2 px-5 justify-center`}
+              style={{borderColor: primary}}>
               <Title className="py-1 tracking-wider" lg bold>
                 {item.title}
               </Title>

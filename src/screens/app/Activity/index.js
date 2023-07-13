@@ -5,6 +5,7 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  useColorScheme,
 } from 'react-native';
 
 import Linear from '../../../components/Linear';
@@ -12,21 +13,32 @@ import Header from '../../../components/Header';
 import GFlatList from '../../../components/GFlatList';
 import Card from '../../../components/Card';
 
+import colors from '../../../constants/colors';
+
 const Activity = () => {
+  const colorScheme = useColorScheme();
   const [text, setText] = useState('');
   const [clear, setClear] = useState(false);
+
+  const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
 
   useEffect(() => {
     text.length > 0 ? setClear(true) : setClear(false);
   }, [text]);
 
   const SearchButtons = ({...props}) => (
-    <Pressable className="px-3 py-3 mx-[4] rounded-lg border border-primary">
+    <Pressable
+      className="px-3 py-3 mx-[4] rounded-lg border"
+      style={{borderColor: primary}}>
       <Image
         source={
-          props.image === 'filter'
+          colorScheme === 'dark' && props.image === 'filter'
             ? require('../../../assets/filter-light.png')
-            : require('../../../assets/search-light.png')
+            : colorScheme === 'dark' && props.image === 'search'
+            ? require('../../../assets/search-light.png')
+            : colorScheme !== 'dark' && props.image === 'filter'
+            ? require('../../../assets/filter-dark.png')
+            : require('../../../assets/search-dark.png')
         }
         className="h-4 w-4 "
       />
@@ -59,7 +71,7 @@ const Activity = () => {
           )}
         </View>
         <View className="px-2 py-2 flex-row items-center justify-center">
-          <SearchButtons />
+          <SearchButtons image="search" />
           <SearchButtons image="filter" />
         </View>
       </Card>

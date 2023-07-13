@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {View, Image} from 'react-native';
+import React, {useState} from 'react';
+import {View, Image, useColorScheme} from 'react-native';
 
 import Linear from '../../../components/Linear';
 import Header from '../../../components/Header';
@@ -12,9 +12,16 @@ import categories from '../../../data/categories';
 import styleConstants from '../../../constants/styles';
 import Title from '../../../components/Title';
 import CustomModal from '../../../components/CustomModal';
+
+import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 
-const Order = ({navigation}) => {
+const Order = () => {
+  const navigation = useNavigation();
+  const colorScheme = useColorScheme();
+
+  const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
+
   const [rating, setRating] = useState(0);
   const [picked, setPicked] = useState(false);
   const [ratingModalVisible, setRatingModalVisible] = useState(false);
@@ -28,7 +35,9 @@ const Order = ({navigation}) => {
   let imageSource = categories.find(
     category => category?.title === order.typeOfVehicle,
   );
-  imageSource = imageSource?.icon;
+
+  imageSource =
+    colorScheme === 'dark' ? imageSource?.icon : imageSource?.darkIcon;
 
   const RatingModal = () => {
     return (
@@ -131,11 +140,13 @@ const Order = ({navigation}) => {
         </View>
         <View className="w-full items-center justify-between flex-1 mt-0 ">
           <Card>
-            <View className="w-full flex-row items-center justify-between border-b border-primary pb-5 pt-2 px-1">
+            <View
+              className="w-full flex-row items-center justify-between border-b pb-5 pt-2 px-1"
+              style={{borderColor: primary}}>
               {userType === 'driver' ? (
                 <View className="items-start">
                   <Title className="pb-1" bold primary>
-                    Name: <Title>John Doe</Title>
+                    Name: <Title black={colorScheme !== 'dark'}>John Doe</Title>
                   </Title>
                   <Rating rating={4.5} style={{width: 15, height: 15}} />
                 </View>
@@ -155,7 +166,9 @@ const Order = ({navigation}) => {
               </View>
             </View>
             {userType === 'user' && (
-              <View className="w-full items-center justify-between flex-row py-5 border-b border-primary px-1">
+              <View
+                className="w-full items-center justify-between flex-row py-5 border-b px-1"
+                style={{borderColor: primary}}>
                 <Title sm bold left primary>
                   Name: <Title sm>{order?.driverName}</Title>
                 </Title>
@@ -164,7 +177,9 @@ const Order = ({navigation}) => {
                 </Title>
               </View>
             )}
-            <View className="w-full items-start justify-center py-8 border-b border-primary gap-y-6 px-1 ">
+            <View
+              className="w-full items-start justify-center py-8 border-b gap-y-6 px-1"
+              style={{borderColor: primary}}>
               <Title
                 className="tracking-wide leading-5"
                 numberOfLines={3}

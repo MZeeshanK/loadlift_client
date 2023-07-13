@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 import React from 'react';
 
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, StyleSheet, View, useColorScheme} from 'react-native';
 import colors from './src/constants/colors';
 
 import {NavigationContainer} from '@react-navigation/native';
@@ -32,7 +32,6 @@ import Map from './src/screens/app/Map';
 import Call from './src/screens/app/Call';
 import DriverList from './src/screens/app/DriverList';
 import PaymentDone from './src/screens/app/PaymentDone';
-import Logout from './src/screens/app/Logout';
 import IncomingCall from './src/screens/app/IncomingCall';
 import ComingSoon from './src/screens/ComingSoon';
 import Title from './src/components/Title';
@@ -44,6 +43,9 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function App() {
+  const colorScheme = useColorScheme();
+
+  const tab = colorScheme === 'dark' ? colors.tab : colors.lightTab;
   // Tab Navigator
   function Tabs() {
     return (
@@ -54,7 +56,7 @@ function App() {
           // Tab Bar styles
           tabBarStyle: {
             borderTopWidth: 0,
-            backgroundColor: colors.tab,
+            backgroundColor: tab,
             borderTop: 'none',
             height: 50,
           },
@@ -70,8 +72,10 @@ function App() {
                 <Image
                   style={styles.icon}
                   source={
-                    focused
+                    colorScheme === 'dark' && focused
                       ? require('./src/assets/home-focused.png')
+                      : colorScheme !== 'dark' && focused
+                      ? require('./src/assets/home-light.png')
                       : require('./src/assets/home.png')
                   }
                 />
@@ -91,8 +95,10 @@ function App() {
                 <Image
                   style={styles.icon}
                   source={
-                    focused
+                    colorScheme === 'dark' && focused
                       ? require('./src/assets/activity-focused.png')
+                      : colorScheme !== 'dark' && focused
+                      ? require('./src/assets/activity-light.png')
                       : require('./src/assets/activity.png')
                   }
                 />
@@ -112,8 +118,10 @@ function App() {
                 <Image
                   style={styles.icon}
                   source={
-                    focused
+                    colorScheme === 'dark' && focused
                       ? require('./src/assets/account-focused.png')
+                      : colorScheme !== 'dark' && focused
+                      ? require('./src/assets/account-light.png')
                       : require('./src/assets/account.png')
                   }
                 />
@@ -149,7 +157,6 @@ function App() {
           <Stack.Screen name="Map" component={Map} />
           <Stack.Screen name="DriverList" component={DriverList} />
           <Stack.Screen name="Premium" component={Premium} />
-          <Stack.Screen name="Logout" component={Logout} />
           <Stack.Screen name="Call" component={Call} />
           <Stack.Screen name="PaymentDone" component={PaymentDone} />
           <Stack.Screen name="IncomingCall" component={IncomingCall} />

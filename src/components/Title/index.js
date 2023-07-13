@@ -1,9 +1,17 @@
 import React, {useState} from 'react';
-import {Text} from 'react-native';
+import {Text, useColorScheme} from 'react-native';
 import colors from '../../constants/colors';
 
 const Title = ({children, style, ...props}) => {
+  const colorScheme = useColorScheme();
+
   const [lines, setLines] = useState(props.numberOfLines || 10);
+
+  const normal = colorScheme === 'dark' ? colors.white : colors.black;
+  const black = colorScheme === 'dark' ? colors.black : colors.white;
+  const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
+
+  const danger = colors.danger;
 
   return (
     <Text
@@ -24,14 +32,14 @@ const Title = ({children, style, ...props}) => {
             ? 'Poppins-SemiBold'
             : 'Poppins-Regular',
           color: props.black
-            ? colors.black
+            ? black
             : props.primary
-            ? colors.primary
+            ? primary
             : props.darkGrey
             ? colors.darkGrey
             : props.danger
-            ? colors.danger
-            : colors.white,
+            ? danger
+            : normal,
           fontSize: props.xxs
             ? 8
             : props.xxsm
@@ -50,6 +58,7 @@ const Title = ({children, style, ...props}) => {
             ? 24
             : 14,
         },
+
         style,
       ]}>
       {children}

@@ -1,5 +1,13 @@
 import React, {useState, useRef, useEffect} from 'react';
-import {View, StyleSheet, Text, Image, Pressable, Animated} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  Image,
+  Pressable,
+  Animated,
+  useColorScheme,
+} from 'react-native';
 
 import Linear from '../../../components/Linear';
 import Header from '../../../components/Header';
@@ -7,8 +15,10 @@ import colors from '../../../constants/colors';
 import Card from '../../../components/Card';
 
 import {useNavigation} from '@react-navigation/native';
+import Title from '../../../components/Title';
 
 const Call = () => {
+  const colorScheme = useColorScheme();
   const navigation = useNavigation();
 
   const animationDuration = 1000;
@@ -138,13 +148,19 @@ const Call = () => {
       <View className="flex-1 items-center justify-between pb-10 px-4 w-full">
         <View className="w-full items-center justify-center">
           <Image
-            source={require('../../../assets/account-focused.png')}
+            source={
+              colorScheme === 'dark'
+                ? require('../../../assets/account-focused.png')
+                : require('../../../assets/account-light.png')
+            }
             className="w-20 h-20"
           />
-          <Text className="text-white text-lg font-semibold mt-2">
+          <Title base semibold className="mt-2">
             Ghulam Nabi
-          </Text>
-          <Text className="text-white text-sm mt-4">Calling</Text>
+          </Title>
+          <Title sm semibold className="mt-4">
+            Calling
+          </Title>
         </View>
 
         {incoming ? (

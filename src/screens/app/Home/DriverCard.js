@@ -1,6 +1,5 @@
 import React from 'react';
-import {Pressable, View} from 'react-native';
-import Card from '../../../components/Card';
+import {Pressable, View, useColorScheme} from 'react-native';
 
 import {useNavigation} from '@react-navigation/native';
 import Title from '../../../components/Title';
@@ -15,10 +14,15 @@ const DriverCard = ({
   setIsDelivering,
 }) => {
   const navigation = useNavigation();
+  const colorScheme = useColorScheme();
+
+  const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
 
   return (
     <Pressable className="w-full">
-      <View className="w-full items-start justify-center border-b border-primary pb-3">
+      <View
+        className="w-full items-start justify-center border-b pb-3"
+        style={{borderColor: primary}}>
         <View className="w-full justify-center">
           <View className="w-full flex-row items-center justify-between">
             <Title bold primary left>
@@ -42,7 +46,9 @@ const DriverCard = ({
           </View>
         </View>
       </View>
-      <View className="w-full py-2 mb-5 border-b border-primary">
+      <View
+        className="w-full py-2 mb-5 border-b"
+        style={{borderColor: primary}}>
         <Title className="mb-3" bold primary left numberOfLines={2}>
           Pick Up: <Title light>121, Hawaal, Srinagar, Jammu and Kashmir</Title>
         </Title>
