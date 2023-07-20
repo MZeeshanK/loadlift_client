@@ -14,7 +14,7 @@ import {useSelector} from 'react-redux';
 const UserDetails = ({user}) => {
   const navigation = useNavigation();
 
-  const userType = useSelector(state => state.user.data);
+  const userType = useSelector(state => state.user.type);
 
   const [category, setCategory] = useState(
     user

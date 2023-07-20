@@ -39,6 +39,8 @@ const Title = ({children, style, ...props}) => {
             ? colors.darkGrey
             : props.danger
             ? danger
+            : props.white
+            ? colors.white
             : normal,
           fontSize: props.xxs
             ? 8

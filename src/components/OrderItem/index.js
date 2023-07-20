@@ -14,7 +14,7 @@ const OrderItem = ({item, ...props}) => {
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
 
-  const userType = useSelector(state => state.user.data);
+  const userType = useSelector(state => state.user.type);
 
   const imageSource = categories.find(
     category => category?.title === item?.typeOfVehicle,

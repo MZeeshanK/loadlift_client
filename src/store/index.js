@@ -1,10 +1,24 @@
-import {configureStore} from '@reduxjs/toolkit';
+import {configureStore, combineReducers} from '@reduxjs/toolkit';
 import userReducer from './user';
+import ordersReducer from './orders';
+import persistReducer from 'redux-persist/es/persistReducer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const persistConfig = {
+  key: 'root',
+  versions: 1,
+  storage: AsyncStorage,
+};
+
+const rootReducer = combineReducers({
+  user: userReducer,
+  orders: ordersReducer,
+});
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export default configureStore({
-  reducer: {
-    user: userReducer,
-  },
+  reducer: persistedReducer,
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({serializableCheck: false}),
 });

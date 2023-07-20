@@ -1,28 +1,31 @@
-import React from 'react';
-import {Dimensions, Modal, Pressable} from 'react-native';
+import React, {useEffect} from 'react';
+import {Modal, View} from 'react-native';
 
 import Title from '../Title';
 import Card from '../Card';
 
-const {height} = Dimensions.get('window');
-
 const Alert = ({message, visible, setVisible, ...props}) => {
+  useEffect(() => {
+    if (visible) {
+      setTimeout(() => {
+        setVisible(false);
+      }, 3000);
+    }
+  }, [visible]);
+
   return (
     <Modal
       onRequestClose={() => setVisible(false)}
       transparent
       animationType="fade"
       visible={visible}>
-      <Pressable
-        onPress={!props.block && (() => setVisible(false))}
-        className="items-center justify-around px-5"
-        style={{height: height, backgroundColor: 'rgba(0,0,0,.6)'}}>
-        <Card danger style={props.style}>
-          <Title bold xl>
+      <View className="px-3 absolute top-12 w-full">
+        <Card danger style={props.style} className="py-1 rounded-full">
+          <Title bold white>
             {message}
           </Title>
         </Card>
-      </Pressable>
+      </View>
     </Modal>
   );
 };

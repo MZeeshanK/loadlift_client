@@ -9,6 +9,7 @@ import DriverButton from './DriverButton';
 import DriverCard from './DriverCard';
 import CustomModal from '../../../components/CustomModal';
 import Card from '../../../components/Card';
+
 import {useSelector} from 'react-redux';
 
 const Home = () => {
@@ -16,7 +17,13 @@ const Home = () => {
   const [isDelivering, setIsDelivering] = useState(false);
   const [deliveryModalVisible, setDeliveryModalVisible] = useState(false);
 
-  const userType = useSelector(state => state.user.data);
+  const userType = useSelector(state => state.user.type);
+  const userToken = useSelector(state => state.user.token);
+
+  console.log(userToken);
+
+  const orders = useSelector(state => state.orders.data);
+  const homeOrders = orders.filter(order => order?.status === 'ongoing');
 
   useEffect(() => {
     isActive ? setDeliveryModalVisible(true) : setDeliveryModalVisible(false);
@@ -73,7 +80,7 @@ const Home = () => {
         ) : (
           <>
             {/* 3 last orders list */}
-            <GFlatList home />
+            <GFlatList home orders={homeOrders} />
 
             <HomeButton />
           </>

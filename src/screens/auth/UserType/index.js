@@ -15,7 +15,7 @@ import {changeUser} from '../../../store/user';
 const UserType = ({navigation}) => {
   const dispatch = useDispatch();
 
-  const userType = useSelector(state => state.user.data);
+  const userType = useSelector(state => state.user.type);
 
   return (
     <Linear>

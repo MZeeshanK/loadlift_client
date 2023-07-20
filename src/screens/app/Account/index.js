@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ScrollView, View, Image, Pressable, useColorScheme} from 'react-native';
 
 import Linear from '../../../components/Linear';
@@ -12,6 +12,8 @@ import CustomModal from '../../../components/CustomModal';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import colors from '../../../constants/colors';
+import axios from 'axios';
+import {BACKEND_URL} from '@env';
 
 const Account = ({}) => {
   const navigation = useNavigation();
@@ -21,7 +23,32 @@ const Account = ({}) => {
 
   const [modalVisible, setModalVisible] = useState(false);
 
-  const userType = useSelector(state => state.user.data);
+  const userType = useSelector(state => state.user.type);
+  const user = useSelector(state => state.user.data);
+  const userToken = useSelector(state => state.user.token);
+
+  const url = `${BACKEND_URL}/api/users/me`;
+
+  const getUser = async () => {
+    try {
+      const {data} = await axios.get(url, {
+        data: {
+          phone: '9622510439',
+        },
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      });
+
+      console.log(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    getUser();
+  }, []);
 
   const accountOptions = [
     {
@@ -136,7 +163,7 @@ const Account = ({}) => {
                 className="tracking-wider mb-2"
                 xxl
                 semibold>
-                John Doe
+                {user?.firstName} {user?.lastName}
               </Title>
               <Rating rating={4} />
             </View>
@@ -150,8 +177,8 @@ const Account = ({}) => {
             />
           </View>
           <View className="flex-row items-center justify-between mt-5 mb-2 w-full">
-            <Title className="tracking-tighter" lg bold>
-              +91 94190 12345
+            <Title lg bold>
+              +91 {user?.phone}
             </Title>
             <Button
               title="Update Profile"

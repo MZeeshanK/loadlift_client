@@ -38,6 +38,10 @@ import Title from './src/components/Title';
 
 import {Provider} from 'react-redux';
 import store from './src/store';
+import {PersistGate} from 'redux-persist/integration/react';
+import persistStore from 'redux-persist/es/persistStore';
+
+let persistor = persistStore(store);
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -136,8 +140,8 @@ function App() {
     );
   }
 
-  return (
-    <Provider store={store}>
+  const Main = () => {
+    return (
       <NavigationContainer>
         {/* Stack Navigtor */}
         <Stack.Navigator screenOptions={{headerShown: false}}>
@@ -164,6 +168,14 @@ function App() {
           <Stack.Screen name="NotFound" component={NotFound} />
         </Stack.Navigator>
       </NavigationContainer>
+    );
+  };
+
+  return (
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>
+        <Main />
+      </PersistGate>
     </Provider>
   );
 }

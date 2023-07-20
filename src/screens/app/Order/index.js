@@ -28,7 +28,7 @@ const Order = () => {
   const [pickUpModalVisible, setPickUpModalVisible] = useState(false);
   const [deliveredModalVisible, setDeliveredModalVisible] = useState(false);
 
-  const userType = useSelector(state => state.user.data);
+  const userType = useSelector(state => state.user.type);
 
   const order = orders[0];
 
