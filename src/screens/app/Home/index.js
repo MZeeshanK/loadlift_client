@@ -18,9 +18,6 @@ const Home = () => {
   const [deliveryModalVisible, setDeliveryModalVisible] = useState(false);
 
   const userType = useSelector(state => state.user.type);
-  const userToken = useSelector(state => state.user.token);
-
-  console.log(userToken);
 
   const orders = useSelector(state => state.orders.data);
   const homeOrders = orders.filter(order => order?.status === 'ongoing');

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {View, StyleSheet, ScrollView, FlatList, Image} from 'react-native';
 import TextLabel from '../TextLabel';
 import Input from '../Input';
@@ -7,29 +7,82 @@ import Card from '../Card';
 import categories from '../../data/categories';
 import Title from '../Title';
 import Button from '../Button';
+import Loader from '../Loader';
+import Alert from '../Alert';
 
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
+import axios from 'axios';
 
-const UserDetails = ({user}) => {
+const UserDetails = ({phone}) => {
   const navigation = useNavigation();
 
   const userType = useSelector(state => state.user.type);
+  const user = useSelector(state => state.user.data);
+
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
   const [category, setCategory] = useState(
     user
       ? categories.find(category => user?.typeOfVehicle === category?.title)
       : {},
   );
+  const [firstName, setFirstName] = useState(user.firstName);
+  const [lastName, setLastName] = useState(user.lastName);
+  const [isMount, setIsMount] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [errorModal, setErrorModal] = useState(false);
+
+  const url = `${BACKEND_URL}/api/users/register`;
+
+  useEffect(() => {
+    const register = async () => {
+      setLoading(true);
+      try {
+        const {status} = await axios.post(
+          url,
+          {
+            firstName,
+            lastName,
+            phone,
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        );
+
+        if (status === 200) {
+          navigation.navigate('OTP', {phone});
+        }
+      } catch (err) {
+        setError(err.response.data);
+        setErrorModal(true);
+      }
+      setLoading(false);
+    };
+
+    if (isMount) {
+      register();
+      setIsMount(false);
+    }
+  }, [isMount]);
+
+  const lastNameRef = useRef();
+  const vehicleNumberRef = useRef();
 
   return (
     <ScrollView
       className="w-full flex-1"
       showsHorizontalScrollIndicator={false}>
+      {loading && <Loader />}
+      <Alert message={error} visible={errorModal} setVisible={setErrorModal} />
       <View className="w-full items-center">
         <TextLabel title="Phone Number:" />
         <Input
-          placeholder={user ? `+91 ${user?.phone}` : '+91 94190 09876'}
+          placeholder={user ? `+91 ${user?.phone}` : `+91 ${phone}`}
           isDisabled={true}
         />
         {/* Divide Bar */}
@@ -37,14 +90,31 @@ const UserDetails = ({user}) => {
 
         <TextLabel title="First Name:" />
         <Input
+          value={firstName}
+          onChangeText={setFirstName}
           returnKeyType="next"
-          placeholder={user ? user?.firstName : 'Enter your First Name'}
+          onSubmitEditing={() => {
+            lastNameRef.current.focus();
+            // console.log(123);
+          }}
+          blurOnSubmit={false}
+          placeholder="Enter your First Name"
         />
 
         <TextLabel title="Last Name:" />
         <Input
-          returnKeyType="next"
-          placeholder={user ? user?.lastName : 'Enter your Last Name'}
+          value={lastName}
+          ref={lastNameRef}
+          onChangeText={setLastName}
+          onSubmitEditing={() => {
+            if (user) {
+              setIsMount(!isMount);
+            } else {
+              vehicleNumberRef.current.focus();
+            }
+          }}
+          returnKeyType={userType === 'driver' ? 'next' : 'done'}
+          placeholder="Enter your Last Name"
         />
 
         {userType === 'driver' && (
@@ -54,11 +124,8 @@ const UserDetails = ({user}) => {
 
             <TextLabel title="Vehicle Number:" />
             <Input
-              placeholder={
-                user
-                  ? user?.vehicleNumber
-                  : 'Enter your vehicle registration Number'
-              }
+              placeholder="Enter your vehicle registration Number"
+              ref={vehicleNumberRef}
             />
 
             {/* Category list for drivers */}
@@ -109,7 +176,7 @@ const UserDetails = ({user}) => {
       </View>
       <Button
         title={user ? 'Update Profile' : 'Create Account'}
-        onPress={() => navigation.navigate(user ? 'Account' : 'Tabs')}
+        onPress={() => setIsMount(!isMount)}
         style={{marginTop: 50, width: '65%', alignSelf: 'center'}}
       />
     </ScrollView>

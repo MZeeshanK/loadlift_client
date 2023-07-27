@@ -10,14 +10,17 @@ import Title from '../../../components/Title';
 import CustomModal from '../../../components/CustomModal';
 
 import {useNavigation} from '@react-navigation/native';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
+import {userDetails} from '../../../store/user';
 import colors from '../../../constants/colors';
 import axios from 'axios';
-import {BACKEND_URL} from '@env';
 
 const Account = ({}) => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
+
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
   const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
 
@@ -27,26 +30,25 @@ const Account = ({}) => {
   const user = useSelector(state => state.user.data);
   const userToken = useSelector(state => state.user.token);
 
-  const url = `${BACKEND_URL}/api/users/me`;
-
-  const getUser = async () => {
-    try {
-      const {data} = await axios.get(url, {
-        data: {
-          phone: '9622510439',
-        },
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-        },
-      });
-
-      console.log(data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   useEffect(() => {
+    const url = `${BACKEND_URL}/api/users/me`;
+
+    const getUser = async () => {
+      try {
+        const {data, status} = await axios.get(url, {
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        });
+
+        if (status === 200) {
+          dispatch(userDetails(data.user));
+        }
+      } catch (err) {
+        console.log(err.response.data['message' || 'error']);
+      }
+    };
+
     getUser();
   }, []);
 

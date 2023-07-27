@@ -14,11 +14,12 @@ import Alert from '../../../components/Alert';
 import {useDispatch, useSelector} from 'react-redux';
 import {userLogin} from '../../../store/user';
 import axios from 'axios';
-import {BACKEND_URL} from '@env';
 
 const OTP = ({route}) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
+
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
   const [timer, setTimer] = useState(59);
   const [otp, setOtp] = useState('');
@@ -42,7 +43,7 @@ const OTP = ({route}) => {
     setLoading(true);
     try {
       const {data, status} = await axios.post(
-        `https://loadlift3.onrender.com/api/verify`,
+        url,
         {
           phone,
           verificationCode: otp,
@@ -56,7 +57,6 @@ const OTP = ({route}) => {
 
       if (status === 200) {
         dispatch(userLogin({token: data.token}));
-        console.log(data);
         navigation.navigate('Tabs');
       }
     } catch (err) {

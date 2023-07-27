@@ -7,9 +7,11 @@ import {
   TouchableWithoutFeedback,
   useColorScheme,
 } from 'react-native';
+import {useSelector} from 'react-redux';
 // import LinearGradient from 'react-native-linear-gradient';
 
 import colors from '../../constants/colors';
+import Loader from '../Loader';
 
 const {height} = Dimensions.get('window');
 
@@ -33,6 +35,12 @@ const {height} = Dimensions.get('window');
 const Linear = ({children, style}) => {
   const colorScheme = useColorScheme();
 
+  const loading = useSelector(state => state.misc.loading);
+
+  if (loading) {
+    Keyboard.dismiss();
+  }
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <SafeAreaView
@@ -47,7 +55,10 @@ const Linear = ({children, style}) => {
           },
           style,
         ]}>
-        {children}
+        <>
+          {loading && <Loader />}
+          {children}
+        </>
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );

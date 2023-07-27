@@ -32,7 +32,6 @@ import Map from './src/screens/app/Map';
 import Call from './src/screens/app/Call';
 import DriverList from './src/screens/app/DriverList';
 import PaymentDone from './src/screens/app/PaymentDone';
-import IncomingCall from './src/screens/app/IncomingCall';
 import ComingSoon from './src/screens/ComingSoon';
 import Title from './src/components/Title';
 
@@ -163,7 +162,6 @@ function App() {
           <Stack.Screen name="Premium" component={Premium} />
           <Stack.Screen name="Call" component={Call} />
           <Stack.Screen name="PaymentDone" component={PaymentDone} />
-          <Stack.Screen name="IncomingCall" component={IncomingCall} />
           <Stack.Screen name="ComingSoon" component={ComingSoon} />
           <Stack.Screen name="NotFound" component={NotFound} />
         </Stack.Navigator>

@@ -10,11 +10,15 @@ import Button from '../../../components/Button';
 import Card from '../../../components/Card';
 import Title from '../../../components/Title';
 import {useSelector, useDispatch} from 'react-redux';
-import {changeUser} from '../../../store/user';
+import {changeUserType} from '../../../store/user';
 
-const UserType = ({navigation}) => {
+import {useNavigation} from '@react-navigation/native';
+
+const UserType = ({route}) => {
+  const navigation = useNavigation();
   const dispatch = useDispatch();
 
+  const {phone} = route.params;
   const userType = useSelector(state => state.user.type);
 
   return (
@@ -29,7 +33,7 @@ const UserType = ({navigation}) => {
         <View className="items-center justify-center">
           <Card
             style={[styles.card, userType === 'user' && styles.selectedCard]}
-            onPress={() => dispatch(changeUser('user'))}>
+            onPress={() => dispatch(changeUserType('user'))}>
             <Image
               style={styles.icon}
               source={
@@ -44,7 +48,7 @@ const UserType = ({navigation}) => {
           </Card>
           <Card
             style={[styles.card, userType === 'driver' && styles.selectedCard]}
-            onPress={() => dispatch(changeUser('driver'))}>
+            onPress={() => dispatch(changeUserType('driver'))}>
             <Image
               style={styles.icon}
               source={
@@ -60,7 +64,7 @@ const UserType = ({navigation}) => {
         </View>
         <Button
           title="Next"
-          onPress={() => navigation.navigate('CreateAccount')}
+          onPress={() => navigation.navigate('CreateAccount', {phone})}
           style={{marginTop: 20}}
         />
       </View>
