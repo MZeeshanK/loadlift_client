@@ -45,12 +45,18 @@ const Activity = () => {
 
   // Clear button in activity screen search
   useEffect(() => {
-    text.length > 0 ? setClear(true) : setClear(false);
-    setFilteredOrders(
-      filteredOrders.filter(order =>
-        order.driverName.toLowerCase().includes(text.toLowerCase()),
-      ),
-    );
+    if (text) {
+      setClear(true);
+
+      setFilteredOrders(
+        filteredOrders.filter(order =>
+          order.driverName.toLowerCase().includes(text.toLowerCase()),
+        ),
+      );
+    } else {
+      setClear(false);
+      setFilteredOrders(orders);
+    }
   }, [text]);
 
   // Search button filter

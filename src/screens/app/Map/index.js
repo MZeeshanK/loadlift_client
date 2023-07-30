@@ -40,7 +40,7 @@ const Map = () => {
         className="px-4 w-full items-center justify-center rounded-b-xl"
         style={{
           backgroundColor:
-            colorScheme === 'dark' ? colors.background : colors.lightBackground,
+            colorScheme === 'dark' ? colors.card : colors.lightCard,
           elevation: 10,
         }}>
         <Header

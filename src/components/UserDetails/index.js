@@ -7,45 +7,51 @@ import Card from '../Card';
 import categories from '../../data/categories';
 import Title from '../Title';
 import Button from '../Button';
-import Loader from '../Loader';
 import Alert from '../Alert';
 
 import {useNavigation} from '@react-navigation/native';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
+import {setLoading} from '../../store/misc';
 
 const UserDetails = ({phone}) => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const userType = useSelector(state => state.user.type);
   const user = useSelector(state => state.user.data);
-
-  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
   const [category, setCategory] = useState(
     user
       ? categories.find(category => user?.typeOfVehicle === category?.title)
       : {},
   );
-  const [firstName, setFirstName] = useState(user.firstName);
-  const [lastName, setLastName] = useState(user.lastName);
+  const [firstName, setFirstName] = useState(user?.firstName || '');
+  const [lastName, setLastName] = useState(user?.lastName || '');
+  const [vehicleNumber, setVehicleNumber] = useState(user?.vehicleNumber || '');
   const [isMount, setIsMount] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [errorModal, setErrorModal] = useState(false);
 
-  const url = `${BACKEND_URL}/api/users/register`;
+  console.log(category);
 
   useEffect(() => {
-    const register = async () => {
-      setLoading(true);
+    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+
+    const url =
+      userType === 'user'
+        ? `${BACKEND_URL}/api/users/register`
+        : `${BACKEND_URL}/api/drivers/register`;
+
+    const userRegister = async () => {
+      dispatch(setLoading(true));
       try {
-        const {status} = await axios.post(
+        const {data, status} = await axios.post(
           url,
           {
+            phone,
             firstName,
             lastName,
-            phone,
           },
           {
             headers: {
@@ -54,18 +60,51 @@ const UserDetails = ({phone}) => {
           },
         );
 
+        console.log(data, status);
         if (status === 200) {
           navigation.navigate('OTP', {phone});
         }
       } catch (err) {
-        setError(err.response.data);
-        setErrorModal(true);
+        console.log(err);
       }
-      setLoading(false);
+      dispatch(setLoading(false));
+    };
+
+    const driverRegister = async () => {
+      dispatch(setLoading(true));
+      try {
+        const {data, status} = await axios.post(
+          url,
+          {
+            phone,
+            firstName,
+            lastName,
+            typeOfVehicle: category.title,
+            vehicleNumber,
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        );
+        console.log(data, status);
+
+        if (status === 200) {
+          navigation.navigate('OTP', {phone});
+        }
+      } catch (err) {
+        console.log(err.response.data);
+      }
+      dispatch(setLoading(false));
     };
 
     if (isMount) {
-      register();
+      if (userType === 'user') {
+        userRegister();
+      } else {
+        driverRegister();
+      }
       setIsMount(false);
     }
   }, [isMount]);
@@ -77,7 +116,6 @@ const UserDetails = ({phone}) => {
     <ScrollView
       className="w-full flex-1"
       showsHorizontalScrollIndicator={false}>
-      {loading && <Loader />}
       <Alert message={error} visible={errorModal} setVisible={setErrorModal} />
       <View className="w-full items-center">
         <TextLabel title="Phone Number:" />
@@ -124,6 +162,8 @@ const UserDetails = ({phone}) => {
 
             <TextLabel title="Vehicle Number:" />
             <Input
+              value={vehicleNumber}
+              onChangeText={setVehicleNumber}
               placeholder="Enter your vehicle registration Number"
               ref={vehicleNumberRef}
             />
@@ -132,13 +172,16 @@ const UserDetails = ({phone}) => {
             <TextLabel title="Category of Vehicle" />
             <FlatList
               horizontal
-              className="px-4 py-2 mt-2 rounded-xl bg-card"
+              className="px-4 py-2 mt-2 rounded-xl"
+              style={{
+                backgroundColor: colors.card,
+              }}
               showsHorizontalScrollIndicator={false}
               data={categories}
               keyExtractor={item => item?.id}
               renderItem={({item, index}) => (
                 <Card
-                  alt
+                  ongoing
                   border
                   style={[
                     styles.cardButton,
@@ -185,7 +228,6 @@ const UserDetails = ({phone}) => {
 
 const styles = StyleSheet.create({
   cardButton: {
-    backgroundColor: colors.ongoing,
     width: 105,
     height: 100,
     elevation: 1,

@@ -8,6 +8,7 @@ import UserDetails from '../../../components/UserDetails';
 
 const CreateAccount = ({route}) => {
   const {phone} = route.params;
+
   return (
     <Linear>
       <Header title={'Create Account'} />

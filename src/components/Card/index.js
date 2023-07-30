@@ -30,7 +30,7 @@ const Card = ({children, style, onPress, ...props}) => {
 
 const styles = StyleSheet.create({
   container: {
-    elevation: 4,
+    elevation: 2,
     // shadowColor: colors.black,
   },
 });

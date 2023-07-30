@@ -5,11 +5,14 @@ import Button from '../../../components/Button';
 import Title from '../../../components/Title';
 
 const FilterCard = ({state, setState, initialState}) => {
-  const [prev, setPrev] = useState('');
-
   const colorScheme = useColorScheme();
 
+  const [prev, setPrev] = useState('');
+
   const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
+  const ongoing = colorScheme === 'dark' ? colors.ongoing : colors.lightOngoing;
+  const dark = colorScheme === 'dark' ? colors.black : colors.white;
+  const light = colorScheme === 'dark' ? colors.white : colors.black;
 
   const classNames = 'px-5 rounded-full mr-5';
 
@@ -32,10 +35,8 @@ const FilterCard = ({state, setState, initialState}) => {
           base
           className={classNames}
           style={{
-            backgroundColor: state[type]
-              ? colors.lightSecondary
-              : colors.ongoing,
-            color: state[type] ? colors.black : colors.white,
+            backgroundColor: state[type] ? primary : ongoing,
+            color: state[type] ? dark : light,
           }}>
           {type}
         </Title>
@@ -43,9 +44,13 @@ const FilterCard = ({state, setState, initialState}) => {
     );
   };
 
+  const removeFilter = () => {
+    setState(initialState);
+  };
+
   return (
     <Card className="py-4 items-end">
-      <Button mini title="Remove Filter" />
+      <Button mini title="Remove Filter" onPress={removeFilter} />
 
       <Title className="w-full" left>
         Status

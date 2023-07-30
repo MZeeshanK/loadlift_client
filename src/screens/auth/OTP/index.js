@@ -8,12 +8,12 @@ import Input from '../../../components/Input';
 import Button from '../../../components/Button';
 import TextLabel from '../../../components/TextLabel';
 import Title from '../../../components/Title';
-import Loader from '../../../components/Loader';
 import Alert from '../../../components/Alert';
 
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {userLogin} from '../../../store/user';
 import axios from 'axios';
+import {setLoading} from '../../../store/misc';
 
 const OTP = ({route}) => {
   const navigation = useNavigation();
@@ -24,7 +24,6 @@ const OTP = ({route}) => {
   const [timer, setTimer] = useState(59);
   const [otp, setOtp] = useState('');
   const [isMount, setIsMount] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [errorModal, setErrorModal] = useState(null);
 
@@ -40,7 +39,7 @@ const OTP = ({route}) => {
   const url = `${BACKEND_URL}/api/verify`;
 
   const otpVerify = async () => {
-    setLoading(true);
+    dispatch(setLoading(true));
     try {
       const {data, status} = await axios.post(
         url,
@@ -65,7 +64,7 @@ const OTP = ({route}) => {
     }
     setIsMount(false);
 
-    setLoading(false);
+    dispatch(setLoading(false));
   };
 
   useEffect(() => {
@@ -77,51 +76,46 @@ const OTP = ({route}) => {
   return (
     <Linear style={{justifyContent: 'flex-start'}}>
       <Alert message={error} visible={errorModal} setVisible={setErrorModal} />
-      {loading ? (
-        <Loader />
-      ) : (
-        <>
-          <Header title="Login" />
+      <Header title="Login" />
 
-          <View className="w-full items-center justify-between flex-1 my-10">
-            <View className="w-full items-center justify-between ">
-              <Input isDisabled phone placeholder={phone} />
+      <View className="w-full items-center justify-between flex-1 my-10">
+        <View className="w-full items-center justify-between ">
+          <Input isDisabled phone placeholder={phone} />
 
-              <TextLabel title="Please Enter the 6 digit OTP" />
+          <TextLabel title="Please Enter the 6 digit OTP" />
 
-              <Input
-                value={otp}
-                onChangeText={setOtp}
-                placeholder="XXXXXX"
-                keyboard="numeric"
-              />
-              <TouchableOpacity className="w-full px-2">
-                {timer > 0 ? (
-                  <Title primary bold sm left>
-                    Resend OTP in 0:{timer}
-                  </Title>
-                ) : (
-                  <Pressable
-                    onPress={() => {
-                      setTimer(3);
-                      navigation.navigate('OTP', {phone});
-                    }}>
-                    <Title bold primary sm left>
-                      Resend OTP
-                    </Title>
-                  </Pressable>
-                )}
-              </TouchableOpacity>
-            </View>
-            <Button
-              title="Verify"
-              onPress={() => {
-                setIsMount(isMount => !isMount);
-              }}
-            />
-          </View>
-        </>
-      )}
+          <Input
+            value={otp}
+            onChangeText={setOtp}
+            placeholder="XXXXXX"
+            keyboard="numeric"
+          />
+
+          <TouchableOpacity className="w-full px-2">
+            {timer > 0 ? (
+              <Title primary bold sm left>
+                Resend OTP in 0:{timer}
+              </Title>
+            ) : (
+              <Pressable
+                onPress={() => {
+                  setTimer(3);
+                  navigation.navigate('OTP', {phone});
+                }}>
+                <Title bold primary sm left>
+                  Resend OTP
+                </Title>
+              </Pressable>
+            )}
+          </TouchableOpacity>
+        </View>
+        <Button
+          title="Verify"
+          onPress={() => {
+            setIsMount(isMount => !isMount);
+          }}
+        />
+      </View>
     </Linear>
   );
 };

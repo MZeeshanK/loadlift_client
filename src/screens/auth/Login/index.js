@@ -18,7 +18,7 @@ const Login = ({navigation}) => {
 
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-  const [phone, setPhone] = useState('9622510439');
+  const [phone, setPhone] = useState('9419292735');
   const [errorModal, setErrorModal] = useState(false);
   const [error, setError] = useState(null);
   const [mount, setMount] = useState(false);

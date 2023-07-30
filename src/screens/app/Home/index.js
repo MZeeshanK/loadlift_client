@@ -65,7 +65,7 @@ const Home = () => {
 
   return (
     <Linear style={{paddingVertical: 0, paddngHorizontal: 0}}>
-      <Header title="Home" isBack={false} />
+      <Header title="LoadLift" isBack={false} />
 
       <View className="flex-1 w-full items-center justify-between">
         <Image

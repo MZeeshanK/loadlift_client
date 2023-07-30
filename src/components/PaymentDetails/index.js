@@ -17,8 +17,9 @@ const PaymentDetails = () => {
 
   const ongoing =
     colorScheme === 'dark' ? colors.ongoing : colors.lightSecondary;
-  const secondary =
-    colorScheme === 'dark' ? colors.secondary : colors.lightOngoing;
+  const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
+  const dark = colorScheme === 'dark' ? colors.black : colors.white;
+  const light = colorScheme === 'dark' ? colors.white : colors.black;
 
   return (
     <>
@@ -71,11 +72,15 @@ const PaymentDetails = () => {
               onPress={() => setCardOptions(true)}
               key={card.number}
               className="my-2 flex-row items-center justify-between w-full px-3 py-1 rounded-full"
-              style={{backgroundColor: index === 0 ? secondary : ongoing}}>
-              <Title lg bold left>
+              style={{backgroundColor: index === 0 ? primary : ongoing}}>
+              <Title lg bold left style={{color: index === 0 ? dark : light}}>
                 {card.name}
               </Title>
-              <Title base semibold right>
+              <Title
+                base
+                semibold
+                right
+                style={{color: index === 0 ? dark : light}}>
                 XXXX {card.number.slice(-4)}
               </Title>
             </Pressable>

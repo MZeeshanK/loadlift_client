@@ -206,25 +206,8 @@ const Account = ({}) => {
               Payment
             </Title>
           </Card>
-
-          {userType === 'user' && (
-            <Card
-              onPress={() => navigation.navigate('Premium')}
-              className="flex-1">
-              <Image
-                source={
-                  colorScheme === 'dark'
-                    ? require('../../../assets/premium.png')
-                    : require('../../../assets/premium-light.png')
-                }
-                className={`h-[36] w-[36] `}
-              />
-              <Title className="pt-2 tracking-wider" semibold>
-                Premium
-              </Title>
-            </Card>
-          )}
         </View>
+
         <Card className="py-1 px-0">
           {selectedOptions.map((item, index) => (
             <Pressable

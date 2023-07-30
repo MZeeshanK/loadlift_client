@@ -48,7 +48,7 @@ const Tab = createBottomTabNavigator();
 function App() {
   const colorScheme = useColorScheme();
 
-  const tab = colorScheme === 'dark' ? colors.tab : colors.lightTab;
+  const card = colorScheme === 'dark' ? colors.card : colors.lightCard;
   // Tab Navigator
   function Tabs() {
     return (
@@ -59,9 +59,8 @@ function App() {
           // Tab Bar styles
           tabBarStyle: {
             borderTopWidth: 0,
-            backgroundColor: tab,
-            borderTop: 'none',
-            height: 50,
+            backgroundColor: card,
+            height: 55,
           },
           tabBarLabel: () => null,
         }}>
@@ -82,7 +81,7 @@ function App() {
                       : require('./src/assets/home.png')
                   }
                 />
-                <Title className="text-xs" xs primary={focused} grey={!focused}>
+                <Title xsm primary={focused} grey={!focused}>
                   Home
                 </Title>
               </View>
@@ -105,7 +104,7 @@ function App() {
                       : require('./src/assets/activity.png')
                   }
                 />
-                <Title className="text-xs" xs primary={focused} grey={!focused}>
+                <Title xsm primary={focused} grey={!focused}>
                   Activity
                 </Title>
               </View>
@@ -128,7 +127,7 @@ function App() {
                       : require('./src/assets/account.png')
                   }
                 />
-                <Title className="text-xs" xs primary={focused} grey={!focused}>
+                <Title xsm primary={focused} grey={!focused}>
                   Account
                 </Title>
               </View>
@@ -180,8 +179,8 @@ function App() {
 
 const styles = StyleSheet.create({
   icon: {
-    width: 22,
-    height: 22,
+    width: 20,
+    height: 20,
   },
 });
 

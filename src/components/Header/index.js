@@ -43,7 +43,7 @@ const Header = ({isBack, expand, isInverted, title, style, onPress}) => {
           />
         </Pressable>
       )}
-      <Title lg bold primary>
+      <Title lg bold primary className="tracking-widest">
         {title}
       </Title>
 

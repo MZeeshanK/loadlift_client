@@ -8,8 +8,7 @@ const Button = ({title, onPress, source, style, ...props}) => {
 
   const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
   const danger = colorScheme === 'dark' ? colors.danger : colors.lightDanger;
-  const ongoing =
-    colorScheme === 'dark' ? colors.ongoing : colors.lightSecondary;
+  const ongoing = colorScheme === 'dark' ? colors.ongoing : colors.lightOngoing;
 
   return (
     <TouchableOpacity
