@@ -14,12 +14,15 @@ import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
 import {setLoading} from '../../store/misc';
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+
 const UserDetails = ({phone}) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
   const userType = useSelector(state => state.user.type);
   const user = useSelector(state => state.user.data);
+  // const errorModal = useSelector(state => state.misc.error.modal);
 
   const [category, setCategory] = useState(
     user
@@ -30,28 +33,35 @@ const UserDetails = ({phone}) => {
   const [lastName, setLastName] = useState(user?.lastName || '');
   const [vehicleNumber, setVehicleNumber] = useState(user?.vehicleNumber || '');
   const [isMount, setIsMount] = useState(false);
-  const [error, setError] = useState(false);
-  const [errorModal, setErrorModal] = useState(false);
 
-  console.log(category);
+  const url =
+    userType === 'user'
+      ? `${BACKEND_URL}/api/users/register`
+      : `${BACKEND_URL}/api/drivers/register`;
+
+  const userInputs = {
+    phone,
+    firstName,
+    lastName,
+  };
+
+  const driverInputs = {
+    phone,
+    firstName,
+    lastName,
+    vehicleNumber,
+    typeOfVehicle: category?.title,
+  };
 
   useEffect(() => {
-    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-
-    const url =
-      userType === 'user'
-        ? `${BACKEND_URL}/api/users/register`
-        : `${BACKEND_URL}/api/drivers/register`;
-
-    const userRegister = async () => {
+    const register = async inputs => {
       dispatch(setLoading(true));
+
       try {
         const {data, status} = await axios.post(
           url,
           {
-            phone,
-            firstName,
-            lastName,
+            inputs,
           },
           {
             headers: {
@@ -60,52 +70,20 @@ const UserDetails = ({phone}) => {
           },
         );
 
-        console.log(data, status);
         if (status === 200) {
           navigation.navigate('OTP', {phone});
         }
       } catch (err) {
         console.log(err);
+        // dispatch(setError(err.response.data['message' || 'error']));
       }
       dispatch(setLoading(false));
     };
 
-    const driverRegister = async () => {
-      dispatch(setLoading(true));
-      try {
-        const {data, status} = await axios.post(
-          url,
-          {
-            phone,
-            firstName,
-            lastName,
-            typeOfVehicle: category.title,
-            vehicleNumber,
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          },
-        );
-        console.log(data, status);
-
-        if (status === 200) {
-          navigation.navigate('OTP', {phone});
-        }
-      } catch (err) {
-        console.log(err.response.data);
-      }
-      dispatch(setLoading(false));
-    };
-
-    if (isMount) {
-      if (userType === 'user') {
-        userRegister();
-      } else {
-        driverRegister();
-      }
-      setIsMount(false);
+    if (userType === 'user') {
+      register(userInputs);
+    } else {
+      register(driverInputs);
     }
   }, [isMount]);
 
@@ -116,7 +94,7 @@ const UserDetails = ({phone}) => {
     <ScrollView
       className="w-full flex-1"
       showsHorizontalScrollIndicator={false}>
-      <Alert message={error} visible={errorModal} setVisible={setErrorModal} />
+      {/* <Alert visible={errorModal} /> */}
       <View className="w-full items-center">
         <TextLabel title="Phone Number:" />
         <Input

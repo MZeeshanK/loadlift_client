@@ -30,7 +30,7 @@ export default orders = [
   {
     id: '3',
     userName: 'John Doe',
-    driverName: 'Ghulam Nabi',
+    driverName: 'Manzoor khan',
     status: 'completed',
     typeOfVehicle: 'Mini Truck',
     price: 1200,

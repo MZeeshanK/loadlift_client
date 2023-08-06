@@ -10,10 +10,10 @@ import TextLabel from '../../../components/TextLabel';
 import Title from '../../../components/Title';
 import Alert from '../../../components/Alert';
 
-import {useDispatch} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {userLogin} from '../../../store/user';
 import axios from 'axios';
-import {setLoading} from '../../../store/misc';
+import {setError, setLoading} from '../../../store/misc';
 
 const OTP = ({route}) => {
   const navigation = useNavigation();
@@ -24,8 +24,6 @@ const OTP = ({route}) => {
   const [timer, setTimer] = useState(59);
   const [otp, setOtp] = useState('');
   const [isMount, setIsMount] = useState(false);
-  const [error, setError] = useState(false);
-  const [errorModal, setErrorModal] = useState(null);
 
   const {phone} = route?.params;
 
@@ -55,12 +53,12 @@ const OTP = ({route}) => {
       );
 
       if (status === 200) {
-        dispatch(userLogin({token: data.token}));
-        navigation.navigate('Tabs');
+        dispatch(userLogin(data.token));
+        // navigation.navigate('AppScreens', {screen: 'Tabs'});
       }
     } catch (err) {
-      setError(err.response.data.error || err.response.data.message);
-      setErrorModal(true);
+      // dispatch(setError(err.response.data['error' || 'message']));
+      console.log(err);
     }
     setIsMount(false);
 
@@ -70,12 +68,13 @@ const OTP = ({route}) => {
   useEffect(() => {
     if (isMount) {
       otpVerify();
+      setIsMount(false);
     }
   }, [isMount]);
 
   return (
     <Linear style={{justifyContent: 'flex-start'}}>
-      <Alert message={error} visible={errorModal} setVisible={setErrorModal} />
+      {/* <Alert visible={modal} /> */}
       <Header title="Login" />
 
       <View className="w-full items-center justify-between flex-1 my-10">

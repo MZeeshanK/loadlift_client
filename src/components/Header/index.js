@@ -3,8 +3,11 @@ import {Image, Pressable, useColorScheme, Animated} from 'react-native';
 
 import {useNavigation} from '@react-navigation/native';
 import Title from '../Title';
+import {useDispatch} from 'react-redux';
+import {setLoading} from '../../store/misc';
 
 const Header = ({isBack, expand, isInverted, title, style, onPress}) => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
 
@@ -16,6 +19,11 @@ const Header = ({isBack, expand, isInverted, title, style, onPress}) => {
       duration: 100,
       useNativeDriver: true,
     }).start();
+  };
+
+  const goBack = () => {
+    dispatch(setLoading(false));
+    navigation.goBack();
   };
 
   useEffect(() => {
@@ -32,7 +40,7 @@ const Header = ({isBack, expand, isInverted, title, style, onPress}) => {
       {isBack && (
         <Pressable
           className="absolute left-0 h-full justify-center"
-          onPress={() => navigation.goBack()}>
+          onPress={goBack}>
           <Image
             className="w-5 h-5"
             source={

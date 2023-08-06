@@ -10,7 +10,7 @@ import Alert from '../../../components/Alert';
 
 import {changeUserType} from '../../../store/user';
 import {setLoading} from '../../../store/misc';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 
 const Login = ({navigation}) => {
@@ -18,14 +18,10 @@ const Login = ({navigation}) => {
 
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-  const [phone, setPhone] = useState('9419292735');
+  const [phone, setPhone] = useState('9622510439');
   const [errorModal, setErrorModal] = useState(false);
   const [error, setError] = useState(null);
   const [mount, setMount] = useState(false);
-
-  const next = () => {
-    navigation.navigate('OTP', {phone});
-  };
 
   const url = `${BACKEND_URL}/api/verify/login`;
 
@@ -48,7 +44,7 @@ const Login = ({navigation}) => {
 
         if (status === 200) {
           dispatch(changeUserType(data.type));
-          next();
+          navigation.navigate('OTP', {phone});
         }
       } catch (err) {
         console.log(err);

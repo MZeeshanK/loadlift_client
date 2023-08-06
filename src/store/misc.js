@@ -1,9 +1,13 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 export const miscSlice = createSlice({
-  name: 'misc',
+  name: 'user',
   initialState: {
     loading: false,
+    error: {
+      message: '',
+      visible: false,
+    },
   },
   reducers: {
     setLoading: (state, action) => {
@@ -12,10 +16,22 @@ export const miscSlice = createSlice({
     resetLoading: state => {
       state.loading = false;
     },
+    setError: (state, action) => {
+      state.error = {
+        message: action.payload,
+        visible: true,
+      };
+    },
+    removeError: state => {
+      state.error = {
+        message: '',
+        visible: false,
+      };
+    },
   },
 });
 
-// Action creators are generated for each case reducer function
-export const {setLoading, resetLoading} = miscSlice.actions;
+export const {setLoading, resetLoading, setError, removeError} =
+  miscSlice.actions;
 
 export default miscSlice.reducer;

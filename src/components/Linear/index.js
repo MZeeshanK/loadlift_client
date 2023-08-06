@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   SafeAreaView,
   Dimensions,
@@ -7,39 +7,34 @@ import {
   TouchableWithoutFeedback,
   useColorScheme,
 } from 'react-native';
-import {useSelector} from 'react-redux';
-// import LinearGradient from 'react-native-linear-gradient';
+import {useDispatch, useSelector} from 'react-redux';
 
 import colors from '../../constants/colors';
 import Loader from '../Loader';
+import Alert from '../Alert';
+import {removeError} from '../../store/misc';
 
 const {height} = Dimensions.get('window');
 
-// const Linear = ({children, style}) => {
-//   return (
-//     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-//       <SafeAreaView className="flex-1" style={[styles.container, style]}>
-//         <LinearGradient
-//           className="flex-1 w-full h-full items-center justify-center p-4"
-//           colors={[colors.start, colors.end]}
-//           start={{x: 0, y: 0}}
-//           end={{x: 1, y: 1}}
-//           locations={[0, 1]}>
-//           {children}
-//         </LinearGradient>
-//       </SafeAreaView>
-//     </TouchableWithoutFeedback>
-//   );
-// };
-
 const Linear = ({children, style}) => {
   const colorScheme = useColorScheme();
+  const dispatch = useDispatch();
 
   const loading = useSelector(state => state.misc.loading);
 
   if (loading) {
     Keyboard.dismiss();
   }
+
+  const {visible} = useSelector(state => state.misc.error);
+
+  useEffect(() => {
+    if (visible) {
+      setTimeout(() => {
+        dispatch(removeError());
+      }, 2000);
+    }
+  }, [visible]);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -56,6 +51,7 @@ const Linear = ({children, style}) => {
           style,
         ]}>
         <>
+          <Alert />
           {loading && <Loader />}
           {children}
         </>

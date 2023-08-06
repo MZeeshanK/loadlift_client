@@ -11,81 +11,60 @@ import CustomModal from '../../../components/CustomModal';
 
 import {useNavigation} from '@react-navigation/native';
 import {useSelector, useDispatch} from 'react-redux';
-import {userDetails} from '../../../store/user';
+import {userLogout} from '../../../store/user';
 import colors from '../../../constants/colors';
-import axios from 'axios';
+
+const accountOptions = [
+  {
+    title: 'Settings',
+    screen: 'Settings',
+  },
+  {
+    title: "Switch to Driver's Account",
+    screen: 'AccountSwitch',
+    userOnly: true,
+  },
+  {
+    title: "Switch to User's Account",
+    screen: 'AccountSwitch',
+    driverOnly: true,
+  },
+  {
+    title: 'Rate Us',
+    //  Todo
+  },
+  {
+    title: 'Contact Us',
+    //  TODO
+  },
+  {
+    title: 'Logout',
+  },
+];
+
+const userAccountOptions = accountOptions.filter(option => !option.driverOnly);
+const driverAccountOptions = accountOptions.filter(option => !option.userOnly);
 
 const Account = ({}) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
 
-  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-
   const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
 
   const [modalVisible, setModalVisible] = useState(false);
 
-  const userType = useSelector(state => state.user.type);
-  const user = useSelector(state => state.user.data);
-  const userToken = useSelector(state => state.user.token);
+  const {
+    type: userType,
+    data: user,
+    token: userToken,
+  } = useSelector(state => state.user);
 
   useEffect(() => {
-    const url = `${BACKEND_URL}/api/users/me`;
-
-    const getUser = async () => {
-      try {
-        const {data, status} = await axios.get(url, {
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
-        });
-
-        if (status === 200) {
-          dispatch(userDetails(data.user));
-        }
-      } catch (err) {
-        console.log(err.response.data['message' || 'error']);
-      }
-    };
-
-    getUser();
-  }, []);
-
-  const accountOptions = [
-    {
-      title: 'Settings',
-      screen: 'Settings',
-    },
-    {
-      title: "Switch to Driver's Account",
-      screen: 'AccountSwitch',
-      userOnly: true,
-    },
-    {
-      title: "Switch to User's Account",
-      screen: 'AccountSwitch',
-      driverOnly: true,
-    },
-    {
-      title: 'Rate Us',
-      //  Todo
-    },
-    {
-      title: 'Contact Us',
-      //  TODO
-    },
-    {
-      title: 'Logout',
-    },
-  ];
-
-  const userAccountOptions = accountOptions.filter(
-    option => !option.driverOnly,
-  );
-  const driverAccountOptions = accountOptions.filter(
-    option => !option.userOnly,
-  );
+    if (!userToken) {
+      navigation.reset();
+    }
+  }, [userToken]);
 
   const selectedOptions =
     userType === 'driver' ? driverAccountOptions : userAccountOptions;
@@ -113,8 +92,8 @@ const Account = ({}) => {
             danger
             half
             onPress={() => {
+              dispatch(userLogout());
               setModalVisible(false);
-              navigation.navigate('Login');
             }}
           />
         </View>
@@ -127,7 +106,6 @@ const Account = ({}) => {
       <Header title="Account" isBack={false} />
 
       <Modal />
-
       <ScrollView
         className="w-full flex-1"
         showsVerticalScrollIndicator={false}>
