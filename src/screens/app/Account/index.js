@@ -7,12 +7,13 @@ import Card from '../../../components/Card';
 import Rating from '../../../components/Rating';
 import Button from '../../../components/Button';
 import Title from '../../../components/Title';
-import CustomModal from '../../../components/CustomModal';
+import CustomModal from '../../../components/UserDetails/CustomModal';
 
 import {useNavigation} from '@react-navigation/native';
 import {useSelector, useDispatch} from 'react-redux';
 import {userLogout} from '../../../store/user';
 import colors from '../../../constants/colors';
+import DriverRate from './DriverRate';
 
 const accountOptions = [
   {
@@ -185,6 +186,9 @@ const Account = ({}) => {
             </Title>
           </Card>
         </View>
+
+        {userType === 'driver' && <DriverRate />}
+        {/* <DriverRate /> */}
 
         <Card className="py-1 px-0">
           {selectedOptions.map((item, index) => (

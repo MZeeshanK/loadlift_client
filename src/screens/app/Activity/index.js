@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   useColorScheme,
+  Pressable,
 } from 'react-native';
 
 import Linear from '../../../components/Linear';
@@ -12,9 +13,13 @@ import GFlatList from '../../../components/GFlatList';
 import Card from '../../../components/Card';
 
 import colors from '../../../constants/colors';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import FilterCard from './FilterCard';
+import axios from 'axios';
+import {setError} from '../../../store/misc';
+import {getAllOrders} from '../../../store/orders';
+import Title from '../../../components/Title';
 
 const initialState = {
   ongoing: false,
@@ -28,57 +33,41 @@ const initialState = {
   above10000: false,
 };
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+
 const Activity = () => {
+  const dispatch = useDispatch();
   const colorScheme = useColorScheme();
+  const {token: userToken} = useSelector(state => state.user);
+
   const orders = useSelector(state => state.orders.data);
 
   // state
   const [text, setText] = useState('');
   const [clear, setClear] = useState(false);
-  const [filterOptions, setFilterOptions] = useState(false);
-  const [filterSettings, setFilterSettings] = useState(initialState);
   const [filteredOrders, setFilteredOrders] = useState(orders);
 
   // theme
   const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
   const ongoing = colorScheme === 'dark' ? colors.ongoing : colors.lightOngoing;
 
-  // Clear button in activity screen search
   useEffect(() => {
     if (text) {
       setClear(true);
 
       setFilteredOrders(
-        filteredOrders.filter(order =>
-          order.driverName.toLowerCase().includes(text.toLowerCase()),
+        orders.filter(
+          order =>
+            order?.driver?.firstName
+              .toLocaleLowerCase()
+              .includes(text.toLocaleLowerCase()) ||
+            order?.driver?.lastName
+              .toLocaleLowerCase()
+              .includes(text.toLocaleLowerCase()),
         ),
       );
-    } else {
-      setClear(false);
-      setFilteredOrders(orders);
     }
   }, [text]);
-
-  // Search button filter
-  const SearchButton = ({...props}) => (
-    <TouchableOpacity
-      onPress={props.onPress}
-      className="px-3 py-3 mx-[4] rounded-lg border"
-      style={[{borderColor: primary}, props.style]}>
-      <Image
-        source={
-          colorScheme === 'dark' && props.image === 'filter'
-            ? require('../../../assets/filter-light.png')
-            : colorScheme === 'dark' && props.image === 'search'
-            ? require('../../../assets/search-light.png')
-            : colorScheme !== 'dark' && props.image === 'filter'
-            ? require('../../../assets/filter-dark.png')
-            : require('../../../assets/search-dark.png')
-        }
-        className="h-4 w-4 "
-      />
-    </TouchableOpacity>
-  );
 
   return (
     <Linear>
@@ -95,6 +84,7 @@ const Activity = () => {
             }}
             placeholderTextColor={colors.grey}
             placeholder="Search..."
+            returnKeyType="search"
           />
           {clear && (
             <TouchableOpacity onPress={() => setText('')} className="p-3 mr-1">
@@ -105,23 +95,10 @@ const Activity = () => {
             </TouchableOpacity>
           )}
         </View>
-        <View className="px-2 py-2 flex-row items-center justify-center">
-          {/* <SearchButton image="search" /> */}
-          <SearchButton
-            image="filter"
-            onPress={() => setFilterOptions(filterOptions => !filterOptions)}
-            style={{backgroundColor: filterOptions && ongoing}}
-          />
-        </View>
+
+        {/* Filter Button */}
       </Card>
-      {filterOptions && (
-        <FilterCard
-          initialState={initialState}
-          state={filterSettings}
-          setState={setFilterSettings}
-          setFilterOptions={setFilterOptions}
-        />
-      )}
+
       {/* List */}
       <GFlatList orders={filteredOrders} activity />
     </Linear>

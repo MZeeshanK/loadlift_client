@@ -5,7 +5,6 @@ import {
   FlatList,
   Pressable,
   Image,
-  Dimensions,
   useColorScheme,
 } from 'react-native';
 
@@ -18,11 +17,13 @@ import Card from '../../../components/Card';
 import categories from '../../../data/categories';
 import Title from '../../../components/Title';
 import colors from '../../../constants/colors';
-
-const {height} = Dimensions.get('window');
+import {setOrigin} from '../../../store/map';
+import {useSelector} from 'react-redux';
 
 const Booking = ({navigation}) => {
   const colorScheme = useColorScheme();
+
+  const {origin, destination} = useSelector(state => state.map);
 
   const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
   const ongoing = colorScheme === 'dark' ? colors.ongoing : colors.lightOngoing;
@@ -53,13 +54,12 @@ const Booking = ({navigation}) => {
   );
 
   const VehicleCard = () => (
-    <Card className="w-full mb-10 py-2">
+    <Card className="w-full mb-5 py-2 flex-1">
       <Title primary xxl bold className="pb-2">
         Categories
       </Title>
       <FlatList
         className="w-full"
-        style={{height: height / 3}}
         showsVerticalScrollIndicator={false}
         data={categories}
         keyExtractor={item => item?.id}
@@ -142,7 +142,7 @@ const Booking = ({navigation}) => {
       <View className="w-full flex-1 items-center justify-start">
         <InputButton
           title="Set pick-up location"
-          onPress={() => navigation.navigate('Map')}
+          onPress={() => navigation.navigate('Map', {state: 'origin'})}
         />
         <InputButton
           title="Set Destination location"
@@ -165,7 +165,6 @@ const Booking = ({navigation}) => {
         ) : (
           <>
             <VehicleCard />
-            <View className="flex-1" />
           </>
         )}
       </View>

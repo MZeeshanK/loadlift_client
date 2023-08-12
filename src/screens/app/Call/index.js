@@ -2,20 +2,20 @@ import React, {useState, useRef, useEffect} from 'react';
 import {
   View,
   StyleSheet,
-  Text,
   Image,
   Pressable,
   Animated,
   useColorScheme,
 } from 'react-native';
 
+import colors from '../../../constants/colors';
+
 import Linear from '../../../components/Linear';
 import Header from '../../../components/Header';
-import colors from '../../../constants/colors';
 import Card from '../../../components/Card';
+import Title from '../../../components/Title';
 
 import {useNavigation} from '@react-navigation/native';
-import Title from '../../../components/Title';
 
 const Call = () => {
   const colorScheme = useColorScheme();
@@ -97,47 +97,52 @@ const Call = () => {
 
   const IncomingOptions = () => {
     return (
-      <View className="w-full items-center justify-center space-y-4">
-        <Animated.Image
-          source={require('../../../assets/calling-green.png')}
-          style={[
-            styles.arrows,
-            {
-              opacity: animation.interpolate({
-                inputRange: [0, 1],
-                outputRange: [0.3, 0.6],
-              }),
-            },
-          ]}
-        />
-        <Animated.Image
-          source={require('../../../assets/call.png')}
-          style={[
-            styles.button2,
-            {
-              transform: [
-                {
-                  translateY: animation.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [0, -10],
-                  }),
-                },
-              ],
-            },
-          ]}
-        />
-        <Animated.Image
-          source={require('../../../assets/calling-red.png')}
-          style={[
-            styles.arrows,
-            {
-              opacity: animation.interpolate({
-                inputRange: [0, 1],
-                outputRange: [0.6, 0.3],
-              }),
-            },
-          ]}
-        />
+      <View className="w-full flex-row mb-16 items-center justify-between px-8">
+        <Pressable onPress={() => setIncoming(false)}>
+          <Animated.Image
+            source={require('../../../assets/call.png')}
+            style={[
+              styles.button2,
+              {
+                opacity: animation.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0.8, 1],
+                }),
+                transform: [
+                  {
+                    scale: animation.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [1, 1.05],
+                    }),
+                  },
+                ],
+              },
+            ]}
+          />
+        </Pressable>
+
+        <Pressable onPress={() => navigation.goBack()}>
+          <Animated.Image
+            source={require('../../../assets/callend.png')}
+            style={[
+              styles.button2,
+              {
+                opacity: animation.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [1, 0.8],
+                }),
+                transform: [
+                  {
+                    scale: animation.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [1.05, 1],
+                    }),
+                  },
+                ],
+              },
+            ]}
+          />
+        </Pressable>
       </View>
     );
   };

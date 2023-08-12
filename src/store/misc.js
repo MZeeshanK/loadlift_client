@@ -8,6 +8,11 @@ export const miscSlice = createSlice({
       message: '',
       visible: false,
     },
+    modalError: {
+      message: '',
+      visible: false,
+      modal: false,
+    },
   },
   reducers: {
     setLoading: (state, action) => {
@@ -28,10 +33,38 @@ export const miscSlice = createSlice({
         visible: false,
       };
     },
+    setModalError: (state, action) => {
+      state.modalError = {
+        message: action.payload,
+        visible: true,
+        modal: true,
+      };
+    },
+    removeModalError: state => {
+      state.modalError = {
+        message: '',
+        visible: false,
+        modal: true,
+      };
+    },
+    removeModal: state => {
+      state.modalError = {
+        message: '',
+        visible: false,
+        modal: false,
+      };
+    },
   },
 });
 
-export const {setLoading, resetLoading, setError, removeError} =
-  miscSlice.actions;
+export const {
+  setLoading,
+  resetLoading,
+  setError,
+  removeError,
+  setModalError,
+  removeModalError,
+  removeModal,
+} = miscSlice.actions;
 
 export default miscSlice.reducer;

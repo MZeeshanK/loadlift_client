@@ -23,11 +23,13 @@
     "react-native": "0.71.10",
     "react-native-asset": "^2.1.1",
     "react-native-dotenv": "^3.4.9",
+    "react-native-draggable": "^3.3.0",
     "react-native-drop-shadow": "^0.0.7",
     "react-native-easing-gradient": "^1.1.0",
     "react-native-gesture-handler": "^2.11.0",
     "react-native-linear-gradient": "^2.7.3",
     "react-native-maps": "^1.7.1",
+    "react-native-maps-directions": "^1.9.0",
     "react-native-safe-area-context": "^4.5.3",
     "react-native-screens": "^3.20.0",
     "react-native-shadow": "^1.2.2",
@@ -37,6 +39,7 @@
     "react-redux": "^8.1.1",
     "redux": "^4.2.1",
     "redux-persist": "^6.0.0",
+    "redux-thunk": "^2.4.2",
     "tailwindcss": "^3.3.2"
   },
   "devDependencies": {

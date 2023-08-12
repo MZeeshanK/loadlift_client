@@ -1,17 +1,15 @@
 export default orders = [
   {
     id: '1',
-    userName: 'John Doe',
-    driverName: 'Ghulam Nabi',
+    user: 'ObjectId',
+    driver: 'ObjectId',
     typeOfVehicle: 'Mini Truck',
     price: 1200,
     distance: 10.8,
-    status: 'ongoing',
-    substatus: 'requesting payment',
-    vehicleNumber: 'JK01AA 1234',
     pickUp: '121, Hawaal, Srinagar, Jammu and Kashmir',
     date: '02/11/2023',
     destination: '203, Rainawari, Srinagar, Jammu and Kashmir',
+    status: 'ongoing',
   },
   {
     id: '2',

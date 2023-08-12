@@ -53,32 +53,32 @@ const OrderItem = ({item, ...props}) => {
         <View
           className="border-r items-center justify-start px-1 py-3"
           style={{borderColor: primary}}>
-          <Image source={image} style={styles.car} />
+          {/* <Image source={image} style={styles.car} /> */}
         </View>
 
         <View className="flex-1 items-between justify-between py-2 px-2 h-[90%]">
           <View className="flex-row items-center justify-between">
-            <Title className="tracking-tight" xsm>
+            <Title left className="tracking-tight w-1/2" xsm>
               <Title semibold xsm>
                 Name:{' '}
               </Title>
-              {item?.driverName}
+              {item?.driver?.firstName} {item?.driver?.lastName}
             </Title>
-            <Title className="tracking-tight" xsm>
-              <Title semibold xsm>
-                Number:{' '}
-              </Title>
-              {item?.vehicleNumber}
-            </Title>
-          </View>
-          <View className="flex-row items-center justify-between">
-            <Title className="tracking-tight" xsm>
+            <Title right className="tracking-tight" xsm>
               <Title semibold xsm>
                 Price:{' '}
               </Title>
               {'\u20b9'} {item?.price}
             </Title>
-            <Title className="tracking-tight" xsm>
+          </View>
+          <View className="flex-row items-center justify-between">
+            <Title left className="tracking-tight w-1/2" xsm>
+              <Title semibold xsm>
+                Vehicle Number:{' '}
+              </Title>
+              {item?.driver?.vehicleNumber}
+            </Title>
+            <Title right className="tracking-tight" xsm>
               <Title semibold xsm>
                 Distance:{' '}
               </Title>

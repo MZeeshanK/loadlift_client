@@ -5,15 +5,23 @@ import Card from '../Card';
 import Title from '../Title';
 
 import upi from '../../data/upi';
-import userCards from '../../data/userCards';
 import Button from '../Button';
 import colors from '../../constants/colors';
+import NewCard from './NewCard';
 
 const PaymentDetails = () => {
   const colorScheme = useColorScheme();
 
-  const [cards] = useState(userCards);
-  const [cardOptions, setCardOptions] = useState(false);
+  const [cards, setCards] = useState([
+    {
+      userName: 'John Doe',
+      cardNumber: '1234567890123456',
+      expiry: '12/24',
+      cvv: '123',
+    },
+  ]);
+  const [newCardModal, setNewCardModal] = useState(false);
+  const [selectedCard, setSelectedCard] = useState('');
 
   const ongoing =
     colorScheme === 'dark' ? colors.ongoing : colors.lightSecondary;
@@ -21,8 +29,17 @@ const PaymentDetails = () => {
   const dark = colorScheme === 'dark' ? colors.black : colors.white;
   const light = colorScheme === 'dark' ? colors.white : colors.black;
 
+  const deleteCard = () => {
+    setCards(cards.filter(card => card.cardNumber !== selectedCard));
+  };
+
   return (
     <>
+      <NewCard
+        visible={newCardModal}
+        setVisible={setNewCardModal}
+        setState={setCards}
+      />
       <Card className="flex-row px-6 py-2 justify-between items-center">
         <Title xl bold className="tracking-wide">
           LoadCoin
@@ -67,35 +84,114 @@ const PaymentDetails = () => {
         </Title>
 
         <View className="w-full py-1">
-          {cards.map((card, index) => (
-            <Pressable
-              onPress={() => setCardOptions(true)}
-              key={card.number}
-              className="my-2 flex-row items-center justify-between w-full px-3 py-1 rounded-full"
-              style={{backgroundColor: index === 0 ? primary : ongoing}}>
-              <Title lg bold left style={{color: index === 0 ? dark : light}}>
-                {card.name}
-              </Title>
-              <Title
-                base
-                semibold
-                right
-                style={{color: index === 0 ? dark : light}}>
-                XXXX {card.number.slice(-4)}
-              </Title>
-            </Pressable>
-          ))}
+          {cards.map((card, index) => {
+            const selectCondition = selectedCard === card?.cardNumber;
+
+            if (selectCondition) {
+              return (
+                <Pressable
+                  onPress={() => {
+                    setSelectedCard('');
+                  }}
+                  key={card?.cardNumber}
+                  className="my-2 w-full px-3 py-1 rounded-xl"
+                  style={{backgroundColor: index === 0 ? primary : ongoing}}>
+                  <View className="flex-row w-full items-center justify-between mb-3">
+                    <View className="flex-row items-center">
+                      <Title
+                        base
+                        bold
+                        left
+                        style={{color: index === 0 ? dark : light}}>
+                        Name:{' '}
+                      </Title>
+                      <Title
+                        base
+                        semibold
+                        left
+                        style={{color: index === 0 ? dark : light}}>
+                        {card?.userName}
+                      </Title>
+                    </View>
+                    <View className="flex-row items-center">
+                      <Title
+                        base
+                        bold
+                        right
+                        style={{color: index === 0 ? dark : light}}>
+                        Expiry:{' '}
+                      </Title>
+                      <Title
+                        base
+                        semibold
+                        right
+                        style={{color: index === 0 ? dark : light}}>
+                        {card?.expiry}
+                      </Title>
+                    </View>
+                  </View>
+                  <View className="flex-row items-center justify-between">
+                    <View className="flex-row items-center">
+                      <Title
+                        base
+                        bold
+                        left
+                        style={{color: index === 0 ? dark : light}}>
+                        Card Number:{' '}
+                      </Title>
+                      <Title
+                        semibold
+                        left
+                        style={{color: index === 0 ? dark : light}}>
+                        {card?.cardNumber}
+                      </Title>
+                    </View>
+                  </View>
+                  <View className="flex-row w-full items-center gap-x-2 justify-end mt-5 mb-2">
+                    <Button mini title="Make Primary Card" />
+                    <Button danger mini title="Delete" onPress={deleteCard} />
+                  </View>
+                </Pressable>
+              );
+            }
+
+            return (
+              <Pressable
+                onPress={() => {
+                  setSelectedCard(card?.cardNumber);
+                }}
+                key={card?.cardNumber}
+                className="my-2 flex-row items-center justify-between w-full px-3 py-1 rounded-full"
+                style={{backgroundColor: index === 0 ? primary : ongoing}}>
+                <Title
+                  base
+                  bold
+                  left
+                  style={{color: index === 0 ? dark : light}}>
+                  {card?.userName}
+                </Title>
+                <Title
+                  base
+                  semibold
+                  right
+                  style={{color: index === 0 ? dark : light}}>
+                  XXXX {card?.cardNumber.slice(-4)}
+                </Title>
+              </Pressable>
+            );
+          })}
         </View>
 
-        <View className="flex-row items-center justify-end my-3 w-full">
-          {cardOptions && (
-            <>
-              <Button title="Remove Card" mini danger />
-              <Button title="Edit Card" card mini className="ml-3" />
-            </>
-          )}
-          <Button title="Add Card" mini className="ml-3" />
-        </View>
+        {cards.length <= 2 && (
+          <View className="flex-row items-center justify-end my-3 w-full">
+            <Button
+              title="Add Card"
+              mini
+              className="ml-3"
+              onPress={() => setNewCardModal(true)}
+            />
+          </View>
+        )}
       </Card>
     </>
   );

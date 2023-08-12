@@ -7,13 +7,13 @@ import HomeButton from './UserButton';
 import GFlatList from '../../../components/GFlatList';
 import DriverButton from './DriverButton';
 import DriverCard from './DriverCard';
-import CustomModal from '../../../components/CustomModal';
+import CustomModal from '../../../components/UserDetails/CustomModal';
 import Card from '../../../components/Card';
 
 import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
-import {userDetails, userLogout} from '../../../store/user';
-import {setError} from '../../../store/misc';
+import {userDetails} from '../../../store/user';
+import {getAllOrders} from '../../../store/orders';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -24,12 +24,14 @@ const Home = () => {
   const [isDelivering, setIsDelivering] = useState(false);
   const [deliveryModalVisible, setDeliveryModalVisible] = useState(false);
 
-  const userType = useSelector(state => state.user.type);
-  const userToken = useSelector(state => state.user.token);
+  const {
+    type: userType,
+    token: userToken,
+    data: userData,
+  } = useSelector(state => state.user);
 
   const orders = useSelector(state => state.orders.data);
-
-  const homeOrders = orders.filter(order => order?.status === 'ongoing');
+  // console.log(orders);
 
   useEffect(() => {
     isActive ? setDeliveryModalVisible(true) : setDeliveryModalVisible(false);
@@ -60,8 +62,20 @@ const Home = () => {
       }
     };
 
-    getUser();
+    if (!userData) {
+      getUser();
+    }
   }, []);
+
+  useEffect(() => {
+    dispatch(getAllOrders(userToken));
+  }, [dispatch]);
+
+  // const homeOrders = orders
+  //   .filter(
+  //     order => order.status !== 'completed' && order.status !== 'cancelled',
+  //   )
+  //   .slice(0, 2);
 
   const Driver = () => (
     <View className="flex-1 w-full items-center justify-between -mt-8">
@@ -114,7 +128,7 @@ const Home = () => {
         ) : (
           <>
             {/* 3 last orders list */}
-            <GFlatList home orders={homeOrders} />
+            <GFlatList home orders={[]} />
 
             <HomeButton />
           </>

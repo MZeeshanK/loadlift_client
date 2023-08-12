@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, Pressable, useColorScheme} from 'react-native';
 
-const Card = ({children, style, onPress, ...props}) => {
+const Card = ({children, style, ...props}) => {
   const colorScheme = useColorScheme();
 
   const card = colorScheme === 'dark' ? colors.card : colors.lightCard;
@@ -10,7 +10,7 @@ const Card = ({children, style, onPress, ...props}) => {
 
   return (
     <Pressable
-      onPress={onPress}
+      onPress={props.onPress && props.onPress}
       className={`rounded-xl p-4 my-3 items-center w-full justify-center`}
       style={[
         styles.container,

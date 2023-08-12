@@ -11,7 +11,7 @@ import orders from '../../../data/orders';
 import categories from '../../../data/categories';
 import styleConstants from '../../../constants/styles';
 import Title from '../../../components/Title';
-import CustomModal from '../../../components/CustomModal';
+import CustomModal from '../../../components/UserDetails/CustomModal';
 
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
@@ -240,13 +240,13 @@ const Order = () => {
               <Button
                 title="Call"
                 half
+                card={picked}
                 onPress={() => navigation.navigate('Call')}
               />
               {picked && userType === 'driver' && (
                 <Button
                   title="Delivered"
                   half
-                  success
                   className="flex-1 ml-2"
                   onPress={() => setDeliveredModalVisible(true)}
                 />

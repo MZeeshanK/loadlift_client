@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React, {useEffect} from 'react';
+import React from 'react';
 
 import {Image, StyleSheet, View, useColorScheme} from 'react-native';
 import colors from './constants/colors';
@@ -30,6 +30,8 @@ import Map from './screens/app/Map';
 import Call from './screens/app/Call';
 import DriverList from './screens/app/DriverList';
 import PaymentDone from './screens/app/PaymentDone';
+import LocationSettings from './screens/app/Settings/LocationSettings';
+
 import ComingSoon from './screens/ComingSoon';
 
 import Title from './components/Title';
@@ -156,6 +158,7 @@ function Routes() {
         <Stack.Screen name="Map" component={Map} />
         <Stack.Screen name="DriverList" component={DriverList} />
         <Stack.Screen name="Call" component={Call} />
+        <Stack.Screen name="LocationSettings" component={LocationSettings} />
         <Stack.Screen name="PaymentDone" component={PaymentDone} />
         <Stack.Screen name="ComingSoon" component={ComingSoon} />
         <Stack.Screen name="NotFound" component={NotFound} />

@@ -13,10 +13,10 @@ const Button = ({title, onPress, source, style, ...props}) => {
   return (
     <TouchableOpacity
       className={`flex-row rounded-full items-center justify-center px-10 py-1 ${
-        source && 'gap-x-1'
-      } ${props.mini && 'px-3'} ${props.medium && 'px-8'} ${
-        props.max && 'px-16'
-      } ${props.half && 'w-[48%]'}`}
+        props.mini && 'px-3'
+      } ${props.medium && 'px-8'} ${props.max && 'px-16'} ${
+        props.half && 'w-[48%]'
+      }`}
       style={[
         {
           backgroundColor: primary,
@@ -39,7 +39,7 @@ const Button = ({title, onPress, source, style, ...props}) => {
         style,
       ]}
       onPress={onPress}>
-      {source && <Image className="w-[16] h-[16]" source={source} />}
+      {source && <Image className="w-[16] h-[16] mr-2" source={source} />}
       <Title
         bold={!props.mini}
         semibold={props.mini}

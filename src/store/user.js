@@ -6,7 +6,10 @@ export const userSlice = createSlice({
     token: '',
     type: '',
     data: null,
-    what: 'null',
+    rate: {
+      perkm: 100,
+      per5km: 450,
+    },
   },
   reducers: {
     changeUserType: (state, action) => {
@@ -23,11 +26,14 @@ export const userSlice = createSlice({
     userDetails: (state, action) => {
       state.data = action.payload;
     },
+    changeRate: (state, action) => {
+      state.rate = action.payload;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const {changeUserType, userLogin, userLogout, userDetails} =
+export const {changeUserType, userLogin, userLogout, userDetails, changeRate} =
   userSlice.actions;
 
 export default userSlice.reducer;

@@ -71,11 +71,12 @@ const DriverList = ({navigation}) => {
           </Title>
         </View>
         <View className="flex-1 flex-row items-center justify-between px-1">
-          <View>
+          <View className="w-1/2 items-start justify-center">
             <Title
-              className="tracking-tighter leading-5 "
               semibold
               sm
+              left
+              className="tracking-tighter leading-5 "
               black={driver === item}>
               {item?.driverName}
             </Title>
@@ -101,14 +102,27 @@ const DriverList = ({navigation}) => {
               />
             </View>
           </View>
-          <Title className="tracking-tighter" bold xsm black={driver === item}>
-            {item?.vehicleNumber}
-          </Title>
+          <View className="flex-row items-center justify-center px-1">
+            <Title
+              className="tracking-tighter"
+              xsm
+              bold
+              black={driver === item}>
+              Rate/Km:{' '}
+            </Title>
+            <Title
+              className="tracking-tighter"
+              xsm
+              semibold
+              black={driver === item}>
+              {'\u20b9'} {item?.rateperKm}
+            </Title>
+          </View>
         </View>
         <View
           className={`items-center justify-center border-l-2 h-full border-primary ${
             driver === item && 'border-black'
-          } px-2`}
+          } px-3`}
           style={{
             borderColor:
               driver === item && colorScheme === 'dark'
@@ -121,10 +135,17 @@ const DriverList = ({navigation}) => {
           }}>
           <Title
             className="tracking-tighter"
-            xxsm
+            xsm
             semibold
             black={driver === item}>
-            {item?.distance}m away
+            {item?.distance}m
+          </Title>
+          <Title
+            className="tracking-tighter leading-3"
+            xsm
+            semibold
+            black={driver === item}>
+            away
           </Title>
         </View>
       </Pressable>
