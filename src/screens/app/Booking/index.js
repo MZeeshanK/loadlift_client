@@ -17,8 +17,8 @@ import Card from '../../../components/Card';
 import categories from '../../../data/categories';
 import Title from '../../../components/Title';
 import colors from '../../../constants/colors';
-import {setOrigin} from '../../../store/map';
 import {useSelector} from 'react-redux';
+import TextLabel from '../../../components/TextLabel';
 
 const Booking = ({navigation}) => {
   const colorScheme = useColorScheme();
@@ -140,13 +140,30 @@ const Booking = ({navigation}) => {
     <Linear>
       <Header title="Booking" />
       <View className="w-full flex-1 items-center justify-start">
+        <TextLabel title="Pick Up: " />
         <InputButton
-          title="Set pick-up location"
-          onPress={() => navigation.navigate('Map', {state: 'origin'})}
+          style={{marginTop: 0}}
+          title={
+            origin ? `${origin?.lat} ${origin.lng}` : 'Set Pick Up Location'
+          }
+          onPress={() =>
+            navigation.navigate('Map', {location: origin, state: 'origin'})
+          }
         />
+        <TextLabel title="Destination: " />
         <InputButton
-          title="Set Destination location"
-          onPress={() => navigation.navigate('Map')}
+          title={
+            destination
+              ? `${destination?.lat} ${destination.lng}`
+              : 'Set Destination Location'
+          }
+          style={{marginTop: 0}}
+          onPress={() =>
+            navigation.navigate('Map', {
+              location: destination,
+              state: 'destination',
+            })
+          }
         />
 
         <View
@@ -157,11 +174,14 @@ const Booking = ({navigation}) => {
         <ChipButton />
 
         {weight ? (
-          <Input
-            placeholder="Enter Weight in Kg"
-            keyboard="numeric"
-            style={{marginTop: 20}}
-          />
+          <>
+            <TextLabel title="Set Weight: " />
+            <Input
+              placeholder="Enter Weight in Kg"
+              keyboardType="numeric"
+              style={{marginTop: 0}}
+            />
+          </>
         ) : (
           <>
             <VehicleCard />

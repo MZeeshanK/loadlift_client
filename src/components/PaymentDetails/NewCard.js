@@ -5,7 +5,7 @@ import Title from '../Title';
 
 import Button from '../Button';
 import colors from '../../constants/colors';
-import CustomModal from '../UserDetails/CustomModal';
+import CustomModal from '../CustomModal';
 import TextLabel from '../TextLabel';
 import Input from '../Input';
 import {useDispatch} from 'react-redux';

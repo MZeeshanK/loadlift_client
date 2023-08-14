@@ -7,7 +7,7 @@ import Card from '../../../components/Card';
 import Rating from '../../../components/Rating';
 import Button from '../../../components/Button';
 import Title from '../../../components/Title';
-import CustomModal from '../../../components/UserDetails/CustomModal';
+import CustomModal from '../../../components/CustomModal';
 
 import {useNavigation} from '@react-navigation/native';
 import {useSelector, useDispatch} from 'react-redux';

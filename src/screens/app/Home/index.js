@@ -7,7 +7,7 @@ import HomeButton from './UserButton';
 import GFlatList from '../../../components/GFlatList';
 import DriverButton from './DriverButton';
 import DriverCard from './DriverCard';
-import CustomModal from '../../../components/UserDetails/CustomModal';
+import CustomModal from '../../../components/CustomModal';
 import Card from '../../../components/Card';
 
 import {useDispatch, useSelector} from 'react-redux';
@@ -29,9 +29,6 @@ const Home = () => {
     token: userToken,
     data: userData,
   } = useSelector(state => state.user);
-
-  const orders = useSelector(state => state.orders.data);
-  // console.log(orders);
 
   useEffect(() => {
     isActive ? setDeliveryModalVisible(true) : setDeliveryModalVisible(false);

@@ -1,24 +1,16 @@
 import {createSlice} from '@reduxjs/toolkit';
+import ThunkApi from 'redux-thunk';
 
 export const mapSlice = createSlice({
   name: 'user',
   initialState: {
-    origin: {
-      lat: 0,
-      lng: 0,
-    },
-    destination: {
-      lat: 0,
-      lng: 0,
-    },
+    origin: {},
+    destination: {},
     home: {
-      lat: 0,
-      lng: 0,
+      lat: 34.08057325838969,
+      lng: 74.79995688423514,
     },
-    work: {
-      lat: 0,
-      lng: 0,
-    },
+    work: {},
   },
   reducers: {
     setOrigin: (state, action) => {
@@ -38,15 +30,12 @@ export const mapSlice = createSlice({
         lat: action.payload.lat,
         lng: action.payload.lng,
       };
-
-      console.log(state.home);
     },
     setWork: (state, action) => {
       state.work = {
         lat: action.payload.lat,
         lng: action.payload.lng,
       };
-      console.log(state.work);
     },
   },
 });

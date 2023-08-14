@@ -14,7 +14,7 @@ const CreateAccount = ({route}) => {
       <Header title={'Create Account'} />
 
       <View className="flex-1 w-full items-center justify-between mb-5">
-        <UserDetails phone={phone} />
+        <UserDetails phoneNumber={phone} info="create" />
       </View>
     </Linear>
   );

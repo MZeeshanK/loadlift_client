@@ -25,16 +25,16 @@
 
 export default colors = {
   background: '#0f0f0f',
-  lightBackground: '#D1E1ED',
+  lightBackground: '#CBDADC',
 
   card: '#181E1F',
-  lightCard: '#DDECE7',
+  lightCard: '#D8E6E3',
 
   ongoing: '#212A2D',
   lightOngoing: '#BADCD0',
 
   primary: '#B8F2E6',
-  lightPrimary: '#21A797',
+  lightPrimary: '#11655B',
 
   secondary: '#BDD8DB',
   lightSecondary: '#BDD8DB',

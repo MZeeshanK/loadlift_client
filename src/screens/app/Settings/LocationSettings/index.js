@@ -17,7 +17,6 @@ import InputButton from '../../../../components/InputButton';
 import {useSelector} from 'react-redux';
 
 const LocationSettings = () => {
-  const colorScheme = useColorScheme();
   const navigation = useNavigation();
 
   const {home, work} = useSelector(state => state.map);
@@ -29,7 +28,7 @@ const LocationSettings = () => {
           {state}:{' '}
         </Title>
         <InputButton
-          onPress={() => navigation.navigate('Map', {state})}
+          onPress={() => navigation.navigate('Map', {location, state})}
           title={`${location?.lat}, ${location?.lng}`}
         />
       </Card>

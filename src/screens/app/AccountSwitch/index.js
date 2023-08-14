@@ -5,7 +5,7 @@ import Linear from '../../../components/Linear';
 import Header from '../../../components/Header';
 import Title from '../../../components/Title';
 import Button from '../../../components/Button';
-import CustomModal from '../../../components/UserDetails/CustomModal';
+import CustomModal from '../../../components/CustomModal';
 
 import details from '../../../data/switchDetails';
 

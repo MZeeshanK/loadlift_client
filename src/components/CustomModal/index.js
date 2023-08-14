@@ -1,10 +1,9 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Modal, Dimensions, Pressable} from 'react-native';
 
-import Card from '../../Card';
+import Card from '../Card';
 import {useSelector} from 'react-redux';
-import {setModalError} from '../../../store/misc';
-import Alert from '../../Alert';
+import Alert from '../Alert';
 
 const {height} = Dimensions.get('window');
 

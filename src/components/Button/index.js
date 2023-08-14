@@ -9,6 +9,7 @@ const Button = ({title, onPress, source, style, ...props}) => {
   const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
   const danger = colorScheme === 'dark' ? colors.danger : colors.lightDanger;
   const ongoing = colorScheme === 'dark' ? colors.ongoing : colors.lightOngoing;
+  const card = colorScheme === 'dark' ? colors.card : colors.lightCard;
 
   return (
     <TouchableOpacity
@@ -26,6 +27,10 @@ const Button = ({title, onPress, source, style, ...props}) => {
         },
         props.card && {
           backgroundColor: ongoing,
+          elevation: 7,
+        },
+        props.alt && {
+          backgroundColor: card,
           elevation: 7,
         },
         props.success && {backgroundColor: colors.green},
@@ -51,6 +56,8 @@ const Button = ({title, onPress, source, style, ...props}) => {
         style={[
           {
             color: props.card
+              ? primary
+              : props.alt
               ? primary
               : props.danger
               ? colors.white

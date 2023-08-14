@@ -46,7 +46,7 @@ const {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   button: {
-    elevation: 3,
+    elevation: 2,
     width: width - 32,
   },
   search: {

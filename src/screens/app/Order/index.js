@@ -11,7 +11,7 @@ import orders from '../../../data/orders';
 import categories from '../../../data/categories';
 import styleConstants from '../../../constants/styles';
 import Title from '../../../components/Title';
-import CustomModal from '../../../components/UserDetails/CustomModal';
+import CustomModal from '../../../components/CustomModal';
 
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
@@ -161,7 +161,7 @@ const Order = () => {
                   {order?.date}
                 </Title>
                 <Title className="pt-0 mt-0" xsm bold primary>
-                  Status: <Title xsm>{order?.substatus}</Title>
+                  Status: <Title xsm>{order?.status}</Title>
                 </Title>
               </View>
             </View>

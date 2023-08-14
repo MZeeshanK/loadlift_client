@@ -12,7 +12,7 @@ const Profile = () => {
       <Header title="Profile" />
 
       <View className="flex-1 items-center justify-between">
-        <UserDetails user={user} />
+        <UserDetails info="profile" />
       </View>
     </Linear>
   );

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Dimensions,
   Image,
@@ -19,70 +19,74 @@ import colors from '../../../constants/colors';
 
 import {useDispatch, useSelector} from 'react-redux';
 import {setDestination, setHome, setOrigin, setWork} from '../../../store/map';
+import Linear from '../../../components/Linear';
 
 const {width, height} = Dimensions.get('window');
 
 const classNames = 'py-1 rounded-md mx-2 px-4';
 
 const Map = ({route}) => {
-  const {state} = route.params;
+  const {state, location} = route.params;
 
   const dispatch = useDispatch();
-
-  const {home, work} = useSelector(state => state.map);
-
   const colorScheme = useColorScheme();
   const navigation = useNavigation();
 
-  // let location
+  // redux states
+  const {home, work} = useSelector(state => state.map);
 
-  // switch (state) {
-  //   case 'origin':
-  //     location = {
-  //       lat: origin.lat,
-  //       lng: origin.lng,
-  //     }
-  //     break;
-  //   case 'destination':
-  //     break;
-  //   case 'home':
-  //     dispatch(setHome(center));
-  //     break;
-  //   case 'work':
-  //     dispatch(setWork(center));
-  //     break;
-  // }
-
+  // states
   const [expanded, setExpanded] = useState(true);
+  const [animate, setAnimate] = useState(false);
+
   const [center, setCenter] = useState({
-    latitude: 34.025686,
-    longitude: 74.802065,
+    lat: location.lat || home?.lat,
+    lng: location.lng || home?.lng,
   });
 
   const delta = {
-    latitudeDelta: 0.022,
-    longitudeDelta: 0.021,
+    latitudeDelta: 0.07,
+    longitudeDelta: 0.07,
   };
 
   const setLocation = () => {
     switch (state) {
-      case 'origin':
-        dispatch(setOrigin(center));
-        break;
-      case 'destination':
-        dispatch(setDestination(center));
-        break;
       case 'home':
         dispatch(setHome(center));
         break;
       case 'work':
         dispatch(setWork(center));
         break;
+      case 'origin':
+        dispatch(setOrigin({lat: center.lat, lng: center.lng}));
+        break;
+      case 'destination':
+        dispatch(setDestination(center));
+        break;
+      default:
+        break;
     }
+
+    navigation.goBack();
   };
 
+  const mapViewRef = useRef(null);
+
+  useEffect(() => {
+    if (animate) {
+      mapViewRef.current.animateToRegion({
+        latitude: center?.lat,
+        longitude: center?.lng,
+        latitudeDelta: delta.latitudeDelta,
+        longitudeDelta: delta.longitudeDelta,
+      });
+
+      setAnimate(false);
+    }
+  }, [animate]);
+
   return (
-    <SafeAreaView style={{height: height, width: width}}>
+    <Linear className="p-0">
       <View
         className="px-4 w-full items-center justify-center rounded-b-xl"
         style={{
@@ -98,54 +102,64 @@ const Map = ({route}) => {
           onPress={() => setExpanded(expanded => !expanded)}
         />
         {expanded && (
-          <>
-            <InputButton
-              left
-              title={`${center.latitude}  ,  ${center.longitude}`}
-            />
-            <View className="flex-row w-full justify-evenly my-2 mb-6">
-              <Button
-                onPress={() => setCenter(home)}
-                source={
-                  colorScheme === 'dark'
-                    ? require('../../../assets/home-focused.png')
-                    : require('../../../assets/home-light.png')
-                }
-                title="Home"
-                card
-                className={classNames}
-              />
-              <Button
-                source={
-                  colorScheme === 'dark'
-                    ? require('../../../assets/activity-focused.png')
-                    : require('../../../assets/activity-light.png')
-                }
-                title="Work"
-                card
-                className={classNames}
-              />
-              <Button
-                source={
-                  colorScheme === 'dark'
-                    ? require('../../../assets/current.png')
-                    : require('../../../assets/current-light.png')
-                }
-                title="Current"
-                card
-                className={classNames}
-              />
-            </View>
-          </>
+          <InputButton left title={`${center.lat}  ,  ${center.lng}`} />
         )}
-        {/* <Input placeholder="Search..." /> */}
       </View>
+      {expanded && (
+        <View className="flex-row w-full justify-evenly my-2 mb-6">
+          <Button
+            onPress={() => {
+              setCenter(home);
+              setAnimate(true);
+            }}
+            source={
+              colorScheme === 'dark'
+                ? require('../../../assets/home-focused.png')
+                : require('../../../assets/home-light.png')
+            }
+            title="Home"
+            alt
+            className={classNames}
+          />
+          <Button
+            onPress={() => {
+              setCenter(work);
+              setAnimate(true);
+            }}
+            source={
+              colorScheme === 'dark'
+                ? require('../../../assets/activity-focused.png')
+                : require('../../../assets/activity-light.png')
+            }
+            title="Work"
+            alt
+            className={classNames}
+          />
+          <Button
+            source={
+              colorScheme === 'dark'
+                ? require('../../../assets/current.png')
+                : require('../../../assets/current-light.png')
+            }
+            title="Current"
+            alt
+            className={classNames}
+          />
+        </View>
+      )}
+      {/* MAP */}
       <MapView
-        onRegionChange={region => {
+        onRegionChange={() => {
           setExpanded(false);
-          setCenter(region);
         }}
-        onRegionChangeComplete={() => setExpanded(true)}
+        ref={mapViewRef}
+        onRegionChangeComplete={region => {
+          setExpanded(true);
+          setCenter({
+            lat: region.latitude,
+            lng: region.longitude,
+          });
+        }}
         customMapStyle={colorScheme === 'dark' && mapStyle}
         style={{
           width: '100%',
@@ -157,37 +171,39 @@ const Map = ({route}) => {
           bottom: 0,
         }}
         initialRegion={{
-          latitude: center.latitude,
-          longitude: center.longitude,
+          latitude: center.lat,
+          longitude: center.lng,
           latitudeDelta: delta.latitudeDelta,
           longitudeDelta: delta.longitudeDelta,
-        }}>
-        {/* <Marker
-            coordinate={{
-              latitude: center.latitude,
-              longitude: center.longitude,
-            }}
-            pinColor={colors.primary}
-          /> */}
-      </MapView>
-
-      {/* <MapView initialRegion={center}>
-        <MapViewDirections
-          origin={origin}
-          destination={destination}
-          apikey={GOOGLE_API_KEY}
-        />
-      </MapView> */}
+        }}></MapView>
 
       <Image
         source={require('../../../assets/marker.png')}
         className="w-[30] h-[45] absolute top-1/2 left-1/2 z-10"
         style={{transform: [{translateX: -15}, {translateY: -22.5}]}}
       />
-      <View className="absolute bottom-10 w-full items-center justify-center ">
-        <Button title="Select" onPress={setLocation} />
-      </View>
-    </SafeAreaView>
+      {expanded && (
+        <View className="absolute flex-row bottom-10 w-full items-center justify-center space-x-6">
+          {(state === 'origin' || state === 'destination') && (
+            <Button
+              alt
+              mini
+              title="Set as Home"
+              onPress={() => dispatch(setHome(center))}
+            />
+          )}
+          <Button title="Select" onPress={setLocation} />
+          {(state === 'origin' || state === 'destination') && (
+            <Button
+              alt
+              mini
+              title="Set as Work"
+              onPress={() => dispatch(setWork(center))}
+            />
+          )}
+        </View>
+      )}
+    </Linear>
   );
 };
 

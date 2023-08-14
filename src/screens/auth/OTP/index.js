@@ -87,7 +87,7 @@ const OTP = ({route}) => {
             value={otp}
             onChangeText={setOtp}
             placeholder="XXXXXX"
-            keyboard="numeric"
+            keyboardType="numeric"
           />
 
           <TouchableOpacity className="w-full px-2">

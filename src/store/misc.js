@@ -13,6 +13,10 @@ export const miscSlice = createSlice({
       visible: false,
       modal: false,
     },
+    popUp: {
+      visible: false,
+      message: '',
+    },
   },
   reducers: {
     setLoading: (state, action) => {
@@ -54,6 +58,18 @@ export const miscSlice = createSlice({
         modal: false,
       };
     },
+    setPopUp: (state, action) => {
+      state.popUp = {
+        message: action.payload,
+        visible: true,
+      };
+    },
+    removePopUp: state => {
+      state.popUp = {
+        message: '',
+        visible: false,
+      };
+    },
   },
 });
 
@@ -65,6 +81,8 @@ export const {
   setModalError,
   removeModalError,
   removeModal,
+  setPopUp,
+  removePopUp,
 } = miscSlice.actions;
 
 export default miscSlice.reducer;

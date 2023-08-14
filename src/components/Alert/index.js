@@ -3,16 +3,18 @@ import {Animated, useColorScheme} from 'react-native';
 
 import Title from '../Title';
 
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import colors from '../../constants/colors';
 import {removeError, removeModal, removeModalError} from '../../store/misc';
 
-const Alert = ({message, visible, modal}) => {
+const Alert = () => {
   const colorScheme = useColorScheme();
   const dispatch = useDispatch();
 
   const danger = colorScheme === 'dark' ? colors.danger : colors.dangerLight;
   const ongoing = colorScheme === 'dark' ? colors.ongoing : colors.ongoingLight;
+
+  const {message, visible} = useSelector(state => state.misc.error);
 
   const animation = useRef(new Animated.Value(0)).current;
 
@@ -46,41 +48,28 @@ const Alert = ({message, visible, modal}) => {
   return (
     <>
       <Animated.View
-        className={`z-10 absolute top-10 ${
-          modal && 'top-2'
-        } left-[10] right-[10] py-2 ${
-          modal && 'py-1'
-        } rounded-full items-center justify-center border-2`}
+        className={`z-10 absolute top-24 left-[10] right-[10] py-2 rounded-full items-center justify-center border-2`}
         style={{
-          transform: modal
-            ? [
-                {
-                  translateY: animation.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [-100, 0],
-                  }),
-                },
-                {
-                  scaleY: animation.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [0, 1],
-                  }),
-                },
-              ]
-            : [
-                {
-                  translateX: animation.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [-200, 0],
-                  }),
-                },
-                {
-                  scaleX: animation.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [0, 1],
-                  }),
-                },
-              ],
+          transform: [
+            {
+              translateY: animation.interpolate({
+                inputRange: [0, 1],
+                outputRange: [-100, 0],
+              }),
+            },
+            {
+              scaleY: animation.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, 1],
+              }),
+            },
+            {
+              scale: animation.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, 1],
+              }),
+            },
+          ],
           backgroundColor: danger,
           borderColor: ongoing,
         }}>
