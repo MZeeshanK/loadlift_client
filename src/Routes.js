@@ -23,6 +23,7 @@ import Booking from './screens/app/Booking';
 import Order from './screens/app/Order';
 import Profile from './screens/app/Profile';
 import Settings from './screens/app/Settings';
+import SwitchDetails from './screens/app/SwitchDetails';
 import AccountSwitch from './screens/app/AccountSwitch';
 import Payment from './screens/app/Payment';
 import PaymentMethod from './screens/app/PaymentMethod';
@@ -154,6 +155,7 @@ function Routes() {
         <Stack.Screen name="Settings" component={Settings} />
         <Stack.Screen name="Payment" component={Payment} />
         <Stack.Screen name="PaymentMethod" component={PaymentMethod} />
+        <Stack.Screen name="SwitchDetails" component={SwitchDetails} />
         <Stack.Screen name="AccountSwitch" component={AccountSwitch} />
         <Stack.Screen name="Map" component={Map} />
         <Stack.Screen name="DriverList" component={DriverList} />
@@ -162,6 +164,7 @@ function Routes() {
         <Stack.Screen name="PaymentDone" component={PaymentDone} />
         <Stack.Screen name="ComingSoon" component={ComingSoon} />
         <Stack.Screen name="NotFound" component={NotFound} />
+        <Stack.Screen name="OTP" component={OTP} />
       </Stack.Navigator>
     );
   };

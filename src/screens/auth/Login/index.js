@@ -44,6 +44,7 @@ const Login = ({navigation}) => {
 
         if (status === 200) {
           dispatch(changeUserType(data.type));
+          setMount(false);
           navigation.navigate('OTP', {phone});
         }
       } catch (err) {
@@ -61,7 +62,6 @@ const Login = ({navigation}) => {
 
     if (mount) {
       login();
-      setMount(false);
     }
   }, [mount]);
 

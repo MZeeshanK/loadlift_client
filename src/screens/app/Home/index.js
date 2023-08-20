@@ -12,7 +12,7 @@ import Card from '../../../components/Card';
 
 import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
-import {userDetails} from '../../../store/user';
+import {activate, deactivate, userDetails} from '../../../store/user';
 import {getAllOrders} from '../../../store/orders';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -28,10 +28,39 @@ const Home = () => {
     type: userType,
     token: userToken,
     data: userData,
+    isActive: active,
   } = useSelector(state => state.user);
 
+  const activateDriver = async () => {
+    try {
+      const {data, status} = await axios({
+        url: `${BACKEND_URL}/api/drivers/me/activate`,
+        method: 'PUT',
+        body: {
+          active,
+        },
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      console.log(data, status);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
-    isActive ? setDeliveryModalVisible(true) : setDeliveryModalVisible(false);
+    // isActive ? setDeliveryModalVisible(true) : setDeliveryModalVisible(false);
+
+    if (isActive) {
+      dispatch(activate());
+
+      // activateDriver();
+    } else {
+      dispatch(deactivate());
+    }
   }, [isActive]);
 
   const url =

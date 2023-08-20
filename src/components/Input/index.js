@@ -19,6 +19,7 @@ const Input = forwardRef(function MyInput({...props}, ref) {
       style={[
         {
           elevation: 3,
+          textAlign: 'left',
           fontFamily: fonts.semibold,
           fontSize: 12,
           backgroundColor: props.isDisabled ? grey : colors.white,

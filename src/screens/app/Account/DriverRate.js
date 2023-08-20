@@ -7,15 +7,17 @@ import colors from '../../../constants/colors';
 import {useDispatch, useSelector} from 'react-redux';
 import {changeRate} from '../../../store/user';
 import Button from '../../../components/Button';
+import axios from 'axios';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const DriverRate = () => {
   const colorScheme = useColorScheme();
   const dispatch = useDispatch();
 
-  const {perkm, per5km} = useSelector(state => state.user.rate);
+  const {rate, token: userToken} = useSelector(state => state.user);
 
-  const [perKmRate, setPerKmRate] = useState(perkm);
-  const [per5KmRate, setPer5KmRate] = useState(per5km);
+  const [perKmRate, setPerKmRate] = useState(rate);
   const [edit, setEdit] = useState(false);
   const [isMount, setIsMount] = useState(false);
 
@@ -33,13 +35,36 @@ const DriverRate = () => {
   });
 
   useEffect(() => {
-    if (perkm !== perKmRate || per5km !== per5KmRate) {
+    if (rate !== perKmRate) {
       setEdit(true);
     }
-  }, [per5KmRate, perKmRate]);
+  }, [perKmRate]);
+
+  const setRate = async () => {
+    const url = `${BACKEND_URL}/api/drivers/me/rate`;
+
+    try {
+      const {data, status} = await axios({
+        url,
+        method: 'PUT',
+        data: {
+          ratePerKm: rate,
+        },
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      console.log(data, status);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const next = () => {
-    dispatch(changeRate({perkm: perKmRate, per5km: per5KmRate}));
+    dispatch(changeRate(perKmRate));
+    // setRate();
     setEdit(false);
   };
 
@@ -53,10 +78,8 @@ const DriverRate = () => {
   return (
     <Card>
       <View className="w-full items-center justify-center">
-        <View
-          className="items-center justify-center border-b-2 py-2"
-          style={{borderColor: ongoing}}>
-          <Title bold className="tracking-wider uppercase my-0 py-0">
+        <View className="items-center justify-center py-2">
+          <Title base bold className="tracking-wider uppercase mb-3 py-0">
             Set rating per km
           </Title>
           <View className="w-full flex-row items-center justify-evenly px-4 mb-3">
@@ -69,7 +92,7 @@ const DriverRate = () => {
               </Title>
             </Pressable>
             <Input
-              className="flex-1 my-0"
+              className="flex-1 my-0 text-base text-center"
               placeholder="Set Rate per km"
               value={perKmRate.toString()}
               keyboardType="numeric"
@@ -81,35 +104,6 @@ const DriverRate = () => {
               className={buttonClassName}
               style={styles.adjust}
               onPress={() => setPerKmRate(val => +val + 10)}>
-              <Title className="pt-[1]" base bold primary>
-                +
-              </Title>
-            </Pressable>
-          </View>
-        </View>
-        <View className="items-center justify-center py-2">
-          <Title bold className="tracking-wider uppercase my-0 py-0">
-            Set rating per 5 km
-          </Title>
-          <View className="w-full flex-row items-center justify-evenly px-4 mb-3">
-            <Pressable
-              className={buttonClassName}
-              style={styles.adjust}
-              onPress={() => setPer5KmRate(val => +val - 10)}>
-              <Title className="pt-[1]" base bold primary>
-                -
-              </Title>
-            </Pressable>
-            <Input
-              className="flex-1 my-0"
-              placeholder="Set Rate per km"
-              value={per5KmRate.toString()}
-              keyboardType="numeric"
-            />
-            <Pressable
-              className={buttonClassName}
-              style={styles.adjust}
-              onPress={() => setPer5KmRate(val => +val + 10)}>
               <Title className="pt-[1]" base bold primary>
                 +
               </Title>

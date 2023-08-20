@@ -26,11 +26,6 @@ const accountOptions = [
     userOnly: true,
   },
   {
-    title: "Switch to User's Account",
-    screen: 'AccountSwitch',
-    driverOnly: true,
-  },
-  {
     title: 'Rate Us',
     //  Todo
   },

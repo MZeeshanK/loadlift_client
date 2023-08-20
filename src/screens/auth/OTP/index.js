@@ -8,9 +8,8 @@ import Input from '../../../components/Input';
 import Button from '../../../components/Button';
 import TextLabel from '../../../components/TextLabel';
 import Title from '../../../components/Title';
-import Alert from '../../../components/Alert';
 
-import {useSelector, useDispatch} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {userLogin} from '../../../store/user';
 import axios from 'axios';
 import {setError, setLoading} from '../../../store/misc';
@@ -54,7 +53,7 @@ const OTP = ({route}) => {
 
       if (status === 200) {
         dispatch(userLogin(data.token));
-        // navigation.navigate('AppScreens', {screen: 'Tabs'});
+        navigation.navigate('AppScreens', {screen: 'Tabs'});
       }
     } catch (err) {
       // dispatch(setError(err.response.data['error' || 'message']));

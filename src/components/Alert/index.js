@@ -73,12 +73,7 @@ const Alert = () => {
           backgroundColor: danger,
           borderColor: ongoing,
         }}>
-        <Title
-          base
-          bold
-          xsm={modal}
-          semibold={modal}
-          className="tracking-wider">
+        <Title base bold className="tracking-wider">
           {message}
         </Title>
       </Animated.View>

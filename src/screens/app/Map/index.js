@@ -1,17 +1,11 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {
-  Dimensions,
-  Image,
-  SafeAreaView,
-  View,
-  useColorScheme,
-} from 'react-native';
+import {Image, View, useColorScheme} from 'react-native';
 
 import Header from '../../../components/Header';
 import InputButton from '../../../components/InputButton';
 import Button from '../../../components/Button';
 
-import MapView from 'react-native-maps';
+import MapView, {Marker} from 'react-native-maps';
 import mapStyle from '../../../data/mapStyle';
 
 import {useNavigation} from '@react-navigation/native';
@@ -20,8 +14,9 @@ import colors from '../../../constants/colors';
 import {useDispatch, useSelector} from 'react-redux';
 import {setDestination, setHome, setOrigin, setWork} from '../../../store/map';
 import Linear from '../../../components/Linear';
-
-const {width, height} = Dimensions.get('window');
+import CustomModal from '../../../components/CustomModal';
+import Input from '../../../components/Input';
+import TextLabel from '../../../components/TextLabel';
 
 const classNames = 'py-1 rounded-md mx-2 px-4';
 
@@ -33,41 +28,23 @@ const Map = ({route}) => {
   const navigation = useNavigation();
 
   // redux states
-  const {home, work} = useSelector(state => state.map);
+  const {home, work, destination} = useSelector(state => state.map);
 
   // states
   const [expanded, setExpanded] = useState(true);
   const [animate, setAnimate] = useState(false);
 
   const [center, setCenter] = useState({
-    lat: location.lat || home?.lat,
-    lng: location.lng || home?.lng,
+    lat: location?.lat || home?.lat,
+    lng: location?.lng || home?.lng,
   });
 
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalState, setModalState] = useState('default');
+
   const delta = {
-    latitudeDelta: 0.07,
-    longitudeDelta: 0.07,
-  };
-
-  const setLocation = () => {
-    switch (state) {
-      case 'home':
-        dispatch(setHome(center));
-        break;
-      case 'work':
-        dispatch(setWork(center));
-        break;
-      case 'origin':
-        dispatch(setOrigin({lat: center.lat, lng: center.lng}));
-        break;
-      case 'destination':
-        dispatch(setDestination(center));
-        break;
-      default:
-        break;
-    }
-
-    navigation.goBack();
+    latitudeDelta: 0.01,
+    longitudeDelta: 0.01,
   };
 
   const mapViewRef = useRef(null);
@@ -85,8 +62,121 @@ const Map = ({route}) => {
     }
   }, [animate]);
 
+  const AddressModal = ({modalState}) => {
+    const pinCodeRef = React.useRef();
+
+    const [address, setAddress] = useState(
+      modalState === 'home'
+        ? home?.address
+        : modalState === 'work'
+        ? work?.address
+        : state === 'home'
+        ? home?.address
+        : destination?.address || '',
+    );
+    const [pinCode, setPinCode] = useState(
+      modalState === 'home'
+        ? home?.pinCode
+        : modalState === 'work'
+        ? work?.pinCode
+        : state === 'home'
+        ? home?.pinCode
+        : destination?.pinCode || '',
+    );
+
+    // set address for all the location states
+    const result = () => {
+      switch (modalState) {
+        case 'home':
+          dispatch(
+            setHome({
+              lat: center?.lat,
+              lng: center?.lng,
+              address: address,
+              pinCode: pinCode,
+            }),
+          );
+          break;
+        case 'work':
+          dispatch(
+            setWork({
+              lat: center?.lat,
+              lng: center?.lng,
+              address: address,
+              pinCode: pinCode,
+            }),
+          );
+          break;
+        case 'default':
+          if (state === 'origin') {
+            dispatch(
+              setOrigin({
+                lat: center?.lat,
+                lng: center?.lng,
+                address: address,
+                pinCode: pinCode,
+              }),
+            );
+          } else {
+            dispatch(
+              setDestination({
+                lat: center?.lat,
+                lng: center?.lng,
+                address: address,
+                pinCode: pinCode,
+              }),
+            );
+          }
+          break;
+      }
+
+      if (state === 'origin') {
+        navigation.navigate('Map', {
+          state: 'destination',
+          location: destination,
+        });
+      }
+
+      if (state === 'destination') {
+        navigation.navigate('Booking');
+      }
+
+      setModalVisible(false);
+    };
+
+    return (
+      <CustomModal
+        className="pb-44"
+        block
+        visible={modalVisible}
+        setVisible={setModalVisible}>
+        <TextLabel title="Address" />
+        <Input
+          placeholder="Enter Physical address here"
+          value={address}
+          onChangeText={setAddress}
+          returnKeyType="next"
+          onSubmitEditing={() => pinCodeRef.current.focus()}
+          blurOnSubmit={false}
+        />
+
+        <TextLabel title="Pincode" />
+        <Input
+          placeholder="Enter Pincode"
+          ref={pinCodeRef}
+          value={pinCode}
+          onChangeText={setPinCode}
+          keyboardType="numeric"
+        />
+
+        <Button title="Done" className="mt-4" onPress={result} />
+      </CustomModal>
+    );
+  };
+
   return (
     <Linear className="p-0">
+      <AddressModal modalState={modalState} />
       <View
         className="px-4 w-full items-center justify-center rounded-b-xl"
         style={{
@@ -101,9 +191,7 @@ const Map = ({route}) => {
           isInverted={expanded}
           onPress={() => setExpanded(expanded => !expanded)}
         />
-        {expanded && (
-          <InputButton left title={`${center.lat}  ,  ${center.lng}`} />
-        )}
+        {expanded && <Input placeholder="Search..." returnKeyType="search" />}
       </View>
       {expanded && (
         <View className="flex-row w-full justify-evenly my-2 mb-6">
@@ -149,6 +237,7 @@ const Map = ({route}) => {
       )}
       {/* MAP */}
       <MapView
+        showsCompass
         onRegionChange={() => {
           setExpanded(false);
         }}
@@ -175,7 +264,27 @@ const Map = ({route}) => {
           longitude: center.lng,
           latitudeDelta: delta.latitudeDelta,
           longitudeDelta: delta.longitudeDelta,
-        }}></MapView>
+        }}>
+        <Marker
+          coordinate={{
+            latitude: home?.lat,
+            longitude: home?.lng,
+          }}
+          title="Home"
+          description={`${home?.address} \n ${home?.pinCode}`}
+          image={require('../../../assets/Home-marker.png')}
+        />
+
+        <Marker
+          coordinate={{
+            latitude: work?.lat,
+            longitude: work?.lng,
+          }}
+          title="Work"
+          description={`${work?.address} \n ${work?.pinCode}`}
+          image={require('../../../assets/Work-marker.png')}
+        />
+      </MapView>
 
       <Image
         source={require('../../../assets/marker.png')}
@@ -184,23 +293,31 @@ const Map = ({route}) => {
       />
       {expanded && (
         <View className="absolute flex-row bottom-10 w-full items-center justify-center space-x-6">
-          {(state === 'origin' || state === 'destination') && (
-            <Button
-              alt
-              mini
-              title="Set as Home"
-              onPress={() => dispatch(setHome(center))}
-            />
-          )}
-          <Button title="Select" onPress={setLocation} />
-          {(state === 'origin' || state === 'destination') && (
-            <Button
-              alt
-              mini
-              title="Set as Work"
-              onPress={() => dispatch(setWork(center))}
-            />
-          )}
+          <Button
+            alt
+            mini
+            title="Set as Home"
+            onPress={() => {
+              setModalState('home');
+              setModalVisible(true);
+            }}
+          />
+          <Button
+            title="Mark"
+            onPress={() => {
+              setModalState('default');
+              setModalVisible(true);
+            }}
+          />
+          <Button
+            alt
+            mini
+            title="Set as Work"
+            onPress={() => {
+              setModalState('work');
+              setModalVisible(true);
+            }}
+          />
         </View>
       )}
     </Linear>

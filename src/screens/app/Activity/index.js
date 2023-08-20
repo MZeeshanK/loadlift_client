@@ -5,7 +5,6 @@ import {
   TextInput,
   TouchableOpacity,
   useColorScheme,
-  Pressable,
 } from 'react-native';
 
 import Linear from '../../../components/Linear';
@@ -15,23 +14,9 @@ import Card from '../../../components/Card';
 import colors from '../../../constants/colors';
 import {useDispatch, useSelector} from 'react-redux';
 
-import FilterCard from './FilterCard';
 import axios from 'axios';
-import {setError} from '../../../store/misc';
 import {getAllOrders} from '../../../store/orders';
 import Title from '../../../components/Title';
-
-const initialState = {
-  ongoing: false,
-  completed: false,
-  cancelled: false,
-  under5: false,
-  under10: false,
-  above10: false,
-  under5000: false,
-  under10000: false,
-  above10000: false,
-};
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -100,7 +85,15 @@ const Activity = () => {
       </Card>
 
       {/* List */}
-      <GFlatList orders={filteredOrders} activity />
+      {orders.length ? (
+        <GFlatList orders={filteredOrders} activity />
+      ) : (
+        <View className="flex-1 w-full items-center justify-center">
+          <Title bold xxl className="tracking-wider">
+            No Orders Yet
+          </Title>
+        </View>
+      )}
     </Linear>
   );
 };

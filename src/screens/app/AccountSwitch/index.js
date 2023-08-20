@@ -36,10 +36,10 @@ const AccountSwitch = ({navigation}) => {
           <Button
             onPress={() => {
               setModalVisible(false);
-              dispatch(
-                changeUserType(userType === 'driver' ? 'user' : 'driver'),
-              );
-              navigation.navigate('Home');
+              // dispatch(
+              //   changeUserType(userType === 'driver' ? 'user' : 'driver'),
+              // );
+              navigation.navigate('SwitchDetails');
             }}
             title="Yes"
             half

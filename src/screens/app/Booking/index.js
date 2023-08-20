@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -19,6 +19,9 @@ import Title from '../../../components/Title';
 import colors from '../../../constants/colors';
 import {useSelector} from 'react-redux';
 import TextLabel from '../../../components/TextLabel';
+import axios from 'axios';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const Booking = ({navigation}) => {
   const colorScheme = useColorScheme();
@@ -30,6 +33,35 @@ const Booking = ({navigation}) => {
 
   const [weight, setWeight] = useState(true);
   const [vehicle, setVehicle] = useState(categories[0]);
+  const [isMount, setIsMount] = useState(false);
+
+  useEffect(() => {
+    const findDrivers = async () => {
+      const url = `${BACKEND_URL}/api/order/nearby`;
+
+      try {
+        const {data, status} = await axios({
+          url,
+          method: 'POST',
+          params: {
+            q: {
+              latitude: origin.lat,
+              longitude: origin.lng,
+            },
+          },
+        });
+
+        console.log(data, status);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    if (isMount) {
+      findDrivers();
+      setIsMount(false);
+    }
+  }, [isMount]);
 
   const ChipButton = () => (
     <Pressable
@@ -143,20 +175,14 @@ const Booking = ({navigation}) => {
         <TextLabel title="Pick Up: " />
         <InputButton
           style={{marginTop: 0}}
-          title={
-            origin ? `${origin?.lat} ${origin.lng}` : 'Set Pick Up Location'
-          }
+          title={origin?.address || 'Set Pick Up Location'}
           onPress={() =>
             navigation.navigate('Map', {location: origin, state: 'origin'})
           }
         />
         <TextLabel title="Destination: " />
         <InputButton
-          title={
-            destination
-              ? `${destination?.lat} ${destination.lng}`
-              : 'Set Destination Location'
-          }
+          title={destination?.address || 'Set Destination Location'}
           style={{marginTop: 0}}
           onPress={() =>
             navigation.navigate('Map', {
@@ -190,7 +216,7 @@ const Booking = ({navigation}) => {
       </View>
       <Button
         title="Search for drivers"
-        onPress={() => navigation.navigate('DriverList')}
+        onPress={() => setIsMount(isMount => !isMount)}
         style={{marginBottom: 16}}
       />
     </Linear>

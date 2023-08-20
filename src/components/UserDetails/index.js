@@ -19,7 +19,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
 import {setLoading} from '../../store/misc';
-import {userDetails} from '../../store/user';
+import {userDetails, switchUser} from '../../store/user';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -55,6 +55,8 @@ const UserDetails = ({phoneNumber, info}) => {
     userType === 'user'
       ? `${BACKEND_URL}/api/users/me/update`
       : `${BACKEND_URL}/api/drivers/me/update`;
+
+  const switchUrl = `${BACKEND_URL}/api/users/me/switch`;
 
   useEffect(() => {
     const register = async inputs => {
@@ -108,6 +110,24 @@ const UserDetails = ({phoneNumber, info}) => {
       dispatch(setLoading(false));
     };
 
+    const switchUser = async () => {
+      try {
+        const {data, status} = await axios({
+          method: 'POST',
+          url: switchUrl,
+          data: driverInputs,
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        console.log(data, status);
+      } catch (err) {
+        console.log('error', err.response);
+      }
+    };
+
     const userInputs = {
       phone,
       firstName,
@@ -129,6 +149,8 @@ const UserDetails = ({phoneNumber, info}) => {
         } else {
           register(driverInputs);
         }
+      } else if (info === 'switch') {
+        switchUser();
       } else {
         if (userType === 'user') {
           update(userInputs);
@@ -181,7 +203,7 @@ const UserDetails = ({phoneNumber, info}) => {
             placeholder="Enter your Last Name"
           />
 
-          {userType === 'driver' && (
+          {(userType === 'driver' || info === 'switch') && (
             <>
               {/* Divide Bar */}
               <View className="w-[95%] mb-4 mt-2 h-[1] bg-primary" />

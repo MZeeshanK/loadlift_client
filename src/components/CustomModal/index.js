@@ -21,7 +21,7 @@ const CustomModal = ({children, visible, setVisible, style, ...props}) => {
       animationType="fade"
       visible={visible}>
       <Pressable
-        onPress={!props.block && (() => setVisible(false))}
+        onPress={!props.block ? () => setVisible(false) : () => {}}
         className="items-center justify-center px-5"
         style={[{height: height, backgroundColor: 'rgba(0,0,0,.6)'}, style]}>
         <Card style={props.style}>
