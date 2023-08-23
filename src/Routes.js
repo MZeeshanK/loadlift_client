@@ -1,7 +1,13 @@
 import 'react-native-gesture-handler';
 import React from 'react';
 
-import {Image, StyleSheet, View, useColorScheme} from 'react-native';
+import {
+  BackHandler,
+  Image,
+  StyleSheet,
+  View,
+  useColorScheme,
+} from 'react-native';
 import colors from './constants/colors';
 
 import {TransitionPresets, createStackNavigator} from '@react-navigation/stack';
@@ -31,24 +37,31 @@ import Map from './screens/app/Map';
 import Call from './screens/app/Call';
 import DriverList from './screens/app/DriverList';
 import PaymentDone from './screens/app/PaymentDone';
-import LocationSettings from './screens/app/Settings/LocationSettings';
 
 import ComingSoon from './screens/ComingSoon';
 
 import Title from './components/Title';
 
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {setLoading} from './store/misc';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function Routes() {
   const colorScheme = useColorScheme();
+  const dispatch = useDispatch();
 
   const card = colorScheme === 'dark' ? colors.card : colors.lightCard;
 
   // Tab Navigator
   const userToken = useSelector(state => state.user.token);
+
+  const onBackPress = () => {
+    dispatch(setLoading(false));
+  };
+
+  BackHandler.addEventListener('hardwareBackPress', onBackPress);
 
   const Tabs = () => {
     return (
@@ -160,7 +173,6 @@ function Routes() {
         <Stack.Screen name="Map" component={Map} />
         <Stack.Screen name="DriverList" component={DriverList} />
         <Stack.Screen name="Call" component={Call} />
-        <Stack.Screen name="LocationSettings" component={LocationSettings} />
         <Stack.Screen name="PaymentDone" component={PaymentDone} />
         <Stack.Screen name="ComingSoon" component={ComingSoon} />
         <Stack.Screen name="NotFound" component={NotFound} />

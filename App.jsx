@@ -10,6 +10,7 @@ import {PersistGate} from 'redux-persist/integration/react';
 import persistStore from 'redux-persist/es/persistStore';
 
 import Routes from './src/Routes';
+import Geocoder from 'react-native-geocoding';
 
 let persistor = persistStore(store);
 
