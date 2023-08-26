@@ -13,7 +13,6 @@ import {useNavigation} from '@react-navigation/native';
 import {useSelector, useDispatch} from 'react-redux';
 import {userLogout} from '../../../store/user';
 import colors from '../../../constants/colors';
-import DriverRate from './DriverRate';
 
 const accountOptions = [
   {
@@ -61,9 +60,6 @@ const Account = ({}) => {
       navigation.reset();
     }
   }, [userToken]);
-
-  const selectedOptions =
-    userType === 'driver' ? driverAccountOptions : userAccountOptions;
 
   const Modal = () => {
     return (
@@ -164,47 +160,67 @@ const Account = ({}) => {
           </View>
         </Card>
 
-        <View className="w-full flex-row items-center justify-center space-x-4">
-          <Card
-            onPress={() => navigation.navigate('PaymentMethod')}
-            className="flex-1">
-            <Image
-              source={
-                colorScheme === 'dark'
-                  ? require('../../../assets/wallet.png')
-                  : require('../../../assets/wallet-light.png')
-              }
-              className="h-[36] w-[39]"
-            />
-            <Title className="pt-2 tracking-wider" semibold>
-              Payment
-            </Title>
-          </Card>
-        </View>
-
-        {userType === 'driver' && <DriverRate />}
-        {/* <DriverRate /> */}
+        <Card
+          onPress={() => navigation.navigate('PaymentMethod')}
+          className="flex-1">
+          <Image
+            source={
+              colorScheme === 'dark'
+                ? require('../../../assets/wallet.png')
+                : require('../../../assets/wallet-light.png')
+            }
+            className="h-[36] w-[39]"
+          />
+          <Title className="pt-2 tracking-wider" semibold>
+            Payment
+          </Title>
+        </Card>
 
         <Card className="py-1 px-0">
-          {selectedOptions.map((item, index) => (
-            <Pressable
-              key={index}
-              onPress={
-                item?.screen
-                  ? () => navigation.navigate(item?.screen)
-                  : item?.title === 'Logout'
-                  ? () => setModalVisible(true)
-                  : () => navigation.navigate('NotFound')
-              }
-              className={`w-full items-start ${
-                index !== selectedOptions.length - 1 && 'border-b'
-              } p-2 px-5 justify-center`}
-              style={{borderColor: primary}}>
-              <Title className="py-1 tracking-wider" lg bold>
-                {item.title}
-              </Title>
-            </Pressable>
-          ))}
+          <Pressable
+            onPress={() => navigation.navigate('NotFound')}
+            className="w-full items-start border-b p-2 px-5 justify-center"
+            style={{borderColor: primary}}>
+            <Title className="py-1 tracking-wider" lg bold>
+              Switch to Driver's Account
+            </Title>
+          </Pressable>
+
+          <Pressable
+            onPress={() => navigation.navigate('NotFound')}
+            className="w-full items-start border-b p-2 px-5 justify-center"
+            style={{borderColor: primary}}>
+            <Title className="py-1 tracking-wider" lg bold>
+              FAQ's
+            </Title>
+          </Pressable>
+
+          <Pressable
+            onPress={() => navigation.navigate('NotFound')}
+            className="w-full items-start border-b p-2 px-5 justify-center"
+            style={{borderColor: primary}}>
+            <Title className="py-1 tracking-wider" lg bold>
+              Rate Us
+            </Title>
+          </Pressable>
+
+          <Pressable
+            onPress={() => navigation.navigate('NotFound')}
+            className="w-full items-start border-b p-2 px-5 justify-center"
+            style={{borderColor: primary}}>
+            <Title className="py-1 tracking-wider" lg bold>
+              Contact Us
+            </Title>
+          </Pressable>
+
+          <Pressable
+            onPress={() => setModalVisible(true)}
+            className="w-full items-start p-2 px-5 justify-center"
+            style={{borderColor: primary}}>
+            <Title className="py-1 tracking-wider" lg bold>
+              Logout
+            </Title>
+          </Pressable>
         </Card>
       </ScrollView>
     </Linear>

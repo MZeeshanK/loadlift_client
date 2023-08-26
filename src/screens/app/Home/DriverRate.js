@@ -5,7 +5,7 @@ import Title from '../../../components/Title';
 import Input from '../../../components/Input';
 import colors from '../../../constants/colors';
 import {useDispatch, useSelector} from 'react-redux';
-import {changeRate} from '../../../store/user';
+import {changeRate, userDetails} from '../../../store/user';
 import Button from '../../../components/Button';
 import axios from 'axios';
 
@@ -15,9 +15,11 @@ const DriverRate = () => {
   const colorScheme = useColorScheme();
   const dispatch = useDispatch();
 
-  const {rate, token: userToken} = useSelector(state => state.user);
+  const {data: userData, token: userToken} = useSelector(state => state.user);
 
-  const [perKmRate, setPerKmRate] = useState(rate);
+  const {ratePerKm: rate} = userData;
+
+  const [perKmRate, setPerKmRate] = useState(rate || 0);
   const [edit, setEdit] = useState(false);
   const [isMount, setIsMount] = useState(false);
 
@@ -45,10 +47,10 @@ const DriverRate = () => {
 
     try {
       const {data, status} = await axios({
-        url,
         method: 'PUT',
+        url,
         data: {
-          ratePerKm: rate,
+          ratePerKm: perKmRate,
         },
         headers: {
           Authorization: `Bearer ${userToken}`,
@@ -56,15 +58,16 @@ const DriverRate = () => {
         },
       });
 
-      console.log(data, status);
+      if (status === 200) {
+        dispatch(userDetails(data));
+      }
     } catch (err) {
       console.log(err);
     }
   };
 
   const next = () => {
-    dispatch(changeRate(perKmRate));
-    // setRate();
+    setRate();
     setEdit(false);
   };
 
@@ -94,7 +97,7 @@ const DriverRate = () => {
             <Input
               className="flex-1 my-0 text-base text-center"
               placeholder="Set Rate per km"
-              value={perKmRate.toString()}
+              value={perKmRate?.toString()}
               keyboardType="numeric"
               onChangeText={val => {
                 setPerKmRate(val);

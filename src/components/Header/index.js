@@ -35,7 +35,7 @@ const Header = ({isBack, expand, isInverted, title, style, onPress}) => {
   return (
     <Pressable
       onPress={expand && onPress}
-      className="flex-row w-full items-center justify-center bg-transparent fixed top-0 left-0 right-0 -my-2 mb-10"
+      className="flex-row w-full items-center justify-center bg-transparent fixed top-0 left-0 right-0 -my-2 mb-2"
       style={style}>
       {isBack && (
         <Pressable

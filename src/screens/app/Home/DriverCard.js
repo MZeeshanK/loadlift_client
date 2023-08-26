@@ -6,13 +6,7 @@ import Title from '../../../components/Title';
 import Rating from '../../../components/Rating';
 import Button from '../../../components/Button';
 
-const DriverCard = ({
-  deliveryModalVisible,
-  setDeliveryModalVisible,
-  isDelivering,
-  setIsActive,
-  setIsDelivering,
-}) => {
+const DriverCard = ({deliveryModalVisible, setDeliveryModalVisible}) => {
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
 
@@ -28,11 +22,6 @@ const DriverCard = ({
             <Title bold primary left>
               Name: <Title>John Doe</Title>
             </Title>
-            {isDelivering && (
-              <Title right bold primary>
-                Status: <Title>User Waiting</Title>
-              </Title>
-            )}
           </View>
           <View className="w-full flex-row items-center justify-between mb-1">
             <Rating

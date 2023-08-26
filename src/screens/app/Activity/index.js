@@ -85,7 +85,7 @@ const Activity = () => {
       </Card>
 
       {/* List */}
-      {orders.length ? (
+      {orders ? (
         <GFlatList orders={filteredOrders} activity />
       ) : (
         <View className="flex-1 w-full items-center justify-center">

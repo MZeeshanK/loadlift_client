@@ -253,7 +253,13 @@ const Map = ({route}) => {
           elevation: 10,
         }}>
         <Header
-          title="Map"
+          title={
+            state === 'origin'
+              ? 'Pick Up'
+              : state === 'destination'
+              ? 'Destination'
+              : 'Map'
+          }
           className="mb-0 py-4"
           expand
           isInverted={expanded}

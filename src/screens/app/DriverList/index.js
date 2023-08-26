@@ -19,8 +19,11 @@ import categories from '../../../data/categories';
 import colors from '../../../constants/colors';
 import styleConstants from '../../../constants/styles';
 import Title from '../../../components/Title';
+import {useNavigation} from '@react-navigation/native';
 
-const DriverList = ({navigation}) => {
+const DriverList = ({route}) => {
+  const {drivers} = route.params;
+  const navigation = useNavigation();
   const colorScheme = useColorScheme();
 
   const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
@@ -30,8 +33,8 @@ const DriverList = ({navigation}) => {
   const [driver, setDriver] = useState({});
 
   const Item = ({item}) => {
-    const image = categories.find(
-      category => category?.title === item?.typeOfVehicle,
+    const category = categories.find(
+      category => category?.value === item?.typeOfVehicle,
     );
 
     return (
@@ -57,17 +60,17 @@ const DriverList = ({navigation}) => {
           <Image
             source={
               driver === item && colorScheme === 'dark'
-                ? image?.darkIcon
+                ? category?.darkIcon
                 : driver === item && colorScheme === 'light'
-                ? image?.icon
+                ? category?.icon
                 : colorScheme !== 'dark'
-                ? image?.darkIcon
-                : image?.icon
+                ? category?.darkIcon
+                : category?.icon
             }
             style={styles.icon}
           />
           <Title className="tracking-tighter" xxs black={driver === item}>
-            {item?.typeOfVehicle}
+            {category?.title}
           </Title>
         </View>
         <View className="flex-1 flex-row items-center justify-between px-1">
@@ -78,7 +81,7 @@ const DriverList = ({navigation}) => {
               left
               className="tracking-tighter leading-5 "
               black={driver === item}>
-              {item?.driverName}
+              {item?.firstName} {item?.lastName}
             </Title>
             <View className="flex-row items-center">
               <Title
@@ -86,7 +89,7 @@ const DriverList = ({navigation}) => {
                 xxs
                 semibold
                 black={driver === item}>
-                {item?.driverRating}
+                {item?.ratings}
               </Title>
               <Image
                 source={
@@ -115,7 +118,7 @@ const DriverList = ({navigation}) => {
               xsm
               semibold
               black={driver === item}>
-              {'\u20b9'} {item?.rateperKm}
+              {'\u20b9'} {item?.ratePerKm}
             </Title>
           </View>
         </View>
@@ -138,7 +141,7 @@ const DriverList = ({navigation}) => {
             xsm
             semibold
             black={driver === item}>
-            {item?.distance}m
+            {item?.distance.toFixed(2)} km
           </Title>
           <Title
             className="tracking-tighter leading-3"
@@ -164,7 +167,7 @@ const DriverList = ({navigation}) => {
             <FlatList
               // showsVerticalScrollIndicator={false}
               className="flex-1 w-full"
-              data={driverList}
+              data={drivers}
               keyExtractor={item => item?.id}
               renderItem={({item}) => <Item item={item} />}
             />

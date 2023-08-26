@@ -17,14 +17,18 @@ import Card from '../../../components/Card';
 import categories from '../../../data/categories';
 import Title from '../../../components/Title';
 import colors from '../../../constants/colors';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import TextLabel from '../../../components/TextLabel';
 import axios from 'axios';
+import {setLoading} from '../../../store/misc';
+import {useNavigation} from '@react-navigation/native';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-const Booking = ({navigation}) => {
+const Booking = () => {
   const colorScheme = useColorScheme();
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
 
   const {origin, destination} = useSelector(state => state.map);
 
@@ -35,28 +39,37 @@ const Booking = ({navigation}) => {
   const [vehicle, setVehicle] = useState(categories[0]);
   const [isMount, setIsMount] = useState(false);
 
-  useEffect(() => {
-    const findDrivers = async () => {
-      const url = `${BACKEND_URL}/api/order/nearby`;
+  const findDrivers = async () => {
+    const url = `${BACKEND_URL}/api/order/nearby`;
 
-      try {
-        const {data, status} = await axios({
-          url,
-          method: 'POST',
-          params: {
-            q: {
-              latitude: origin.lat,
-              longitude: origin.lng,
-            },
-          },
-        });
+    const {lat, lng} = origin;
 
-        console.log(data, status);
-      } catch (err) {
-        console.log(err);
+    dispatch(setLoading(true));
+
+    try {
+      const {data, status} = await axios({
+        method: 'GET',
+        url,
+        params: {
+          latitude: lat,
+          longitude: lng,
+        },
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (status === 200) {
+        navigation.navigate('DriverList', {drivers: data});
       }
-    };
+    } catch (err) {
+      console.log(err.response.data);
+    }
 
+    dispatch(setLoading(false));
+  };
+
+  useEffect(() => {
     if (isMount) {
       findDrivers();
       setIsMount(false);

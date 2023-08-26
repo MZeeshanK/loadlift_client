@@ -6,14 +6,6 @@ export const userSlice = createSlice({
     token: '',
     type: 'user',
     data: null,
-    rate: 100,
-    isActive: false,
-    bank: {
-      name: '',
-      accountNumber: '',
-      ifscCode: '',
-    },
-    rating: 4,
   },
   reducers: {
     changeUserType: (state, action) => {
@@ -30,36 +22,11 @@ export const userSlice = createSlice({
     userDetails: (state, action) => {
       state.data = action.payload;
     },
-    changeRate: (state, action) => {
-      state.rate = action.payload;
-    },
-    activate: state => {
-      state.isActive = true;
-    },
-    deactivate: state => {
-      state.isActive = false;
-    },
-    setBankDetails: (state, action) => {
-      state.bank = action.payload;
-    },
-    switchUser: (state, action) => {
-      state.user = 'driver';
-      state.data = action.payload;
-    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const {
-  changeUserType,
-  userLogin,
-  userLogout,
-  userDetails,
-  changeRate,
-  activate,
-  deactivate,
-  setBankDetails,
-  switchUser,
-} = userSlice.actions;
+export const {changeUserType, userLogin, userLogout, userDetails} =
+  userSlice.actions;
 
 export default userSlice.reducer;

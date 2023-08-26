@@ -9,10 +9,10 @@ import Button from '../../../components/Button';
 import TextLabel from '../../../components/TextLabel';
 import Title from '../../../components/Title';
 
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {userLogin} from '../../../store/user';
 import axios from 'axios';
-import {setError, setLoading} from '../../../store/misc';
+import {setLoading} from '../../../store/misc';
 
 const OTP = ({route}) => {
   const navigation = useNavigation();
@@ -53,7 +53,7 @@ const OTP = ({route}) => {
 
       if (status === 200) {
         dispatch(userLogin(data.token));
-        navigation.navigate('AppScreens', {screen: 'Tabs'});
+        // navigation.navigate('AppScreens', {screen: 'Tabs'});
       }
     } catch (err) {
       // dispatch(setError(err.response.data['error' || 'message']));

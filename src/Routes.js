@@ -176,7 +176,6 @@ function Routes() {
         <Stack.Screen name="PaymentDone" component={PaymentDone} />
         <Stack.Screen name="ComingSoon" component={ComingSoon} />
         <Stack.Screen name="NotFound" component={NotFound} />
-        <Stack.Screen name="OTP" component={OTP} />
       </Stack.Navigator>
     );
   };

@@ -53,8 +53,8 @@ const UserDetails = ({phoneNumber, info}) => {
 
   const updateUrl =
     userType === 'user'
-      ? `${BACKEND_URL}/api/users/me/update`
-      : `${BACKEND_URL}/api/drivers/me/update`;
+      ? `${BACKEND_URL}/api/users/me`
+      : `${BACKEND_URL}/api/drivers/me`;
 
   const switchUrl = `${BACKEND_URL}/api/users/me/switch`;
 
