@@ -22,11 +22,16 @@ export const userSlice = createSlice({
     userDetails: (state, action) => {
       state.data = action.payload;
     },
+    test: state => {
+      const entireState = getStoredState();
+
+      console.log(entireState);
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const {changeUserType, userLogin, userLogout, userDetails} =
+export const {changeUserType, userLogin, userLogout, userDetails, test} =
   userSlice.actions;
 
 export default userSlice.reducer;

@@ -63,10 +63,17 @@ const Map = ({route}) => {
   const [expanded, setExpanded] = useState(true);
   const [animate, setAnimate] = useState(false);
 
-  const [center, setCenter] = useState({
-    lat: location?.lat || home?.lat,
-    lng: location?.lng || home?.lng,
-  });
+  const [center, setCenter] = useState(
+    location
+      ? {
+          lat: location?.lat,
+          lng: location?.lng,
+        }
+      : {
+          lat: home?.lat,
+          lng: home?.lng,
+        },
+  );
 
   const [modalVisible, setModalVisible] = useState(false);
   const [modalState, setModalState] = useState('default');

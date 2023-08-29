@@ -11,6 +11,7 @@ const persistConfig = {
   key: 'root',
   versions: 1,
   storage: AsyncStorage,
+  blackList: ['misc'],
 };
 
 const rootReducer = combineReducers({

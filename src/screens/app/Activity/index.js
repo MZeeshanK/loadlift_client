@@ -15,7 +15,7 @@ import colors from '../../../constants/colors';
 import {useDispatch, useSelector} from 'react-redux';
 
 import axios from 'axios';
-import {getAllOrders} from '../../../store/orders';
+import {setOrders} from '../../../store/orders';
 import Title from '../../../components/Title';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -23,7 +23,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const Activity = () => {
   const dispatch = useDispatch();
   const colorScheme = useColorScheme();
-  const {token: userToken} = useSelector(state => state.user);
+  const {token: userToken, type: userType} = useSelector(state => state.user);
 
   const orders = useSelector(state => state.orders.data);
 
@@ -36,23 +36,52 @@ const Activity = () => {
   const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
   const ongoing = colorScheme === 'dark' ? colors.ongoing : colors.lightOngoing;
 
-  useEffect(() => {
-    if (text) {
-      setClear(true);
+  const getOrders = async () => {
+    const url =
+      userType === 'user'
+        ? `${BACKEND_URL}/api/users/me/orders`
+        : userType === 'driver'
+        ? `${BACKEND_URL}/api/drivers/me/orders`
+        : null;
 
-      setFilteredOrders(
-        orders.filter(
-          order =>
-            order?.driver?.firstName
-              .toLocaleLowerCase()
-              .includes(text.toLocaleLowerCase()) ||
-            order?.driver?.lastName
-              .toLocaleLowerCase()
-              .includes(text.toLocaleLowerCase()),
-        ),
-      );
+    try {
+      const {data, status} = await axios({
+        method: 'GET',
+        url,
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      });
+
+      if (status == 200) {
+        dispatch(setOrders(data));
+      }
+    } catch (err) {
+      console.log(err);
     }
-  }, [text]);
+  };
+
+  useEffect(() => {
+    getOrders();
+  }, []);
+
+  // useEffect(() => {
+  //   if (text) {
+  //     setClear(true);
+
+  //     setFilteredOrders(
+  //       orders.filter(
+  //         order =>
+  //           order?.driver?.firstName
+  //             .toLocaleLowerCase()
+  //             .includes(text.toLocaleLowerCase()) ||
+  //           order?.driver?.lastName
+  //             .toLocaleLowerCase()
+  //             .includes(text.toLocaleLowerCase()),
+  //       ),
+  //     );
+  //   }
+  // }, [text]);
 
   return (
     <Linear>

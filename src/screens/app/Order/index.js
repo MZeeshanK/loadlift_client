@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Image, useColorScheme} from 'react-native';
 
 import Linear from '../../../components/Linear';
@@ -7,7 +7,6 @@ import Button from '../../../components/Button';
 import Card from '../../../components/Card';
 import Rating from '../../../components/Rating';
 
-import orders from '../../../data/orders';
 import categories from '../../../data/categories';
 import styleConstants from '../../../constants/styles';
 import Title from '../../../components/Title';
@@ -15,29 +14,61 @@ import CustomModal from '../../../components/CustomModal';
 
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
+import axios from 'axios';
 
-const Order = () => {
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+
+const Order = ({route}) => {
+  const {orderId} = route.params;
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
 
   const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
 
+  const [myOrder, setMyOrder] = useState({});
   const [rating, setRating] = useState(0);
   const [picked, setPicked] = useState(false);
   const [ratingModalVisible, setRatingModalVisible] = useState(false);
   const [pickUpModalVisible, setPickUpModalVisible] = useState(false);
   const [deliveredModalVisible, setDeliveredModalVisible] = useState(false);
 
-  const userType = useSelector(state => state.user.type);
+  const {type: userType, token: userToken} = useSelector(state => state.user);
 
-  const order = orders[0];
+  const getOrderDetails = async () => {
+    const url = `${BACKEND_URL}/api/users/me/${orderId}`;
 
-  let imageSource = categories.find(
-    category => category?.title === order.typeOfVehicle,
+    try {
+      const {data, status} = await axios({
+        method: 'GET',
+        url,
+        params: {
+          id: orderId,
+        },
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      });
+
+      setMyOrder(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    getOrderDetails();
+  }, []);
+
+  const {user, order, driver} = myOrder;
+
+  const category = categories.find(
+    category => category?.value === driver.typeOfVehicle,
   );
 
-  imageSource =
-    colorScheme === 'dark' ? imageSource?.icon : imageSource?.darkIcon;
+  const categoryTitle = category?.title;
+
+  const imageSource =
+    colorScheme === 'dark' ? category?.icon : category?.darkIcon;
 
   const RatingModal = () => {
     return (
@@ -146,14 +177,17 @@ const Order = () => {
               {userType === 'driver' ? (
                 <View className="items-start">
                   <Title className="pb-1" bold primary>
-                    Name: <Title black={colorScheme !== 'dark'}>John Doe</Title>
+                    Name:{' '}
+                    <Title black={colorScheme !== 'dark'}>
+                      {user?.firstName} {user?.lastName}
+                    </Title>
                   </Title>
                   <Rating rating={4.5} style={{width: 15, height: 15}} />
                 </View>
               ) : (
                 <View className="items-start justify-center">
                   <Image source={imageSource} style={styleConstants.icon} />
-                  <Title xsm>{order?.typeOfVehicle}</Title>
+                  <Title xsm>{categoryTitle}</Title>
                 </View>
               )}
               <View className="items-end justify-center">
@@ -161,7 +195,7 @@ const Order = () => {
                   {order?.date}
                 </Title>
                 <Title className="pt-0 mt-0" xsm bold primary>
-                  Status: <Title xsm>{order?.status}</Title>
+                  Status: <Title xsm>{order?.status?.message}</Title>
                 </Title>
               </View>
             </View>
@@ -170,10 +204,13 @@ const Order = () => {
                 className="w-full items-center justify-between flex-row py-5 border-b px-1"
                 style={{borderColor: primary}}>
                 <Title sm bold left primary>
-                  Name: <Title sm>{order?.driverName}</Title>
+                  Name:{' '}
+                  <Title sm>
+                    {driver?.firstName} {driver?.lastName}
+                  </Title>
                 </Title>
                 <Title bold right>
-                  {order?.vehicleNumber}
+                  {driver?.vehicleNumber}
                 </Title>
               </View>
             )}
@@ -188,7 +225,10 @@ const Order = () => {
                 bold
                 primary
                 sm>
-                Pick Up Location: <Title sm>{order?.pickUp}</Title>
+                Pick Up Location:{' '}
+                <Title sm>
+                  {order?.origin?.address}, {order?.origin?.pinCode}
+                </Title>
               </Title>
 
               <Title
@@ -199,7 +239,11 @@ const Order = () => {
                 bold
                 primary
                 sm>
-                Destination Location: <Title sm>{order?.destination}</Title>
+                Destination Location:{' '}
+                <Title sm>
+                  {' '}
+                  {order?.origin?.address}, {order?.origin?.pinCode}
+                </Title>
               </Title>
             </View>
             <View className="w-full pt-6 pb-3 flex-row items-center justify-between px-1">

@@ -17,7 +17,7 @@ const OrderItem = ({item, ...props}) => {
   const userType = useSelector(state => state.user.type);
 
   const imageSource = categories.find(
-    category => category?.title === item?.typeOfVehicle,
+    category => category?.value === item?.driver?.typeOfVehicle,
   );
 
   const image =
@@ -30,17 +30,26 @@ const OrderItem = ({item, ...props}) => {
       <View className="flex-1 justify-center px-2">
         <View className="w-full flex-row items-center pt-1 justify-between">
           <Title primary bold left>
-            Name: <Title>John Doe</Title>
+            Name:{' '}
+            <Title>
+              {item?.user?.firstName} {item?.user?.lastName}{' '}
+            </Title>
           </Title>
 
           <Title primary bold right>
-            Price: <Title>{'\u20b9'} 1200</Title>
+            Price:{' '}
+            <Title>
+              {'\u20b9'} {item?.order?.price}
+            </Title>
           </Title>
         </View>
         <View className="w-full flex-1 pb-2">
           <Title numberOfLines={2} bold primary left>
             Destination:{' '}
-            <Title>203, Rainawari, Srinagar, Jammu and Kashmir</Title>
+            <Title>
+              {item?.order?.destination?.address}{' '}
+              {item?.order?.destination?.pinCode}{' '}
+            </Title>
           </Title>
         </View>
       </View>
@@ -53,7 +62,7 @@ const OrderItem = ({item, ...props}) => {
         <View
           className="border-r items-center justify-start px-1 py-3"
           style={{borderColor: primary}}>
-          {/* <Image source={image} style={styles.car} /> */}
+          <Image source={image} style={styles.car} />
         </View>
 
         <View className="flex-1 items-between justify-between py-2 px-2 h-[90%]">
@@ -68,13 +77,13 @@ const OrderItem = ({item, ...props}) => {
               <Title semibold xsm>
                 Price:{' '}
               </Title>
-              {'\u20b9'} {item?.price}
+              {'\u20b9'} {item?.order?.price}
             </Title>
           </View>
           <View className="flex-row items-center justify-between">
             <Title left className="tracking-tight w-1/2" xsm>
               <Title semibold xsm>
-                Vehicle Number:{' '}
+                Vehicle:{' '}
               </Title>
               {item?.driver?.vehicleNumber}
             </Title>
@@ -82,7 +91,7 @@ const OrderItem = ({item, ...props}) => {
               <Title semibold xsm>
                 Distance:{' '}
               </Title>
-              {item?.distance} km
+              {item?.order?.distance} km
             </Title>
           </View>
         </View>
@@ -92,7 +101,7 @@ const OrderItem = ({item, ...props}) => {
 
   return (
     <Card
-      onPress={() => navigation.navigate('Order')}
+      onPress={() => navigation.navigate('Order', {orderId: item?._id})}
       className={`rounded-2xl mb-3 py-1 px-1 items-center justify-between`}
       style={styles.order}
       ongoing={props.ongoing}

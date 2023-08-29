@@ -1,18 +1,32 @@
 import {createSlice} from '@reduxjs/toolkit';
-import ThunkApi from 'redux-thunk';
 
 export const mapSlice = createSlice({
-  name: 'user',
+  name: 'map',
   initialState: {
-    origin: {},
-    destination: {},
+    origin: {
+      lat: 34.08057325838969,
+      lng: 74.79995688423514,
+      address: 'Gol Marker, Karanagar, Srinagar, Jammu and Kashmir, India',
+      pinCode: '190010',
+    },
+    destination: {
+      lat: 34.08057325838969,
+      lng: 74.79995688423514,
+      address: 'Gol Marker, Karanagar, Srinagar, Jammu and Kashmir, India',
+      pinCode: '190010',
+    },
     home: {
       lat: 34.08057325838969,
       lng: 74.79995688423514,
       address: 'Gol Marker, Karanagar, Srinagar, Jammu and Kashmir, India',
       pinCode: '190010',
     },
-    work: {},
+    work: {
+      lat: 34.08057325838969,
+      lng: 74.79995688423514,
+      address: 'Gol Marker, Karanagar, Srinagar, Jammu and Kashmir, India',
+      pinCode: '190010',
+    },
   },
   reducers: {
     setOrigin: (state, action) => {

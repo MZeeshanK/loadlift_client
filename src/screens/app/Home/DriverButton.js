@@ -8,6 +8,7 @@ import Title from '../../../components/Title';
 import colors from '../../../constants/colors';
 import axios from 'axios';
 import {changeActivity, userDetails} from '../../../store/user';
+import {setLoading} from '../../../store/misc';
 
 const {width} = Dimensions.get('window');
 
@@ -25,6 +26,8 @@ const DriverHomeButton = () => {
 
   const activateDriver = async () => {
     const url = `${BACKEND_URL}/api/drivers/me/activate`;
+
+    dispatch(setLoading(true));
 
     try {
       const {data, status} = await axios({
@@ -45,6 +48,7 @@ const DriverHomeButton = () => {
     } catch (err) {
       console.log(err);
     }
+    dispatch(setLoading(false));
   };
 
   useEffect(() => {

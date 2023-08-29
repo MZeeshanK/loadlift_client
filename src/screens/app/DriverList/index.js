@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -13,24 +13,72 @@ import Header from '../../../components/Header';
 import Card from '../../../components/Card';
 import Button from '../../../components/Button';
 
-import driverList from '../../../data/driverList';
 import categories from '../../../data/categories';
 
 import colors from '../../../constants/colors';
 import styleConstants from '../../../constants/styles';
 import Title from '../../../components/Title';
 import {useNavigation} from '@react-navigation/native';
+import axios from 'axios';
+import {useDispatch, useSelector} from 'react-redux';
+import {setLoading} from '../../../store/misc';
+
+const BACKEND_URl = process.env.REACT_APP_BACKEND_URL;
 
 const DriverList = ({route}) => {
   const {drivers} = route.params;
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const colorScheme = useColorScheme();
 
   const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
-  const card = colorScheme === 'dark' ? colors.card : colors.lightCard;
   const ongoing = colorScheme === 'dark' ? colors.ongoing : colors.lightOngoing;
 
+  const [order, setOrder] = useState({});
   const [driver, setDriver] = useState({});
+  const [isMount, setIsMount] = useState(false);
+
+  const {token: userToken} = useSelector(state => state.user);
+  const {origin, destination} = useSelector(state => state.map);
+
+  const bookDriver = async () => {
+    const url = `${BACKEND_URl}/api/order/book`;
+
+    dispatch(setLoading(true));
+
+    try {
+      const {data} = await axios({
+        method: 'POST',
+        url,
+        data: {
+          origin,
+          destination,
+          driverId: driver?._id,
+          transitDistance: 11.2,
+        },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userToken}`,
+        },
+      });
+
+      setOrder(data);
+      navigation.navigate('Order', {orderId: order?._id});
+    } catch (err) {
+      console.log(err);
+    }
+
+    dispatch(setLoading(true));
+  };
+
+  useEffect(() => {
+    if (isMount) {
+      if (driver) {
+        bookDriver();
+      }
+      setIsMount(false);
+    }
+  }, [isMount]);
 
   const Item = ({item}) => {
     const category = categories.find(
@@ -161,23 +209,39 @@ const DriverList = ({route}) => {
       <View className="w-full flex-1 items-center justify-center">
         <View className="w-full flex-1 mb-5">
           <Card style={{width: '100%', flex: 1}}>
-            <Title className="tracking-wider my-2 mb-8" xl bold>
-              Choose a driver from the list.
-            </Title>
-            <FlatList
-              // showsVerticalScrollIndicator={false}
-              className="flex-1 w-full"
-              data={drivers}
-              keyExtractor={item => item?.id}
-              renderItem={({item}) => <Item item={item} />}
-            />
+            {drivers.length ? (
+              <>
+                <Title className="tracking-wider my-2 mb-8" xl bold>
+                  Choose a driver from the list.
+                </Title>
+                <FlatList
+                  // showsVerticalScrollIndicator={false}
+                  className="flex-1 w-full"
+                  data={drivers}
+                  keyExtractor={item => item?._id}
+                  renderItem={({item}) => <Item item={item} />}
+                />
+              </>
+            ) : (
+              <>
+                <Image
+                  source={require('../../../assets/fail.png')}
+                  className="w-20 h-20 mb-10"
+                />
+                <Title bold xl>
+                  No Drivers available Right Now.
+                </Title>
+                <Title bold base>
+                  Please try again later.
+                </Title>
+              </>
+            )}
           </Card>
         </View>
-        {/* <View className="flex-1" /> */}
         <Button
           title="Book Vehicle"
           style={{marginVertical: 15}}
-          onPress={() => navigation.navigate('Order')}
+          onPress={() => setIsMount(true)}
         />
       </View>
     </Linear>

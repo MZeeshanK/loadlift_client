@@ -63,6 +63,8 @@ const Booking = () => {
         navigation.navigate('DriverList', {drivers: data});
       }
     } catch (err) {
+      if (err.response.status === 404)
+        navigation.navigate('DriverList', {drivers: []});
       console.log(err.response.data);
     }
 

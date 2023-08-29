@@ -7,47 +7,50 @@ import HomeButton from './UserButton';
 import GFlatList from '../../../components/GFlatList';
 import DriverButton from './DriverButton';
 
-import {useDispatch, useSelector} from 'react-redux';
-import {userDetails} from '../../../store/user';
-import axios from 'axios';
+import {useSelector} from 'react-redux';
 import DriverRate from './DriverRate';
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+import axios from 'axios';
 
 const Home = () => {
-  const dispatch = useDispatch();
+  const {type: userType} = useSelector(state => state.user);
+  const {origin, destination} = useSelector(state => state.map);
 
-  const {type: userType, token: userToken} = useSelector(state => state.user);
-  const {data: userData} = useSelector(state => state.user);
-  console.log(userData);
+  const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API;
+  const API_URL = 'https://maps.googleapis.com/maps/api/directions/json';
 
-  const getUser = async () => {
-    const url =
-      userType === 'user'
-        ? `${BACKEND_URL}/api/users/me`
-        : userType === 'driver'
-        ? `${BACKEND_URL}/api/drivers/me`
-        : null;
+  const params = {
+    origin: `${origin?.lat} ${origin?.lng}`,
+    destination: `${destination?.lat} ${destination?.lng}`,
+    key: API_KEY,
+    departure_time: 'now', // You can also specify a specific time
+    traffic_model: 'best_guess', // Or 'optimistic', or 'pessimistic
+  };
 
+  const getOrderMetrics = async () => {
     try {
-      const {data, status} = await axios({
+      const {data} = await axios({
         method: 'GET',
-        url,
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-        },
+        url: API_URL,
+        params,
       });
 
-      if (status === 200) {
-        dispatch(userDetails(data));
+      const routes = data.routes;
+
+      if (routes.length > 0) {
+        const legs = routes[0].legs;
+        if (legs.length > 0) {
+          const distance = legs[0].distance.text;
+          const duration = legs[0].duration.text;
+          console.log(`Distance: ${distance}, Duration: ${duration}`);
+        }
       }
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.log(error);
     }
   };
 
   useEffect(() => {
-    getUser();
+    // getOrderMetrics();
   }, []);
 
   const Driver = () => (

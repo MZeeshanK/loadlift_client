@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import {
   BackHandler,
@@ -44,9 +44,13 @@ import Title from './components/Title';
 
 import {useDispatch, useSelector} from 'react-redux';
 import {setLoading} from './store/misc';
+import axios from 'axios';
+import {test, userDetails, userLogin} from './store/user';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 function Routes() {
   const colorScheme = useColorScheme();
@@ -62,6 +66,10 @@ function Routes() {
   };
 
   BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+  useEffect(() => {
+    dispatch(test());
+  }, []);
 
   const Tabs = () => {
     return (
@@ -154,6 +162,37 @@ function Routes() {
   };
 
   const AppScreens = () => {
+    const {type: userType} = useSelector(state => state.user);
+
+    const getUser = async () => {
+      const url =
+        userType === 'user'
+          ? `${BACKEND_URL}/api/users/me`
+          : userType === 'driver'
+          ? `${BACKEND_URL}/api/drivers/me`
+          : null;
+
+      try {
+        const {data, status} = await axios({
+          method: 'GET',
+          url,
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        });
+
+        if (status === 200) {
+          dispatch(userDetails(data));
+        }
+      } catch (err) {
+        console.log(err.response.data);
+      }
+    };
+
+    useEffect(() => {
+      getUser();
+    }, []);
+
     return (
       <Stack.Navigator
         screenOptions={{
