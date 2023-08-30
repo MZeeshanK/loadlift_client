@@ -39,18 +39,14 @@ import DriverList from './screens/app/DriverList';
 import PaymentDone from './screens/app/PaymentDone';
 
 import ComingSoon from './screens/ComingSoon';
-
 import Title from './components/Title';
 
 import {useDispatch, useSelector} from 'react-redux';
 import {setLoading} from './store/misc';
-import axios from 'axios';
-import {test, userDetails, userLogin} from './store/user';
+import {fetchUser} from './store/user';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 function Routes() {
   const colorScheme = useColorScheme();
@@ -59,17 +55,13 @@ function Routes() {
   const card = colorScheme === 'dark' ? colors.card : colors.lightCard;
 
   // Tab Navigator
-  const userToken = useSelector(state => state.user.token);
+  const {type: userType, token: userToken} = useSelector(state => state.user);
 
   const onBackPress = () => {
     dispatch(setLoading(false));
   };
 
   BackHandler.addEventListener('hardwareBackPress', onBackPress);
-
-  useEffect(() => {
-    dispatch(test());
-  }, []);
 
   const Tabs = () => {
     return (
@@ -162,44 +154,26 @@ function Routes() {
   };
 
   const AppScreens = () => {
-    const {type: userType} = useSelector(state => state.user);
-
-    const getUser = async () => {
-      const url =
-        userType === 'user'
-          ? `${BACKEND_URL}/api/users/me`
-          : userType === 'driver'
-          ? `${BACKEND_URL}/api/drivers/me`
-          : null;
-
-      try {
-        const {data, status} = await axios({
-          method: 'GET',
-          url,
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
-        });
-
-        if (status === 200) {
-          dispatch(userDetails(data));
-        }
-      } catch (err) {
-        console.log(err.response.data);
-      }
-    };
+    const {
+      token: userToken,
+      type: userType,
+      status: userStatus,
+      data,
+    } = useSelector(state => state.user);
 
     useEffect(() => {
-      getUser();
-    }, []);
+      if (userStatus === 'idle') {
+        dispatch(fetchUser({userToken, userType}));
+      }
+    }, [dispatch, userStatus]);
 
     return (
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
           ...TransitionPresets.SlideFromRightIOS,
-        }}
-        initialRouteName="Tabs">
+          initialRouteName: 'Tabs',
+        }}>
         <Stack.Screen name="Tabs" component={Tabs} />
         <Stack.Screen name="Booking" component={Booking} />
         <Stack.Screen name="Order" component={Order} />
@@ -211,10 +185,10 @@ function Routes() {
         <Stack.Screen name="AccountSwitch" component={AccountSwitch} />
         <Stack.Screen name="Map" component={Map} />
         <Stack.Screen name="DriverList" component={DriverList} />
-        <Stack.Screen name="Call" component={Call} />
         <Stack.Screen name="PaymentDone" component={PaymentDone} />
         <Stack.Screen name="ComingSoon" component={ComingSoon} />
         <Stack.Screen name="NotFound" component={NotFound} />
+        <Stack.Screen name="Call" component={Call} />
       </Stack.Navigator>
     );
   };

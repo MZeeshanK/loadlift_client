@@ -5,11 +5,8 @@ import Title from '../../../components/Title';
 import Input from '../../../components/Input';
 import colors from '../../../constants/colors';
 import {useDispatch, useSelector} from 'react-redux';
-import {changeRate, userDetails} from '../../../store/user';
+import {setRate} from '../../../store/user';
 import Button from '../../../components/Button';
-import axios from 'axios';
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const DriverRate = () => {
   const colorScheme = useColorScheme();
@@ -42,32 +39,8 @@ const DriverRate = () => {
     }
   }, [perKmRate]);
 
-  const setRate = async () => {
-    const url = `${BACKEND_URL}/api/drivers/me/rate`;
-
-    try {
-      const {data, status} = await axios({
-        method: 'PUT',
-        url,
-        data: {
-          ratePerKm: perKmRate,
-        },
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (status === 200) {
-        dispatch(userDetails(data));
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   const next = () => {
-    setRate();
+    dispatch(setRate({perKmRate, userToken}));
     setEdit(false);
   };
 

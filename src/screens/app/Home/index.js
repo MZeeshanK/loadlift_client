@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {View, Image, StyleSheet} from 'react-native';
 
 import Linear from '../../../components/Linear';
@@ -13,11 +13,13 @@ import axios from 'axios';
 
 const Home = () => {
   const {type: userType} = useSelector(state => state.user);
+
   const {origin, destination} = useSelector(state => state.map);
+
+  // Google directions api for calculating distance and time between origin and destination
 
   const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API;
   const API_URL = 'https://maps.googleapis.com/maps/api/directions/json';
-
   const params = {
     origin: `${origin?.lat} ${origin?.lng}`,
     destination: `${destination?.lat} ${destination?.lng}`,
@@ -25,34 +27,26 @@ const Home = () => {
     departure_time: 'now', // You can also specify a specific time
     traffic_model: 'best_guess', // Or 'optimistic', or 'pessimistic
   };
-
-  const getOrderMetrics = async () => {
-    try {
-      const {data} = await axios({
-        method: 'GET',
-        url: API_URL,
-        params,
-      });
-
-      const routes = data.routes;
-
-      if (routes.length > 0) {
-        const legs = routes[0].legs;
-        if (legs.length > 0) {
-          const distance = legs[0].distance.text;
-          const duration = legs[0].duration.text;
-          console.log(`Distance: ${distance}, Duration: ${duration}`);
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    // getOrderMetrics();
-  }, []);
-
+  // const getOrderMetrics = async () => {
+  //   try {
+  //     const {data} = await axios({
+  //       method: 'GET',
+  //       url: API_URL,
+  //       params,
+  //     });
+  //     const routes = data.routes;
+  //     if (routes.length > 0) {
+  //       const legs = routes[0].legs;
+  //       if (legs.length > 0) {
+  //         const distance = legs[0].distance.text;
+  //         const duration = legs[0].duration.text;
+  //         console.log(`Distance: ${distance}, Duration: ${duration}`);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   const Driver = () => (
     <View className="flex-1 w-full items-center justify-between -mt-8">
       {/* <CustomModal
@@ -67,7 +61,6 @@ const Home = () => {
           // setIsDelivering={setIsDelivering}
         />
       </CustomModal> */}
-
       {/* {isDelivering && (
         <Card>
           <DriverCard
@@ -81,18 +74,14 @@ const Home = () => {
         </Card>
       )} */}
       <View className="flex-1" />
-
       <DriverRate />
       <View className="flex-1" />
-
       <DriverButton />
     </View>
   );
-
   return (
     <Linear style={{paddingVertical: 0, paddngHorizontal: 0}}>
       <Header title="LoadLift" isBack={false} />
-
       <View className="flex-1 w-full items-center justify-between">
         <Image
           style={styles.logo}
@@ -104,7 +93,6 @@ const Home = () => {
           <>
             {/* 3 last orders list */}
             <GFlatList home orders={[]} />
-
             <HomeButton />
           </>
         )}

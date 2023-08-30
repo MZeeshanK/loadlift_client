@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   Dimensions,
@@ -20,11 +20,22 @@ const Linear = ({children, style}) => {
   const dispatch = useDispatch();
   const colorScheme = useColorScheme();
 
-  const loading = useSelector(state => state.misc.loading);
+  // const loading = useSelector(state => state.misc.loading);
+  const {status: userStatus} = useSelector(state => state.user);
   const {message, visible} = useSelector(state => state.misc.error);
   const {visible: popUpVisible, message: popUpMessage} = useSelector(
     state => state.misc.popUp,
   );
+
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (userStatus === 'loading') {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+  }, [userStatus]);
 
   if (loading) {
     Keyboard.dismiss();

@@ -16,6 +16,7 @@ import Card from '../../../components/Card';
 import Title from '../../../components/Title';
 
 import {useNavigation} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
 
 const Call = () => {
   const colorScheme = useColorScheme();

@@ -9,16 +9,12 @@ import Button from '../../../components/Button';
 import TextLabel from '../../../components/TextLabel';
 import Title from '../../../components/Title';
 
-import {useDispatch, useSelector} from 'react-redux';
-import {userLogin} from '../../../store/user';
-import axios from 'axios';
-import {setLoading} from '../../../store/misc';
+import {useDispatch} from 'react-redux';
+import {otpVerify} from '../../../store/user';
 
 const OTP = ({route}) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-
-  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
   const [timer, setTimer] = useState(59);
   const [otp, setOtp] = useState('');
@@ -33,40 +29,9 @@ const OTP = ({route}) => {
     return () => clearInterval(interval);
   }, [timer]);
 
-  const url = `${BACKEND_URL}/api/verify`;
-
-  const otpVerify = async () => {
-    dispatch(setLoading(true));
-    try {
-      const {data, status} = await axios.post(
-        url,
-        {
-          phone,
-          verificationCode: otp,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      );
-
-      if (status === 200) {
-        dispatch(userLogin(data.token));
-        // navigation.navigate('AppScreens', {screen: 'Tabs'});
-      }
-    } catch (err) {
-      // dispatch(setError(err.response.data['error' || 'message']));
-      console.log(err);
-    }
-    setIsMount(false);
-
-    dispatch(setLoading(false));
-  };
-
   useEffect(() => {
     if (isMount) {
-      otpVerify();
+      dispatch(otpVerify({phone, otp}));
       setIsMount(false);
     }
   }, [isMount]);

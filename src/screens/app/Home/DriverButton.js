@@ -1,59 +1,29 @@
 import React, {useEffect, useState} from 'react';
 import {Pressable, Dimensions, useColorScheme} from 'react-native';
 
-import {useSelector, useDispatch} from 'react-redux';
-
 import Title from '../../../components/Title';
 
 import colors from '../../../constants/colors';
-import axios from 'axios';
-import {changeActivity, userDetails} from '../../../store/user';
-import {setLoading} from '../../../store/misc';
+
+import {useSelector, useDispatch} from 'react-redux';
+import {activateDriver} from '../../../store/user';
 
 const {width} = Dimensions.get('window');
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const DriverHomeButton = () => {
   const colorScheme = useColorScheme();
   const dispatch = useDispatch();
 
+  // local state
   const [isMount, setIsMount] = useState(false);
 
-  const {data: userData, token: userToken} = useSelector(state => state.user);
-
+  // global states
+  const {data: userData} = useSelector(state => state.user);
   const {active} = userData;
-
-  const activateDriver = async () => {
-    const url = `${BACKEND_URL}/api/drivers/me/activate`;
-
-    dispatch(setLoading(true));
-
-    try {
-      const {data, status} = await axios({
-        method: 'PUT',
-        url,
-        data: {
-          active: !active,
-        },
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (status === 200) {
-        dispatch(userDetails(data));
-      }
-    } catch (err) {
-      console.log(err);
-    }
-    dispatch(setLoading(false));
-  };
 
   useEffect(() => {
     if (isMount) {
-      activateDriver();
+      dispatch(activateDriver({active, userToken}));
       setIsMount(false);
     }
   }, [isMount]);

@@ -1,12 +1,5 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  FlatList,
-  Image,
-  Dimensions,
-} from 'react-native';
+import {View, StyleSheet, ScrollView, FlatList, Image} from 'react-native';
 import TextLabel from '../TextLabel';
 import Input from '../Input';
 import Card from '../Card';
@@ -18,8 +11,7 @@ import Button from '../Button';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
-import {setLoading} from '../../store/misc';
-import {userDetails, switchUser} from '../../store/user';
+import {registerUser, updateUser} from '../../store/user';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -46,75 +38,14 @@ const UserDetails = ({phoneNumber, info}) => {
   );
   const [isMount, setIsMount] = useState(false);
 
-  const url =
-    userType === 'user'
-      ? `${BACKEND_URL}/api/users/register`
-      : `${BACKEND_URL}/api/drivers/register`;
-
-  const updateUrl =
-    userType === 'user'
-      ? `${BACKEND_URL}/api/users/me`
-      : `${BACKEND_URL}/api/drivers/me`;
-
-  const switchUrl = `${BACKEND_URL}/api/users/me/switch`;
+  const url = `${BACKEND_URL}/api/users/me/switch`;
 
   useEffect(() => {
-    const register = async inputs => {
-      dispatch(setLoading(true));
-
-      try {
-        const {status} = await axios({
-          method: 'POST',
-          url,
-          data: inputs,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (status === 200) {
-          navigation.navigate('OTP', {phone});
-        }
-      } catch (err) {
-        console.log(err.response.data);
-      }
-      dispatch(setLoading(false));
-    };
-
-    const update = async inputs => {
-      dispatch(setLoading(true));
-      try {
-        const {data, status} = await axios({
-          method: 'PUT',
-          url: updateUrl,
-          data: inputs,
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${userToken}`,
-          },
-        });
-
-        if (status === 200) {
-          dispatch(
-            userDetails({
-              phone: data?.user?.phone,
-              firstName: data?.user?.firstName,
-              lastName: data?.user?.lastName,
-            }),
-            navigation.goBack(),
-          );
-        }
-      } catch (err) {
-        console.log(err.response.data);
-      }
-      dispatch(setLoading(false));
-    };
-
     const switchUser = async () => {
       try {
         const {data, status} = await axios({
           method: 'POST',
-          url: switchUrl,
+          url: url,
           data: driverInputs,
           headers: {
             Authorization: `Bearer ${userToken}`,
@@ -142,20 +73,22 @@ const UserDetails = ({phoneNumber, info}) => {
       typeOfVehilce: category?.title,
     };
 
+    const inputs = userType === 'driver' ? driverInputs : userInputs;
+
     if (isMount) {
       if (info === 'create') {
         if (userType === 'user') {
-          register(userInputs);
+          dispatch(registerUser({userType, inputs, phone, navigation}));
         } else {
-          register(driverInputs);
+          dispatch(registerUser({userType, inputs, phone, navigation}));
         }
       } else if (info === 'switch') {
         switchUser();
       } else {
         if (userType === 'user') {
-          update(userInputs);
+          dispatch(updateUser({userType, inputs, userToken, navigation}));
         } else {
-          update(driverInputs);
+          dispatch(updateUser({userType, inputs, userToken, navigation}));
         }
       }
       setIsMount(false);
