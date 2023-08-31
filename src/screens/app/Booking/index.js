@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -19,11 +19,8 @@ import Title from '../../../components/Title';
 import colors from '../../../constants/colors';
 import {useDispatch, useSelector} from 'react-redux';
 import TextLabel from '../../../components/TextLabel';
-import axios from 'axios';
-import {setLoading} from '../../../store/misc';
 import {useNavigation} from '@react-navigation/native';
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+import {findDrivers} from '../../../store/orders';
 
 const Booking = () => {
   const colorScheme = useColorScheme();
@@ -36,44 +33,26 @@ const Booking = () => {
   const ongoing = colorScheme === 'dark' ? colors.ongoing : colors.lightOngoing;
 
   const [weight, setWeight] = useState(true);
+  const [weightStr, setWeightStr] = useState('');
   const [vehicle, setVehicle] = useState(categories[0]);
   const [isMount, setIsMount] = useState(false);
 
-  const findDrivers = async () => {
-    const url = `${BACKEND_URL}/api/order/nearby`;
+  const weightVal = +weightStr;
 
-    const {lat, lng} = origin;
+  let typeOfVehicle;
 
-    dispatch(setLoading(true));
-
-    try {
-      const {data, status} = await axios({
-        method: 'GET',
-        url,
-        params: {
-          latitude: lat,
-          longitude: lng,
-        },
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (status === 200) {
-        navigation.navigate('DriverList', {drivers: data});
-      }
-    } catch (err) {
-      if (err.response.status === 404)
-        navigation.navigate('DriverList', {drivers: []});
-      console.log(err.response.data);
-    }
-
-    dispatch(setLoading(false));
-  };
+  if (weight) {
+    if (weightVal < 3000) typeOfVehicle = 'mini-truck';
+    if (weightVal < 6000 && weightVal >= 3000) typeOfVehicle = 'light-truck';
+    if (weightVal < 9000 && weightVal >= 6000) typeOfVehicle = 'medium-truck';
+    if (weightVal >= 9000) typeOfVehicle = 'heavy-truck';
+  } else {
+    typeOfVehicle = vehicle.value;
+  }
 
   useEffect(() => {
     if (isMount) {
-      findDrivers();
+      findDrivers({origin, navigation, typeOfVehicle, dispatch});
       setIsMount(false);
     }
   }, [isMount]);
@@ -168,16 +147,6 @@ const Booking = () => {
                         {item?.weight}T
                       </Title>
                     </Title>
-                    <Title
-                      className="tracking-tighter"
-                      xsm
-                      bold
-                      black={vehicle === item}>
-                      Rate:{' '}
-                      <Title xsm medium black={vehicle === item}>
-                        {'\u20b9'} {item?.rate} / km
-                      </Title>
-                    </Title>
                   </View>
                 </View>
               </Card>
@@ -224,6 +193,8 @@ const Booking = () => {
             <TextLabel title="Set Weight: " />
             <Input
               placeholder="Enter Weight in Kg"
+              value={weightStr}
+              onChangeText={setWeightStr}
               keyboardType="numeric"
               style={{marginTop: 0}}
             />

@@ -10,7 +10,8 @@ import PaymentDetails from '../../../components/PaymentDetails';
 
 import {useNavigation} from '@react-navigation/native';
 
-const Payment = () => {
+const Payment = ({route}) => {
+  const {price} = route.param;
   const navigation = useNavigation();
   return (
     <Linear>
@@ -27,7 +28,7 @@ const Payment = () => {
             Amount Payable:{' '}
           </Title>
           <Title lg semibold>
-            {'\u20b9'} 1100
+            {'\u20b9'} {price}
           </Title>
         </Card>
 

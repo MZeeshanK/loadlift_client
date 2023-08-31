@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {
   SafeAreaView,
   Dimensions,
@@ -6,36 +6,20 @@ import {
   TouchableWithoutFeedback,
   useColorScheme,
 } from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 
 import colors from '../../constants/colors';
 import Loader from '../Loader';
 import Alert from '../Alert';
 import PopUp from '../PopUp';
-import {setPopUp} from '../../store/misc';
 
 const {height} = Dimensions.get('window');
 
 const Linear = ({children, style}) => {
-  const dispatch = useDispatch();
   const colorScheme = useColorScheme();
 
-  // const loading = useSelector(state => state.misc.loading);
-  const {status: userStatus} = useSelector(state => state.user);
+  const loading = useSelector(state => state.misc.loading);
   const {message, visible} = useSelector(state => state.misc.error);
-  const {visible: popUpVisible, message: popUpMessage} = useSelector(
-    state => state.misc.popUp,
-  );
-
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (userStatus === 'loading') {
-      setLoading(true);
-    } else {
-      setLoading(false);
-    }
-  }, [userStatus]);
 
   if (loading) {
     Keyboard.dismiss();

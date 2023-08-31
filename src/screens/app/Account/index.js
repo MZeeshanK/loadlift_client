@@ -1,5 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {ScrollView, View, Image, Pressable, useColorScheme} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 import Linear from '../../../components/Linear';
 import Header from '../../../components/Header';
@@ -9,38 +10,13 @@ import Button from '../../../components/Button';
 import Title from '../../../components/Title';
 import CustomModal from '../../../components/CustomModal';
 
-import {useNavigation} from '@react-navigation/native';
+import colors from '../../../constants/colors';
+import categories from '../../../data/categories';
+
 import {useSelector, useDispatch} from 'react-redux';
 import {userLogout} from '../../../store/user';
-import colors from '../../../constants/colors';
 
-const accountOptions = [
-  {
-    title: 'Settings',
-    screen: 'Settings',
-  },
-  {
-    title: "Switch to Driver's Account",
-    screen: 'AccountSwitch',
-    userOnly: true,
-  },
-  {
-    title: 'Rate Us',
-    //  Todo
-  },
-  {
-    title: 'Contact Us',
-    //  TODO
-  },
-  {
-    title: 'Logout',
-  },
-];
-
-const userAccountOptions = accountOptions.filter(option => !option.driverOnly);
-const driverAccountOptions = accountOptions.filter(option => !option.userOnly);
-
-const Account = ({}) => {
+const Account = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
@@ -49,17 +25,18 @@ const Account = ({}) => {
 
   const [modalVisible, setModalVisible] = useState(false);
 
-  const {
-    type: userType,
-    data: user,
-    token: userToken,
-  } = useSelector(state => state.user);
+  const {type: userType, data: user} = useSelector(state => state.user);
 
-  useEffect(() => {
-    if (!userToken) {
-      navigation.reset();
-    }
-  }, [userToken]);
+  // Selecting vehicle details from categories
+  let vehicleImage, vehicleTitle;
+  if (userType === 'driver') {
+    const vehicle = categories.find(
+      category => category.value === user?.typeOfVehicle,
+    );
+
+    vehicleTitle = vehicle.title;
+    vehicleImage = colorScheme === 'dark' ? vehicle?.icon : vehicle?.darkIcon;
+  }
 
   const Modal = () => {
     return (
@@ -101,15 +78,12 @@ const Account = ({}) => {
       <ScrollView
         className="w-full flex-1"
         showsVerticalScrollIndicator={false}>
+        {/* Vehicle info */}
         {userType === 'driver' && (
           <Card>
             <View className="items-center justify-center w-full pb-5 ">
               <Image
-                source={
-                  colorScheme === 'dark'
-                    ? require('../../../assets/mini-truck-light.png')
-                    : require('../../../assets/mini-truck-dark.png')
-                }
+                source={vehicleImage}
                 style={{
                   width: 100,
                   height: 37,
@@ -118,15 +92,16 @@ const Account = ({}) => {
             </View>
             <View className="w-full flex-row items-center justify-between">
               <Title semibold lg>
-                Mini Truck
+                {vehicleTitle}
               </Title>
               <Title semibold lg>
-                JK01AA 1234
+                {user?.vehicleNumber}
               </Title>
             </View>
           </Card>
         )}
 
+        {/* User Profile info */}
         <Card onPress={() => navigation.navigate('Profile')}>
           <View className=" w-full flex-row justify-between items-center">
             <View className="flex-1 items-start justify-around">
@@ -160,6 +135,7 @@ const Account = ({}) => {
           </View>
         </Card>
 
+        {/* Payment Settings button */}
         <Card
           onPress={() => navigation.navigate('PaymentMethod')}
           className="flex-1">
@@ -176,15 +152,18 @@ const Account = ({}) => {
           </Title>
         </Card>
 
+        {/* Other Settings Card */}
         <Card className="py-1 px-0">
-          <Pressable
-            onPress={() => navigation.navigate('NotFound')}
-            className="w-full items-start border-b p-2 px-5 justify-center"
-            style={{borderColor: primary}}>
-            <Title className="py-1 tracking-wider" lg bold>
-              Switch to Driver's Account
-            </Title>
-          </Pressable>
+          {userType === 'user' && (
+            <Pressable
+              onPress={() => navigation.navigate('NotFound')}
+              className="w-full items-start border-b p-2 px-5 justify-center"
+              style={{borderColor: primary}}>
+              <Title className="py-1 tracking-wider" lg bold>
+                Switch to Driver's Account
+              </Title>
+            </Pressable>
+          )}
 
           <Pressable
             onPress={() => navigation.navigate('NotFound')}

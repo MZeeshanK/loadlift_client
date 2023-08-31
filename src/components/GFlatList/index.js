@@ -14,7 +14,11 @@ const GFlatList = ({orders, ...props}) => {
         <OrderItem
           activity={props.activity}
           danger={item?.status === 'cancelled'}
-          ongoing={item?.status !== 'completed' && item?.status !== 'cancelled'}
+          ongoing={
+            item?.status?.code !== 5 &&
+            item?.status?.code !== 9 &&
+            item?.status?.code !== 0
+          }
           item={item}
           index={index}
         />

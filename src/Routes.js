@@ -44,6 +44,7 @@ import Title from './components/Title';
 import {useDispatch, useSelector} from 'react-redux';
 import {setLoading} from './store/misc';
 import {fetchUser} from './store/user';
+import {fetchOrders} from './store/orders';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -55,11 +56,31 @@ function Routes() {
   const card = colorScheme === 'dark' ? colors.card : colors.lightCard;
 
   // Tab Navigator
-  const {type: userType, token: userToken} = useSelector(state => state.user);
+  const {
+    type: userType,
+    token: userToken,
+    data: userData,
+  } = useSelector(state => state.user);
+  const {loading} = useSelector(state => state.misc);
 
   const onBackPress = () => {
     dispatch(setLoading(false));
   };
+
+  const config = {userToken, userType};
+
+  useEffect(() => {
+    if (userType) {
+      dispatch(fetchUser(config));
+      dispatch(fetchOrders(config));
+    }
+  }, [dispatch]);
+
+  if (loading) {
+    setTimeout(() => {
+      dispatch(setLoading(false));
+    }, 15000);
+  }
 
   BackHandler.addEventListener('hardwareBackPress', onBackPress);
 
@@ -154,19 +175,6 @@ function Routes() {
   };
 
   const AppScreens = () => {
-    const {
-      token: userToken,
-      type: userType,
-      status: userStatus,
-      data,
-    } = useSelector(state => state.user);
-
-    useEffect(() => {
-      if (userStatus === 'idle') {
-        dispatch(fetchUser({userToken, userType}));
-      }
-    }, [dispatch, userStatus]);
-
     return (
       <Stack.Navigator
         screenOptions={{
@@ -193,7 +201,7 @@ function Routes() {
     );
   };
 
-  if (userToken) {
+  if (userData._id) {
     return <AppScreens />;
   } else {
     return (

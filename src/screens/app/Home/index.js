@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Image, StyleSheet} from 'react-native';
+import {View, Image, StyleSheet, RefreshControl} from 'react-native';
 
 import Linear from '../../../components/Linear';
 import Header from '../../../components/Header';
@@ -10,6 +10,8 @@ import DriverButton from './DriverButton';
 import {useSelector} from 'react-redux';
 import DriverRate from './DriverRate';
 import axios from 'axios';
+import DriverCard from './DriverCard';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const Home = () => {
   const {type: userType} = useSelector(state => state.user);
@@ -73,6 +75,7 @@ const Home = () => {
           />
         </Card>
       )} */}
+      <DriverCard />
       <View className="flex-1" />
       <DriverRate />
       <View className="flex-1" />
@@ -81,8 +84,8 @@ const Home = () => {
   );
   return (
     <Linear style={{paddingVertical: 0, paddngHorizontal: 0}}>
-      <Header title="LoadLift" isBack={false} />
-      <View className="flex-1 w-full items-center justify-between">
+      <Header title="LoadLift" isBack={false} className="mb-10" />
+      <View className="flex-1 w-full items-center justify-center">
         <Image
           style={styles.logo}
           source={require('../../../assets/logo.png')}

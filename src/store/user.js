@@ -1,16 +1,18 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import axios from 'axios';
+import {setLoading} from './misc';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 export const fetchUser = createAsyncThunk(
   'user/fetchUser',
-  async ({userToken, userType}) => {
+  async ({userToken, userType}, {dispatch}) => {
     const url =
       userType === 'driver'
         ? `${BACKEND_URL}/api/drivers/me`
         : `${BACKEND_URL}/api/users/me`;
 
+    dispatch(setLoading(true));
     try {
       const {data} = await axios({
         method: 'GET',
@@ -23,14 +25,17 @@ export const fetchUser = createAsyncThunk(
       return data;
     } catch (err) {
       return err.response.data;
+    } finally {
+      dispatch(setLoading(false));
     }
   },
 );
 
 export const otpVerify = createAsyncThunk(
   'user/otpVerify',
-  async ({phone, otp}) => {
+  async ({phone, otp}, {dispatch}) => {
     const url = `${BACKEND_URL}/api/verify`;
+    dispatch(setLoading(true));
     try {
       const {data} = await axios.post(
         url,
@@ -48,14 +53,17 @@ export const otpVerify = createAsyncThunk(
       return data.token;
     } catch (err) {
       return err.response.data;
+    } finally {
+      dispatch(setLoading(false));
     }
   },
 );
 
 export const userLogin = createAsyncThunk(
   'user/userLogin',
-  async ({phone, navigation}) => {
+  async ({phone, navigation}, {dispatch}) => {
     const url = `${BACKEND_URL}/api/verify/login`;
+    dispatch(setLoading(true));
 
     try {
       const {data, status} = await axios.post(
@@ -80,17 +88,20 @@ export const userLogin = createAsyncThunk(
         navigation.navigate('UserType', {phone});
       }
       return err.response.data;
+    } finally {
+      dispatch(setLoading(false));
     }
   },
 );
 
 export const registerUser = createAsyncThunk(
   'user/registerUser',
-  async ({userType, inputs, phone, navigation}) => {
+  async ({userType, inputs, phone, navigation}, {dispatch}) => {
     const url =
       userType === 'driver'
         ? `${BACKEND_URL}/api/drivers/register`
         : `${BACKEND_URL}/api/drivers/register`;
+    dispatch(setLoading(true));
 
     try {
       await axios({
@@ -105,20 +116,24 @@ export const registerUser = createAsyncThunk(
       navigation.navigate('OTP', {phone});
     } catch (err) {
       return err.response.data;
+    } finally {
+      dispatch(setLoading(false));
     }
   },
 );
 
 export const updateUser = createAsyncThunk(
   'user/updateUser',
-  async ({userType, inputs, userToken, navigation}) => {
+  async ({userType, inputs, userToken, navigation}, {dispatch}) => {
     const url =
       userType === 'driver'
         ? `${BACKEND_URL}/api/drivers/me`
         : `${BACKEND_URL}/api/users/me`;
 
+    dispatch(setLoading(true));
+
     try {
-      await axios({
+      const {data} = await axios({
         method: 'PUT',
         url,
         data: inputs,
@@ -128,20 +143,25 @@ export const updateUser = createAsyncThunk(
         },
       });
 
-      navigation.goBack();
+      navigation.navigate('Tabs', {screen: 'Account'});
+      return data;
     } catch (err) {
       return err.response.data;
+    } finally {
+      dispatch(setLoading(false));
     }
   },
 );
 
 export const activateDriver = createAsyncThunk(
   'user/activateDriver',
-  async ({active, userToken}) => {
+  async ({active, userToken}, {dispatch}) => {
     const url = `${BACKEND_URL}/api/drivers/me/activate`;
 
+    dispatch(setLoading(true));
+
     try {
-      await axios({
+      const {data} = await axios({
         method: 'PUT',
         url,
         data: {
@@ -152,16 +172,22 @@ export const activateDriver = createAsyncThunk(
           'Content-Type': 'application/json',
         },
       });
+
+      return data;
     } catch (err) {
       return err.response.data;
+    } finally {
+      dispatch(setLoading(false));
     }
   },
 );
 
 export const setRate = createAsyncThunk(
   'user/setRate',
-  async ({perKmRate, userToken}) => {
+  async ({perKmRate, userToken}, {dispatch}) => {
     const url = `${BACKEND_URL}/api/drivers/me/rate`;
+
+    dispatch(setLoading(true));
 
     try {
       await axios({
@@ -175,17 +201,15 @@ export const setRate = createAsyncThunk(
           'Content-Type': 'application/json',
         },
       });
+
+      return data;
     } catch (err) {
       return err.response.data;
+    } finally {
+      dispatch(setLoading(false));
     }
   },
 );
-
-const rejected = (state, action) => {
-  state.status = 'rejected';
-  state.error = action.error.message;
-  console.log(state.error);
-};
 
 export const userSlice = createSlice({
   name: 'user',
@@ -193,7 +217,6 @@ export const userSlice = createSlice({
     token: '',
     type: 'user',
     data: null,
-    status: 'idle', // idle | loading | succeeded | rejected
     error: null,
   },
   reducers: {
@@ -204,89 +227,62 @@ export const userSlice = createSlice({
       state.token = '';
       state.type = '';
       state.data = null;
-      state.status = 'idle';
       state.error = null;
     },
   },
   extraReducers: builder => {
     // fetchUser
-    builder.addCase(fetchUser.pending, state => {
-      state.status = 'loading';
-    });
     builder.addCase(fetchUser.fulfilled, (state, action) => {
-      state.status = 'succeeded';
       state.data = action.payload;
     });
     builder.addCase(fetchUser.rejected, (state, action) => {
-      rejected(state, action);
+      state.error = action.error.message;
     });
 
     // loginUser
-    builder.addCase(userLogin.pending, state => {
-      state.status = 'loading';
-    });
     builder.addCase(userLogin.fulfilled, (state, action) => {
-      state.status = 'idle';
       state.type = action.payload;
     });
     builder.addCase(userLogin.rejected, (state, action) => {
-      rejected(state, action);
+      state.error = action.error.message;
     });
 
     // VerifyOTP
-    builder.addCase(otpVerify.pending, state => {
-      state.status = 'loading';
-    });
     builder.addCase(otpVerify.fulfilled, (state, action) => {
-      state.status = 'idle';
       state.token = action.payload;
     });
     builder.addCase(otpVerify.rejected, (state, action) => {
-      rejected(state, action);
+      state.error = action.error.message;
     });
 
     // register
-    builder.addCase(registerUser.pending, state => {
-      state.status = 'loading';
-    });
-    builder.addCase(registerUser.fulfilled, state => {
-      state.status = 'idle';
-    });
+    builder.addCase(registerUser.fulfilled, state => {});
     builder.addCase(registerUser.rejected, (state, action) => {
-      rejected(state, action);
+      state.error = action.error.message;
     });
 
     // update User Details
-    builder.addCase(updateUser.pending, state => {
-      state.status = 'loading';
-    });
-    builder.addCase(updateUser.fulfilled, state => {
-      state.status = 'idle';
+    builder.addCase(updateUser.fulfilled, (state, action) => {
+      state.data = action.payload;
     });
     builder.addCase(updateUser.rejected, (state, action) => {
-      rejected(state, action);
+      state.error = action.error.message;
     });
 
     // activate Driver
-    builder.addCase(activateDriver.pending, state => {
-      state.status = 'loading';
-    });
-    builder.addCase(activateDriver.fulfilled, state => {
-      state.status = 'idle';
+    builder.addCase(activateDriver.fulfilled, (state, action) => {
+      state.data = action.payload;
     });
     builder.addCase(activateDriver.rejected, (state, action) => {
-      rejected(state, action);
+      state.error = action.error.message;
     });
 
     // setRate
-    builder.addCase(setRate.pending, state => {
-      state.status = 'loading';
-    });
     builder.addCase(setRate.fulfilled, state => {
-      state.status = 'idle';
+      state.data = action.payload;
     });
     builder.addCase(setRate.rejected, (state, action) => {
-      rejected(state, action);
+      state.error = action.error.message;
     });
   },
 });

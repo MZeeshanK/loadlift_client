@@ -18,7 +18,7 @@ const DriverHomeButton = () => {
   const [isMount, setIsMount] = useState(false);
 
   // global states
-  const {data: userData} = useSelector(state => state.user);
+  const {data: userData, token: userToken} = useSelector(state => state.user);
   const {active} = userData;
 
   useEffect(() => {
@@ -37,12 +37,14 @@ const DriverHomeButton = () => {
         </Title>
       )}
       <Pressable
-        onPress={() => setIsMount(isMount => !isMount)}
+        onPress={() => {
+          setIsMount(isMount => !isMount);
+        }}
         className={`aspect-square items-center justify-center rounded-full border-4  mb-5 `}
         style={[
           {
             width: width - 220,
-            backgroundColor: active && primary,
+            backgroundColor: active ? primary : 'transparent',
             borderColor: primary,
           },
           active && {

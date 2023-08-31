@@ -1,102 +1,96 @@
 import React from 'react';
-import {Pressable, View, useColorScheme} from 'react-native';
+import {View, useColorScheme} from 'react-native';
 
 import {useNavigation} from '@react-navigation/native';
 import Title from '../../../components/Title';
-import Rating from '../../../components/Rating';
 import Button from '../../../components/Button';
+import Card from '../../../components/Card';
+import {useDispatch, useSelector} from 'react-redux';
+import {updateOrderStatus} from '../../../store/orders';
 
-const DriverCard = ({deliveryModalVisible, setDeliveryModalVisible}) => {
+const DriverCard = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const colorScheme = useColorScheme();
 
   const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
+  const orders = useSelector(state => state.orders.data);
+  const {token: userToken, type: userType} = useSelector(state => state.user);
 
-  return (
-    <Pressable className="w-full">
-      <View
-        className="w-full items-start justify-center border-b pb-3"
-        style={{borderColor: primary}}>
-        <View className="w-full justify-center">
-          <View className="w-full flex-row items-center justify-between">
-            <Title bold primary left>
-              Name: <Title>John Doe</Title>
+  const newOrder = orders.find(order => order?.order?.status?.code === 0);
+
+  if (newOrder) {
+    return (
+      <Card className="w-full">
+        <View
+          className="w-full items-start justify-center border-b pb-3"
+          style={{borderColor: primary}}>
+          <View className="w-full">
+            <Title lg bold primary left>
+              Name:{' '}
+              <Title lg>
+                {newOrder?.user?.firstName} {newOrder?.user?.lastName}
+              </Title>
             </Title>
           </View>
           <View className="w-full flex-row items-center justify-between mb-1">
-            <Rating
-              className="mt-0"
-              rating={4.5}
-              style={{width: 13, height: 13}}
-            />
-            <Title bold primary left>
-              Distance: <Title>11.8 km</Title>
+            <Title base bold primary left>
+              Distance: <Title>{newOrder?.order?.distance} km</Title>
+            </Title>
+            <Title base bold primary right>
+              Price:{' '}
+              <Title>
+                {'\u20b9'} {newOrder?.order?.price}
+              </Title>
             </Title>
           </View>
         </View>
-      </View>
-      <View
-        className="w-full py-2 mb-5 border-b"
-        style={{borderColor: primary}}>
-        <Title className="mb-3" bold primary left numberOfLines={2}>
-          Pick Up: <Title light>121, Hawaal, Srinagar, Jammu and Kashmir</Title>
-        </Title>
+        <View
+          className="w-full py-2 mb-5 border-b"
+          style={{borderColor: primary}}>
+          <Title className="mb-3" bold primary left numberOfLines={2}>
+            Pick Up:{' '}
+            <Title light>
+              {newOrder?.order?.origin?.address},{' '}
+              {newOrder?.order?.origin?.pinCode}
+            </Title>
+          </Title>
 
-        <Title className="mb-3" primary bold left numberOfLines={2}>
-          Destination:{' '}
-          <Title light>203, Rainawari, Srinagar, Jammu and Kashmir</Title>
-        </Title>
-      </View>
+          <Title className="mb-3" primary bold left numberOfLines={2}>
+            Destination:{' '}
+            <Title light>
+              {' '}
+              {newOrder?.order?.destination?.address},{' '}
+              {newOrder?.order?.destination?.pinCode}
+            </Title>
+          </Title>
+        </View>
 
-      {deliveryModalVisible && (
-        <View className="w-full mb-5">
+        <View className="w-full flex-row items-center justify-between">
+          <Button title="Decline" className="w-[48%]" danger />
           <Button
-            title="Details"
-            onPress={() => navigation.navigate('Order')}
-            card
+            title="Accept"
+            className="w-[48%]"
+            onPress={() =>
+              dispatch(
+                updateOrderStatus({
+                  userType,
+                  orderStatus: {
+                    code: 1,
+                    message: 'Accepted',
+                  },
+                  orderId: newOrder?._id,
+                  userToken,
+                }),
+              )
+            }
           />
         </View>
-      )}
+      </Card>
+    );
+  }
 
-      <View className="w-full flex-row items-center justify-between">
-        {isDelivering ? (
-          <>
-            <Button
-              onPress={() => {
-                navigation.navigate('Order');
-              }}
-              card
-              title="Details"
-              half
-            />
-            <Button
-              onPress={() => navigation.navigate('Map')}
-              title="Map"
-              half
-            />
-          </>
-        ) : (
-          <>
-            <Button
-              title="Cancel"
-              onPress={() => setDeliveryModalVisible(false)}
-              className="w-[48%]"
-              danger
-            />
-            <Button
-              onPress={() => {
-                setIsDelivering(true);
-                setIsActive(false);
-                setDeliveryModalVisible(false);
-              }}
-              title="Accept"
-              className="w-[48%]"
-            />
-          </>
-        )}
-      </View>
-    </Pressable>
-  );
+  return;
 };
 
-export default DriverCard;
+export default React.memo(DriverCard);

@@ -10,10 +10,7 @@ import Button from '../Button';
 
 import {useNavigation} from '@react-navigation/native';
 import {useSelector, useDispatch} from 'react-redux';
-import axios from 'axios';
 import {registerUser, updateUser} from '../../store/user';
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const UserDetails = ({phoneNumber, info}) => {
   const navigation = useNavigation();
@@ -38,59 +35,31 @@ const UserDetails = ({phoneNumber, info}) => {
   );
   const [isMount, setIsMount] = useState(false);
 
-  const url = `${BACKEND_URL}/api/users/me/switch`;
+  const userInputs = {
+    phone,
+    firstName,
+    lastName,
+  };
+
+  const driverInputs = {
+    phone,
+    firstName,
+    lastName,
+    vehicleNumber,
+    typeOfVehilce: category?.title,
+  };
+
+  const inputs = userType === 'driver' ? driverInputs : userInputs;
 
   useEffect(() => {
-    const switchUser = async () => {
-      try {
-        const {data, status} = await axios({
-          method: 'POST',
-          url: url,
-          data: driverInputs,
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-            'Content-Type': 'application/json',
-          },
-        });
-
-        console.log(data, status);
-      } catch (err) {
-        console.log('error', err.response);
-      }
-    };
-
-    const userInputs = {
-      phone,
-      firstName,
-      lastName,
-    };
-
-    const driverInputs = {
-      phone,
-      firstName,
-      lastName,
-      vehicleNumber,
-      typeOfVehilce: category?.title,
-    };
-
-    const inputs = userType === 'driver' ? driverInputs : userInputs;
-
     if (isMount) {
       if (info === 'create') {
-        if (userType === 'user') {
-          dispatch(registerUser({userType, inputs, phone, navigation}));
-        } else {
-          dispatch(registerUser({userType, inputs, phone, navigation}));
-        }
-      } else if (info === 'switch') {
-        switchUser();
-      } else {
-        if (userType === 'user') {
-          dispatch(updateUser({userType, inputs, userToken, navigation}));
-        } else {
-          dispatch(updateUser({userType, inputs, userToken, navigation}));
-        }
+        dispatch(registerUser({userType, inputs, phone, navigation}));
       }
+      if (info === 'profile') {
+        dispatch(updateUser({userType, inputs, userToken, navigation}));
+      }
+
       setIsMount(false);
     }
   }, [isMount]);

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {View, Image, useColorScheme} from 'react-native';
 
 import Linear from '../../../components/Linear';
@@ -6,69 +6,45 @@ import Header from '../../../components/Header';
 import Button from '../../../components/Button';
 import Card from '../../../components/Card';
 import Rating from '../../../components/Rating';
-
-import categories from '../../../data/categories';
-import styleConstants from '../../../constants/styles';
 import Title from '../../../components/Title';
 import CustomModal from '../../../components/CustomModal';
 
-import {useNavigation} from '@react-navigation/native';
-import {useSelector} from 'react-redux';
-import axios from 'axios';
+import categories from '../../../data/categories';
+import styleConstants from '../../../constants/styles';
+import {formattedDate} from '../../../data/functions';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+import {useNavigation} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
+import {getSingleOrder, updateOrderStatus} from '../../../store/orders';
 
 const Order = ({route}) => {
   const {orderId} = route.params;
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
 
   const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
 
-  const [myOrder, setMyOrder] = useState({});
+  // Local States
   const [rating, setRating] = useState(0);
-  const [picked, setPicked] = useState(false);
   const [ratingModalVisible, setRatingModalVisible] = useState(false);
   const [pickUpModalVisible, setPickUpModalVisible] = useState(false);
   const [deliveredModalVisible, setDeliveredModalVisible] = useState(false);
 
+  // redux states
+  const myOrder = useSelector(state => getSingleOrder(state, orderId));
+  const {order, user, driver, createdAt: date} = myOrder;
   const {type: userType, token: userToken} = useSelector(state => state.user);
 
-  const getOrderDetails = async () => {
-    const url = `${BACKEND_URL}/api/users/me/${orderId}`;
-
-    try {
-      const {data, status} = await axios({
-        method: 'GET',
-        url,
-        params: {
-          id: orderId,
-        },
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-        },
-      });
-
-      setMyOrder(data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  useEffect(() => {
-    getOrderDetails();
-  }, []);
-
-  const {user, order, driver} = myOrder;
-
+  // driver vehicle info
   const category = categories.find(
     category => category?.value === driver.typeOfVehicle,
   );
-
   const categoryTitle = category?.title;
-
   const imageSource =
     colorScheme === 'dark' ? category?.icon : category?.darkIcon;
+
+  const newDate = formattedDate(date);
 
   const RatingModal = () => {
     return (
@@ -100,7 +76,19 @@ const Order = ({route}) => {
 
   const PickUpModal = () => {
     const onPress = bool => {
-      setPicked(bool);
+      if (bool) {
+        dispatch(
+          updateOrderStatus({
+            userType,
+            orderStatus: {
+              code: 2,
+              message: 'In Transit',
+            },
+            orderId,
+            userToken,
+          }),
+        );
+      }
       setPickUpModalVisible(false);
     };
 
@@ -140,8 +128,18 @@ const Order = ({route}) => {
             half
             className="flex-1 ml-2"
             onPress={() => {
+              dispatch(
+                updateOrderStatus({
+                  userType,
+                  orderStatus: {
+                    code: 3,
+                    message: 'Requested Payment',
+                  },
+                  orderId,
+                  userToken,
+                }),
+              );
               setDeliveredModalVisible(false);
-              setRatingModalVisible(true);
             }}
             title="Delivered"
           />
@@ -152,7 +150,7 @@ const Order = ({route}) => {
 
   return (
     <Linear>
-      <Header title="Order" />
+      <Header title="Order" className="mb-10" />
       <View className="flex-1 w-full -mt-5">
         <PickUpModal />
         <DeliveredModal />
@@ -170,109 +168,117 @@ const Order = ({route}) => {
           <Button title="Report" danger />
         </View>
         <View className="w-full items-center justify-between flex-1 mt-0 ">
-          <Card>
-            <View
-              className="w-full flex-row items-center justify-between border-b pb-5 pt-2 px-1"
-              style={{borderColor: primary}}>
-              {userType === 'driver' ? (
-                <View className="items-start">
-                  <Title className="pb-1" bold primary>
+          <View className="w-full items-center justify-start flex-1 mt-0">
+            <Card className="mt-6">
+              <View
+                className="w-full flex-row items-center justify-between border-b pb-5 pt-2 px-1"
+                style={{borderColor: primary}}>
+                {userType === 'driver' ? (
+                  <View className="items-start">
+                    <Title className="pb-1" bold primary>
+                      Name:{' '}
+                      <Title black={colorScheme !== 'dark'}>
+                        {user?.firstName} {user?.lastName}
+                      </Title>
+                    </Title>
+                    <Rating rating={4.5} style={{width: 15, height: 15}} />
+                  </View>
+                ) : (
+                  <View className="items-start justify-center">
+                    <Image source={imageSource} style={styleConstants.icon} />
+                    <Title xsm>{categoryTitle}</Title>
+                  </View>
+                )}
+                <View className="items-end justify-center">
+                  <Title base bold>
+                    {newDate}
+                  </Title>
+                  <Title base className="pt-0" xsm bold primary>
+                    Status: <Title xsm>{order?.status?.message}</Title>
+                  </Title>
+                </View>
+              </View>
+              {userType === 'user' && (
+                <View
+                  className="w-full items-center justify-between flex-row py-5 border-b px-1"
+                  style={{borderColor: primary}}>
+                  <Title sm bold left primary>
                     Name:{' '}
-                    <Title black={colorScheme !== 'dark'}>
-                      {user?.firstName} {user?.lastName}
+                    <Title sm>
+                      {driver?.firstName} {driver?.lastName}
                     </Title>
                   </Title>
-                  <Rating rating={4.5} style={{width: 15, height: 15}} />
-                </View>
-              ) : (
-                <View className="items-start justify-center">
-                  <Image source={imageSource} style={styleConstants.icon} />
-                  <Title xsm>{categoryTitle}</Title>
+                  <Title bold right>
+                    {driver?.vehicleNumber}
+                  </Title>
                 </View>
               )}
-              <View className="items-end justify-center">
-                <Title lg bold>
-                  {order?.date}
-                </Title>
-                <Title className="pt-0 mt-0" xsm bold primary>
-                  Status: <Title xsm>{order?.status?.message}</Title>
-                </Title>
-              </View>
-            </View>
-            {userType === 'user' && (
               <View
-                className="w-full items-center justify-between flex-row py-5 border-b px-1"
+                className="w-full items-start justify-center py-8 border-b gap-y-6 px-1"
                 style={{borderColor: primary}}>
-                <Title sm bold left primary>
-                  Name:{' '}
+                <Title
+                  className="tracking-wide leading-5"
+                  numberOfLines={3}
+                  press
+                  left
+                  bold
+                  primary
+                  sm>
+                  Pick Up Location:{' '}
                   <Title sm>
-                    {driver?.firstName} {driver?.lastName}
+                    {order?.origin?.address}, {order?.origin?.pinCode}
                   </Title>
                 </Title>
-                <Title bold right>
-                  {driver?.vehicleNumber}
+
+                <Title
+                  className="tracking-wide leading-5"
+                  numberOfLines={3}
+                  press
+                  left
+                  bold
+                  primary
+                  sm>
+                  Destination Location:{' '}
+                  <Title sm>
+                    {' '}
+                    {order?.origin?.address}, {order?.origin?.pinCode}
+                  </Title>
                 </Title>
               </View>
-            )}
-            <View
-              className="w-full items-start justify-center py-8 border-b gap-y-6 px-1"
-              style={{borderColor: primary}}>
-              <Title
-                className="tracking-wide leading-5"
-                numberOfLines={3}
-                press
-                left
-                bold
-                primary
-                sm>
-                Pick Up Location:{' '}
-                <Title sm>
-                  {order?.origin?.address}, {order?.origin?.pinCode}
+              <View className="w-full pt-6 pb-3 flex-row items-center justify-between px-1">
+                <Title className="tracking-widest" bold primary>
+                  Price:{' '}
+                  <Title>
+                    {' '}
+                    {'\u20b9'}
+                    {order?.price}
+                  </Title>
                 </Title>
-              </Title>
 
-              <Title
-                className="tracking-wide leading-5"
-                numberOfLines={3}
-                press
-                left
-                bold
-                primary
-                sm>
-                Destination Location:{' '}
-                <Title sm>
-                  {' '}
-                  {order?.origin?.address}, {order?.origin?.pinCode}
+                <Title className="tracking-widest" bold primary>
+                  Distance: <Title>{order?.distance} km</Title>
                 </Title>
-              </Title>
-            </View>
-            <View className="w-full pt-6 pb-3 flex-row items-center justify-between px-1">
-              <Title className="tracking-widest" bold primary>
-                Price:{' '}
-                <Title>
-                  {' '}
-                  {'\u20b9'}
-                  {order?.price}
-                </Title>
-              </Title>
+              </View>
+              {order?.status?.code < 2 && userType === 'driver' && (
+                <Button
+                  className="my-2 w-full"
+                  title="Confirm PickUp"
+                  onPress={() => setPickUpModalVisible(true)}
+                />
+              )}
+            </Card>
 
-              <Title className="tracking-widest" bold primary>
-                Distance: <Title>{order?.distance} km</Title>
+            <Card>
+              <Title lg semibold primary className="tracking-wider">
+                Full Pricing Details
               </Title>
-            </View>
-            {!picked && userType === 'driver' && (
-              <Button
-                className="my-2 w-full"
-                title="Confirm PickUp"
-                onPress={() => setPickUpModalVisible(true)}
-              />
-            )}
-          </Card>
+            </Card>
+          </View>
 
           <Card>
             {ratingModalVisible && <RatingModal />}
             <View className="items-center justify-between w-full flex-row">
-              {!picked && (
+              {order?.status?.code < 2 && (
                 <Button
                   title="Cancel"
                   half
@@ -284,15 +290,24 @@ const Order = ({route}) => {
               <Button
                 title="Call"
                 half
-                card={picked}
+                card={order?.status?.code >= 2}
+                className={`${order?.status?.code === 3 && 'flex-1'}`}
                 onPress={() => navigation.navigate('Call')}
               />
-              {picked && userType === 'driver' && (
+              {order?.status?.code === 2 && userType === 'driver' && (
                 <Button
                   title="Delivered"
                   half
-                  className="flex-1 ml-2"
                   onPress={() => setDeliveredModalVisible(true)}
+                />
+              )}
+              {order?.status?.code === 3 && userType === 'user' && (
+                <Button
+                  title="Pay"
+                  half
+                  onPress={() =>
+                    navigation.navigate('Payment', {price: order?.price})
+                  }
                 />
               )}
             </View>

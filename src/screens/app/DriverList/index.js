@@ -22,6 +22,7 @@ import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 import {useDispatch, useSelector} from 'react-redux';
 import {setLoading} from '../../../store/misc';
+import {createOrder} from '../../../store/orders';
 
 const BACKEND_URl = process.env.REACT_APP_BACKEND_URL;
 
@@ -34,47 +35,26 @@ const DriverList = ({route}) => {
   const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
   const ongoing = colorScheme === 'dark' ? colors.ongoing : colors.lightOngoing;
 
-  const [order, setOrder] = useState({});
   const [driver, setDriver] = useState({});
   const [isMount, setIsMount] = useState(false);
 
-  const {token: userToken} = useSelector(state => state.user);
+  const {token: userToken, type: userType} = useSelector(state => state.user);
   const {origin, destination} = useSelector(state => state.map);
-
-  const bookDriver = async () => {
-    const url = `${BACKEND_URl}/api/order/book`;
-
-    dispatch(setLoading(true));
-
-    try {
-      const {data} = await axios({
-        method: 'POST',
-        url,
-        data: {
-          origin,
-          destination,
-          driverId: driver?._id,
-          transitDistance: 11.2,
-        },
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${userToken}`,
-        },
-      });
-
-      setOrder(data);
-      navigation.navigate('Order', {orderId: order?._id});
-    } catch (err) {
-      console.log(err);
-    }
-
-    dispatch(setLoading(true));
-  };
 
   useEffect(() => {
     if (isMount) {
       if (driver) {
-        bookDriver();
+        dispatch(
+          createOrder({
+            userToken,
+            transitDistance: 11.2,
+            origin,
+            destination,
+            driverId: driver?._id,
+            userType,
+            navigation,
+          }),
+        );
       }
       setIsMount(false);
     }

@@ -27,7 +27,7 @@ const Loader = ({...props}) => {
 
   return (
     <View
-      className="absolute top-0 -z-10 right-0 left-0 bottom-0 flex-1 items-center justify-center"
+      className="absolute top-0 z-10 right-0 left-0 bottom-0 flex-1 items-center justify-center"
       style={{height: height, backgroundColor: 'rgba(0,0,0,.2)'}}>
       <Card
         className="absolute z-20"
