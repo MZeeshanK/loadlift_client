@@ -24,8 +24,9 @@ const Activity = () => {
       setClear(true);
 
       const tempOrders = orders.filter(order => {
-        const driverName = order?.driver?.firstName + order?.driver?.lastName;
-        const userName = order?.user?.firstName + order?.user?.lastName;
+        const driverName =
+          order?.driver?.firstName + ' ' + order?.driver?.lastName;
+        const userName = order?.user?.firstName + ' ' + order?.user?.lastName;
 
         if (type === 'user') {
           return driverName

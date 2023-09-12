@@ -15,9 +15,9 @@ const GFlatList = ({orders, ...props}) => {
           activity={props.activity}
           danger={item?.status === 'cancelled'}
           ongoing={
-            item?.status?.code !== 5 &&
-            item?.status?.code !== 9 &&
-            item?.status?.code !== 0
+            item?.order?.status?.code !== 4 &&
+            item?.order?.status?.code !== 8 &&
+            item?.order?.status?.code !== 9
           }
           item={item}
           index={index}

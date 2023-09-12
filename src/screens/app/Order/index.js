@@ -26,8 +26,6 @@ const Order = ({route}) => {
   const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
 
   // Local States
-  const [rating, setRating] = useState(0);
-  const [ratingModalVisible, setRatingModalVisible] = useState(false);
   const [pickUpModalVisible, setPickUpModalVisible] = useState(false);
   const [deliveredModalVisible, setDeliveredModalVisible] = useState(false);
 
@@ -35,6 +33,8 @@ const Order = ({route}) => {
   const myOrder = useSelector(state => getSingleOrder(state, orderId));
   const {order, user, driver, createdAt: date} = myOrder;
   const {type: userType, token: userToken} = useSelector(state => state.user);
+
+  const [rating, setRating] = useState(order?.rating || 0);
 
   // driver vehicle info
   const category = categories.find(
@@ -45,34 +45,6 @@ const Order = ({route}) => {
     colorScheme === 'dark' ? category?.icon : category?.darkIcon;
 
   const newDate = formattedDate(date);
-
-  const RatingModal = () => {
-    return (
-      <CustomModal
-        visible={ratingModalVisible}
-        setVisible={setRatingModalVisible}>
-        <View className="w-full items-center justify-center mb-4">
-          <Title className="mb-2" xl semibold primary>
-            Leave a Rating
-          </Title>
-          <Rating
-            className="mb-10"
-            rating={rating}
-            setRating={setRating}
-            style={{height: 32, marginRight: 5}}
-          />
-          <Button
-            half
-            title="Done"
-            onPress={() => {
-              navigation.navigate('Home');
-              setRatingModalVisible(false);
-            }}
-          />
-        </View>
-      </CustomModal>
-    );
-  };
 
   const PickUpModal = () => {
     const onPress = bool => {
@@ -165,7 +137,7 @@ const Order = ({route}) => {
           ) : (
             <View className="flex-1" />
           )}
-          <Button title="Report" danger />
+          <Button title="Report" danger mini />
         </View>
         <View className="w-full items-center justify-between flex-1 mt-0 ">
           <View className="w-full items-center justify-start flex-1 mt-0">
@@ -181,12 +153,12 @@ const Order = ({route}) => {
                         {user?.firstName} {user?.lastName}
                       </Title>
                     </Title>
-                    <Rating rating={4.5} style={{width: 15, height: 15}} />
                   </View>
                 ) : (
                   <View className="items-start justify-center">
                     <Image source={imageSource} style={styleConstants.icon} />
                     <Title xsm>{categoryTitle}</Title>
+                    <Rating rating={4.5} style={{width: 15, height: 15}} />
                   </View>
                 )}
                 <View className="items-end justify-center">
@@ -267,51 +239,105 @@ const Order = ({route}) => {
                 />
               )}
             </Card>
-
-            <Card>
-              <Title lg semibold primary className="tracking-wider">
-                Full Pricing Details
-              </Title>
-            </Card>
           </View>
 
-          <Card>
-            {ratingModalVisible && <RatingModal />}
-            <View className="items-center justify-between w-full flex-row">
-              {order?.status?.code < 2 && (
+          {order?.status?.code !== 4 &&
+          order?.status?.code !== 8 &&
+          order?.status?.code !== 9 ? (
+            <Card>
+              <View className="items-center justify-between w-full flex-row gap-x-2">
+                {order?.status?.code < 2 && (
+                  <Button
+                    title="Cancel"
+                    half
+                    card
+                    border
+                    onPress={() =>
+                      dispatch(
+                        updateOrderStatus({
+                          userType,
+                          orderStatus: {
+                            code: userType === 'driver' ? 0 : 9,
+                            message:
+                              userType === 'driver'
+                                ? 'Cancelled By Driver'
+                                : 'Cancelled by user',
+                          },
+                          orderId,
+                          userToken,
+                        }),
+                      )
+                    }
+                  />
+                )}
                 <Button
-                  title="Cancel"
+                  title="Call"
                   half
-                  card
-                  border
-                  onPress={() => navigation.goBack('')}
+                  card={order?.status?.code >= 2}
+                  className={`${order?.status?.code === 3 && 'flex-1'}`}
+                  onPress={() => navigation.navigate('Call')}
                 />
+                {order?.status?.code === 2 && userType === 'driver' && (
+                  <Button
+                    title="Delivered"
+                    half
+                    onPress={() => setDeliveredModalVisible(true)}
+                  />
+                )}
+                {order?.status?.code === 3 && userType === 'user' && (
+                  <Button
+                    title="Pay"
+                    half
+                    onPress={() =>
+                      // navigation.navigate('Payment', {price: order?.price})
+                      dispatch(
+                        updateOrderStatus({
+                          userType,
+                          orderStatus: {
+                            code: 4,
+                            message: 'Completed',
+                          },
+                          orderId,
+                          userToken,
+                        }),
+                      )
+                    }
+                  />
+                )}
+              </View>
+            </Card>
+          ) : (
+            <Card className="w-full items-center justify-center mb-4">
+              {userType === 'user' ? (
+                <>
+                  <Title className="mb-5" lg bold primary>
+                    {order.rating ? 'You have Rated' : 'Leave a Rating'}
+                  </Title>
+                  <Rating
+                    className="mb-10"
+                    rating={rating}
+                    setRating={setRating}
+                    orderId={orderId}
+                    driverId={myOrder?.driver.toString()}
+                    style={{height: 32, marginRight: 5}}
+                  />
+                </>
+              ) : (
+                order.rating && (
+                  <>
+                    <Title lg bold primary className="mb-5">
+                      You have recieved the rating
+                    </Title>
+                    <Rating
+                      className="mb-10"
+                      rating={order?.rating}
+                      style={{height: 32, marginRight: 5}}
+                    />
+                  </>
+                )
               )}
-              <Button
-                title="Call"
-                half
-                card={order?.status?.code >= 2}
-                className={`${order?.status?.code === 3 && 'flex-1'}`}
-                onPress={() => navigation.navigate('Call')}
-              />
-              {order?.status?.code === 2 && userType === 'driver' && (
-                <Button
-                  title="Delivered"
-                  half
-                  onPress={() => setDeliveredModalVisible(true)}
-                />
-              )}
-              {order?.status?.code === 3 && userType === 'user' && (
-                <Button
-                  title="Pay"
-                  half
-                  onPress={() =>
-                    navigation.navigate('Payment', {price: order?.price})
-                  }
-                />
-              )}
-            </View>
-          </Card>
+            </Card>
+          )}
         </View>
       </View>
     </Linear>

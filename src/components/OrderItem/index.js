@@ -9,6 +9,7 @@ import categories from '../../data/categories';
 import Title from '../Title';
 import Card from '../Card';
 import {useSelector} from 'react-redux';
+import {formattedDate} from '../../data/functions';
 
 const OrderItem = ({item, ...props}) => {
   const navigation = useNavigation();
@@ -19,6 +20,8 @@ const OrderItem = ({item, ...props}) => {
   const imageSource = categories.find(
     category => category?.value === item?.driver?.typeOfVehicle,
   );
+
+  const newDate = formattedDate(item?.createdAt);
 
   const image =
     colorScheme === 'dark' ? imageSource?.icon : imageSource?.darkIcon;
@@ -120,7 +123,7 @@ const OrderItem = ({item, ...props}) => {
             : 'Completed'}
         </Title>
         <Title className="tracking-wide" bold>
-          {props.ongoing ? 'Ongoing' : item?.date}
+          {props.ongoing ? 'Ongoing' : newDate}
         </Title>
       </View>
 

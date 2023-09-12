@@ -112,7 +112,14 @@ const Account = () => {
                 semibold>
                 {user?.firstName} {user?.lastName}
               </Title>
-              <Rating rating={4} />
+              {userType === 'driver' && (
+                <View className="flex-row items-center justify-center">
+                  <Title lg bold className="mr-2 mt-1">
+                    {user?.numReviews}
+                  </Title>
+                  <Rating rating={user?.ratings} />
+                </View>
+              )}
             </View>
             <Image
               source={

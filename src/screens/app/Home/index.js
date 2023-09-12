@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Image, StyleSheet, RefreshControl} from 'react-native';
+import {View, Image, StyleSheet} from 'react-native';
 
 import Linear from '../../../components/Linear';
 import Header from '../../../components/Header';
@@ -11,24 +11,25 @@ import {useSelector} from 'react-redux';
 import DriverRate from './DriverRate';
 import axios from 'axios';
 import DriverCard from './DriverCard';
-import {ScrollView} from 'react-native-gesture-handler';
+
+// const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API;
+// const API_URL = 'https://maps.googleapis.com/maps/api/directions/json';
 
 const Home = () => {
   const {type: userType} = useSelector(state => state.user);
 
-  const {origin, destination} = useSelector(state => state.map);
+  // const {origin, destination} = useSelector(state => state.map);
 
   // Google directions api for calculating distance and time between origin and destination
 
-  const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API;
-  const API_URL = 'https://maps.googleapis.com/maps/api/directions/json';
-  const params = {
-    origin: `${origin?.lat} ${origin?.lng}`,
-    destination: `${destination?.lat} ${destination?.lng}`,
-    key: API_KEY,
-    departure_time: 'now', // You can also specify a specific time
-    traffic_model: 'best_guess', // Or 'optimistic', or 'pessimistic
-  };
+  // const params = {
+  //   origin: `${origin?.lat} ${origin?.lng}`,
+  //   destination: `${destination?.lat} ${destination?.lng}`,
+  //   key: API_KEY,
+  //   departure_time: 'now', // You can also specify a specific time
+  //   traffic_model: 'best_guess', // Or 'optimistic', or 'pessimistic
+  // };
+
   // const getOrderMetrics = async () => {
   //   try {
   //     const {data} = await axios({
@@ -49,32 +50,9 @@ const Home = () => {
   //     console.log(error);
   //   }
   // };
+
   const Driver = () => (
     <View className="flex-1 w-full items-center justify-between -mt-8">
-      {/* <CustomModal
-        visible={deliveryModalVisible}
-        setVisible={setDeliveryModalVisible}>
-        <DriverCard
-          deliveryModalVisible={deliveryModalVisible}
-          setDeliveryModalVisible={setDeliveryModalVisible}
-          isActive={active}
-          // isDelivering={isDelivering}
-          // setIsActive={setIsActive}
-          // setIsDelivering={setIsDelivering}
-        />
-      </CustomModal> */}
-      {/* {isDelivering && (
-        <Card>
-          <DriverCard
-            deliveryModalVisible={deliveryModalVisible}
-            setDeliveryModalVisible={setDeliveryModalVisible}
-            isActive={isActive}
-            isDelivering={isDelivering}
-            setIsActive={setIsActive}
-            setIsDelivering={setIsDelivering}
-          />
-        </Card>
-      )} */}
       <DriverCard />
       <View className="flex-1" />
       <DriverRate />
@@ -82,6 +60,24 @@ const Home = () => {
       <DriverButton />
     </View>
   );
+
+  const orders = useSelector(state => state.orders.data);
+
+  let homeOrders;
+
+  if (orders.length && Array.isArray(orders)) {
+    homeOrders = orders.filter(
+      order =>
+        order?.order.status.code !== 9 &&
+        order?.order?.status.code !== 0 &&
+        order?.order?.status.code !== 4,
+    );
+  } else {
+    homeOrders = [];
+  }
+
+  homeOrders = [];
+
   return (
     <Linear style={{paddingVertical: 0, paddngHorizontal: 0}}>
       <Header title="LoadLift" isBack={false} className="mb-10" />
@@ -95,7 +91,7 @@ const Home = () => {
         ) : (
           <>
             {/* 3 last orders list */}
-            <GFlatList home orders={[]} />
+            <GFlatList home orders={homeOrders} />
             <HomeButton />
           </>
         )}

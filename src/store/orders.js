@@ -15,14 +15,15 @@ export const fetchOrders = createAsyncThunk(
     dispatch(setLoading(true));
 
     try {
-      const {data} = await axios({
+      const {data, status} = await axios({
         method: 'GET',
         url,
         headers: {
           Authorization: `Bearer ${userToken}`,
         },
       });
-      return data;
+
+      if (status === 200) return data;
     } catch (err) {
       return err.response.data;
     } finally {
@@ -65,7 +66,7 @@ export const createOrder = createAsyncThunk(
         },
       });
 
-      navigation.navigate('Order', {orderId: data?._id});
+      navigation.navigate('Tabs');
       return data;
     } catch (err) {
       return err.response.data;
@@ -122,7 +123,7 @@ export const updateOrderStatus = createAsyncThunk(
 
     dispatch(setLoading(true));
     try {
-      const {data, status} = await axios({
+      const {data} = await axios({
         method: 'PUT',
         url,
         data: {
@@ -134,13 +135,72 @@ export const updateOrderStatus = createAsyncThunk(
         },
       });
 
-      console.log('data => ', data, status);
+      return data;
     } catch (err) {
-      console.log(err);
+      console.log(err.response.data);
       return err.response.data;
     } finally {
       dispatch(setLoading(false));
       dispatch(fetchOrders({userToken, userType}));
+    }
+  },
+);
+
+export const reviewOrder = createAsyncThunk(
+  'orders/reviewOrder',
+  async ({rating, orderId, userToken, navigation}, {dispatch}) => {
+    const url = `${BACKEND_URL}/api/order/review`;
+
+    dispatch(setLoading(true));
+    try {
+      const {data} = await axios({
+        method: 'POST',
+        url,
+        data: {
+          rating,
+          orderId,
+        },
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      });
+
+      navigation.navigate('Tabs');
+
+      return data;
+    } catch (err) {
+      return err.response.data;
+    } finally {
+      dispatch(setLoading(false));
+    }
+  },
+);
+
+export const declineOrder = createAsyncThunk(
+  'orders/declineOrder',
+  async ({orderId, userToken}, {dispatch}) => {
+    const url = `${BACKEND_URL}/api/drivers/me/orders`;
+
+    dispatch(setLoading(true));
+    try {
+      await axios({
+        method: 'DELETE',
+        url,
+        params: {
+          q: {
+            orderId,
+          },
+        },
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      });
+
+      return orderId;
+    } catch (err) {
+      return err.response.data;
+    } finally {
+      dispatch(setLoading(false));
     }
   },
 );
@@ -172,6 +232,23 @@ export const ordersSlice = createSlice({
     builder.addCase(updateOrderStatus.rejected, (state, action) => {
       state.error = action.error.message;
     });
+    // reviewOrder
+    builder.addCase(reviewOrder.fulfilled, (state, action) => {
+      const order = state.data.find(order => order?._id === action.payload._id);
+      order.order.rating = action.payload?.order.rating;
+    });
+    builder.addCase(reviewOrder.rejected, (state, action) => {
+      state.error = action.error.message;
+    });
+    // declineOrder
+    builder.addCase(declineOrder.fulfilled, (state, action) => {
+      state.data = state.data.filter(order => order._id !== action.payload);
+      console.log(action.payload);
+    });
+    builder.addCase(
+      declineOrder.rejected,
+      (state, action) => (state.error = action.error.message),
+    );
   },
 });
 

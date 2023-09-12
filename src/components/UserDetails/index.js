@@ -24,7 +24,7 @@ const UserDetails = ({phoneNumber, info}) => {
 
   const [category, setCategory] = useState(
     user
-      ? categories.find(category => user?.typeOfVehicle === category?.title)
+      ? categories.find(category => user?.typeOfVehicle === category?.value)
       : {},
   );
   const phone = user?.phone?.toString() || phoneNumber;

@@ -207,6 +207,7 @@ export const setRate = createAsyncThunk(
       return err.response.data;
     } finally {
       dispatch(setLoading(false));
+      dispatch(fetchUser({userType: 'driver', userToken}));
     }
   },
 );

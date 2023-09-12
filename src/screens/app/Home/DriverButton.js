@@ -19,6 +19,16 @@ const DriverHomeButton = () => {
 
   // global states
   const {data: userData, token: userToken} = useSelector(state => state.user);
+  const orders = useSelector(state => state.orders.data);
+
+  const activeOrder = orders.find(
+    order =>
+      order?.order?.status.code !== 0 &&
+      order?.order?.status.code !== 9 &&
+      order?.order?.status.code !== 8 &&
+      order?.order?.status.code !== 4,
+  );
+
   const {active} = userData;
 
   useEffect(() => {
@@ -38,9 +48,9 @@ const DriverHomeButton = () => {
       )}
       <Pressable
         onPress={() => {
-          setIsMount(isMount => !isMount);
+          if (!activeOrder) setIsMount(isMount => !isMount);
         }}
-        className={`aspect-square items-center justify-center rounded-full border-4  mb-5 `}
+        className={`aspect-square items-center justify-center rounded-full border-4 mb-5`}
         style={[
           {
             width: width - 220,
@@ -53,7 +63,7 @@ const DriverHomeButton = () => {
           },
         ]}>
         <Title xxl bold primary={!active} black={active}>
-          {active ? 'Active' : 'InActive'}
+          {activeOrder ? 'isDelivering' : active ? 'Active' : 'InActive'}
         </Title>
       </Pressable>
     </>
