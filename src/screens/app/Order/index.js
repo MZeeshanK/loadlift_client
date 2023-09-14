@@ -56,6 +56,8 @@ const Order = ({route}) => {
               code: 2,
               message: 'In Transit',
             },
+            userId: user?._id,
+            driverId: driver?._id,
             orderId,
             userToken,
           }),
@@ -103,6 +105,8 @@ const Order = ({route}) => {
               dispatch(
                 updateOrderStatus({
                   userType,
+                  userId: user?._id,
+                  driverId: driver?._id,
                   orderStatus: {
                     code: 3,
                     message: 'Requested Payment',
@@ -256,6 +260,8 @@ const Order = ({route}) => {
                       dispatch(
                         updateOrderStatus({
                           userType,
+                          userId: user?._id,
+                          driverId: driver?._id,
                           orderStatus: {
                             code: userType === 'driver' ? 0 : 9,
                             message:
@@ -286,13 +292,15 @@ const Order = ({route}) => {
                 )}
                 {order?.status?.code === 3 && userType === 'user' && (
                   <Button
-                    title="Pay"
+                    title="Pay" // console.log(driver);
                     half
                     onPress={() =>
                       // navigation.navigate('Payment', {price: order?.price})
                       dispatch(
                         updateOrderStatus({
                           userType,
+                          userId: user?._id,
+                          driverId: driver?._id,
                           orderStatus: {
                             code: 4,
                             message: 'Completed',
@@ -318,7 +326,7 @@ const Order = ({route}) => {
                     rating={rating}
                     setRating={setRating}
                     orderId={orderId}
-                    driverId={myOrder?.driver.toString()}
+                    driverId={driver?._id.toString()}
                     style={{height: 32, marginRight: 5}}
                   />
                 </>

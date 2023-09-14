@@ -28,22 +28,18 @@ const Alert = () => {
     }).start();
   };
 
-  useEffect(() => {
-    setTimeout(() => {
-      if (visible) {
-        if (modal) {
-          dispatch(removeModalError());
-          setTimeout(() => {
-            dispatch(removeModal());
-          }, animationDuration * 2);
-        } else {
-          dispatch(removeError());
-        }
-      }
-    }, 2000);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     if (visible) {
+  //       setTimeout(() => {}, animationDuration * 2);
+  //       } else {
+  //         dispatch(removeError());
+  //       }
+  //     }
+  //   }, 2000);
 
-    startAnimation();
-  }, [visible]);
+  //   startAnimation();
+  // }, [visible]);
 
   return (
     <>

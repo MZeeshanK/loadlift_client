@@ -1,8 +1,11 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import axios from 'axios';
 import {setLoading} from './misc';
+import {io} from 'socket.io-client';
+import {fetchUser} from './user';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const socket = io(BACKEND_URL);
 
 export const fetchOrders = createAsyncThunk(
   'orders/fetchOrders',
@@ -25,7 +28,7 @@ export const fetchOrders = createAsyncThunk(
 
       if (status === 200) return data;
     } catch (err) {
-      return err.response.data;
+      return err.response;
     } finally {
       dispatch(setLoading(false));
     }
@@ -64,6 +67,11 @@ export const createOrder = createAsyncThunk(
           Authorization: `Bearer ${userToken}`,
           'Content-Type': 'application/json',
         },
+      });
+
+      socket.emit('send-message-to-user', {
+        userId: driverId,
+        message: 'Update Order',
       });
 
       navigation.navigate('Tabs');
@@ -115,7 +123,10 @@ export const findDrivers = async ({
 
 export const updateOrderStatus = createAsyncThunk(
   'orders/updateOrderStatus',
-  async ({userType, orderStatus, orderId, userToken}, {dispatch}) => {
+  async (
+    {userType, orderStatus, userId, driverId, orderId, userToken},
+    {dispatch},
+  ) => {
     const url =
       userType === 'driver'
         ? `${BACKEND_URL}/api/drivers/me/orders`
@@ -135,6 +146,11 @@ export const updateOrderStatus = createAsyncThunk(
         },
       });
 
+      socket.emit('send-message-to-user', {
+        userId: userType === 'driver' ? userId : driverId,
+        message: 'Update Order',
+      });
+
       return data;
     } catch (err) {
       console.log(err.response.data);
@@ -142,13 +158,17 @@ export const updateOrderStatus = createAsyncThunk(
     } finally {
       dispatch(setLoading(false));
       dispatch(fetchOrders({userToken, userType}));
+
+      if (userType === 'driver' && orderStatus.code === 1) {
+        dispatch(fetchUser({userToken, userType: 'driver'}));
+      }
     }
   },
 );
 
 export const reviewOrder = createAsyncThunk(
   'orders/reviewOrder',
-  async ({rating, orderId, userToken, navigation}, {dispatch}) => {
+  async ({rating, orderId, driverId, userToken, navigation}, {dispatch}) => {
     const url = `${BACKEND_URL}/api/order/review`;
 
     dispatch(setLoading(true));
@@ -165,6 +185,11 @@ export const reviewOrder = createAsyncThunk(
         },
       });
 
+      socket.emit('send-message-to-user', {
+        userId: driverId,
+        message: 'Update Order',
+      });
+
       navigation.navigate('Tabs');
 
       return data;
@@ -178,29 +203,31 @@ export const reviewOrder = createAsyncThunk(
 
 export const declineOrder = createAsyncThunk(
   'orders/declineOrder',
-  async ({orderId, userToken}, {dispatch}) => {
-    const url = `${BACKEND_URL}/api/drivers/me/orders`;
+  async ({orderId, userToken, userId}, {dispatch}) => {
+    const url = `${BACKEND_URL}/api/drivers/me/orders/decline`;
 
     dispatch(setLoading(true));
     try {
       await axios({
-        method: 'DELETE',
+        method: 'POST',
         url,
-        params: {
-          q: {
-            orderId,
-          },
+        data: {
+          orderId,
         },
         headers: {
           Authorization: `Bearer ${userToken}`,
         },
       });
 
-      return orderId;
+      socket.emit('send-message-to-user', {
+        userId,
+        message: 'Update Order',
+      });
     } catch (err) {
       return err.response.data;
     } finally {
       dispatch(setLoading(false));
+      dispatch(fetchOrders({userToken, userType: 'driver'}));
     }
   },
 );
@@ -219,7 +246,8 @@ export const ordersSlice = createSlice({
       state.data = action.payload;
     });
     builder.addCase(fetchOrders.rejected, (state, action) => {
-      state.error = action.error.message;
+      // state.error = action.error.message;
+      console.log(action.error.message);
     });
     // createOrder
     builder.addCase(createOrder.fulfilled, (state, action) => {
@@ -241,10 +269,6 @@ export const ordersSlice = createSlice({
       state.error = action.error.message;
     });
     // declineOrder
-    builder.addCase(declineOrder.fulfilled, (state, action) => {
-      state.data = state.data.filter(order => order._id !== action.payload);
-      console.log(action.payload);
-    });
     builder.addCase(
       declineOrder.rejected,
       (state, action) => (state.error = action.error.message),

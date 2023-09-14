@@ -117,7 +117,7 @@ const DriverList = ({route}) => {
                 xxs
                 semibold
                 black={driver === item}>
-                {item?.ratings}
+                {item?.ratings.toFixed(1)}
               </Title>
               <Image
                 source={

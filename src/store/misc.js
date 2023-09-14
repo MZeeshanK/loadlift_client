@@ -37,27 +37,6 @@ export const miscSlice = createSlice({
         visible: false,
       };
     },
-    setModalError: (state, action) => {
-      state.modalError = {
-        message: action.payload,
-        visible: true,
-        modal: true,
-      };
-    },
-    removeModalError: state => {
-      state.modalError = {
-        message: '',
-        visible: false,
-        modal: true,
-      };
-    },
-    removeModal: state => {
-      state.modalError = {
-        message: '',
-        visible: false,
-        modal: false,
-      };
-    },
     setPopUp: (state, action) => {
       state.popUp = {
         message: action.payload,
@@ -78,9 +57,6 @@ export const {
   resetLoading,
   setError,
   removeError,
-  setModalError,
-  removeModalError,
-  removeModal,
   setPopUp,
   removePopUp,
 } = miscSlice.actions;

@@ -42,14 +42,20 @@ import ComingSoon from './screens/ComingSoon';
 import Title from './components/Title';
 
 import {useDispatch, useSelector} from 'react-redux';
-import {setLoading} from './store/misc';
+import {removeError, setError, setLoading} from './store/misc';
 import {fetchUser} from './store/user';
 import {fetchOrders} from './store/orders';
+
+import {io} from 'socket.io-client';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+
 function Routes() {
+  const socket = io(BACKEND_URL);
+
   const colorScheme = useColorScheme();
   const dispatch = useDispatch();
 
@@ -68,6 +74,14 @@ function Routes() {
   };
 
   const config = {userToken, userType};
+
+  socket.emit('user-connected', userData._id);
+
+  socket.on('new-message', message => {
+    if (message === 'Update Order') {
+      dispatch(fetchOrders(config));
+    }
+  });
 
   useEffect(() => {
     if (userType) {
@@ -201,7 +215,7 @@ function Routes() {
     );
   };
 
-  if (userData._id) {
+  if (userData) {
     return <AppScreens />;
   } else {
     return (

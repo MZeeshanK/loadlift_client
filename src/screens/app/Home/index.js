@@ -55,8 +55,6 @@ const Home = () => {
     <View className="flex-1 w-full items-center justify-between -mt-8">
       <DriverCard />
       <View className="flex-1" />
-      <DriverRate />
-      <View className="flex-1" />
       <DriverButton />
     </View>
   );
@@ -75,8 +73,6 @@ const Home = () => {
   } else {
     homeOrders = [];
   }
-
-  homeOrders = [];
 
   return (
     <Linear style={{paddingVertical: 0, paddngHorizontal: 0}}>

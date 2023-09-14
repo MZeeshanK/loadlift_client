@@ -83,12 +83,6 @@ const Map = ({route}) => {
     longitudeDelta: 0.01,
   };
 
-  const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
-  const card = colorScheme === 'dark' ? colors.card : colors.lightCard;
-  const ongoing = colorScheme === 'dark' ? colors.ongoing : colors.lightOngoing;
-  const secondary =
-    colorScheme === 'dark' ? colors.secondary : colors.lightSecondary;
-
   const mapViewRef = useRef(null);
 
   useEffect(() => {

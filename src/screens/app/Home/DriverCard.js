@@ -19,10 +19,11 @@ const DriverCard = () => {
 
   const newOrder =
     orders.find(order => order?.order?.status?.code === 0) || null;
+
   const activeOrder = orders.find(
     order =>
-      order?.order?.status.code === 1 &&
-      order?.order?.status.code === 2 &&
+      order?.order?.status.code === 1 ||
+      order?.order?.status.code === 2 ||
       order?.order?.status.code === 3,
   );
 
@@ -82,6 +83,7 @@ const DriverCard = () => {
               dispatch(
                 declineOrder({
                   orderId: newOrder?._id,
+                  userId: newOrder?.user?._id,
                   userToken,
                 }),
               )
@@ -94,6 +96,8 @@ const DriverCard = () => {
               dispatch(
                 updateOrderStatus({
                   userType,
+                  userId: newOrder?.user?._id,
+                  driverId: newOrder?.driver?._id,
                   orderStatus: {
                     code: 1,
                     message: 'Accepted',
@@ -179,7 +183,7 @@ const DriverCard = () => {
     );
   }
 
-  return;
+  return <DriverRate />;
 };
 
 export default React.memo(DriverCard);

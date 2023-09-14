@@ -24,7 +24,7 @@ export const fetchUser = createAsyncThunk(
 
       return data;
     } catch (err) {
-      return err.response.data;
+      return err.response;
     } finally {
       dispatch(setLoading(false));
     }
@@ -234,10 +234,12 @@ export const userSlice = createSlice({
   extraReducers: builder => {
     // fetchUser
     builder.addCase(fetchUser.fulfilled, (state, action) => {
+      // console.log(action.payload);
       state.data = action.payload;
     });
     builder.addCase(fetchUser.rejected, (state, action) => {
       state.error = action.error.message;
+      // console.log(action.error.message);
     });
 
     // loginUser
