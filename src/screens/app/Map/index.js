@@ -1,63 +1,53 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {Image, PermissionsAndroid, View, useColorScheme} from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { Image, View, useColorScheme } from 'react-native';
 
 import Header from '../../../components/Header';
 import Button from '../../../components/Button';
 
-import MapView, {Marker} from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import mapStyle from '../../../data/mapStyle';
 
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import colors from '../../../constants/colors';
 
-import {useDispatch, useSelector} from 'react-redux';
-import {setDestination, setHome, setOrigin, setWork} from '../../../store/map';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  setDestination,
+  setHome,
+  setOrigin,
+  setWork,
+} from '../../../store/map';
 import Linear from '../../../components/Linear';
 import CustomModal from '../../../components/CustomModal';
 import Input from '../../../components/Input';
 import TextLabel from '../../../components/TextLabel';
 import Geolocation from '@react-native-community/geolocation';
 
-import {Linking} from 'react-native';
+import { Linking } from 'react-native';
 import axios from 'axios';
 import MapViewDirections from 'react-native-maps-directions';
-import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
-const classNames = 'py-1 rounded-md mx-2 px-4';
+const classNames = 'py-1 z-10 rounded-md mx-2 px-4';
 
-const Map = ({route}) => {
-  const {state, location} = route.params;
+const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API;
+const API_URL = 'https://maps.googleapis.com/maps/api/directions/json';
 
-  const requestLocationPermission = async () => {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-          title: 'Cool Photo App Camera Permission',
-          message:
-            'Cool Photo App needs access to your camera ' +
-            'so you can take awesome pictures.',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        // console.log('You can use the location');
-      } else {
-        console.log('location permission denied');
-      }
-    } catch (err) {
-      console.warn(err);
-    }
-  };
+const Map = ({ route }) => {
+  const { state, location } = route.params;
 
   const dispatch = useDispatch();
   const colorScheme = useColorScheme();
   const navigation = useNavigation();
 
+  const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
+  const secondary =
+    colorScheme === 'dark' ? colors.secondary : colors.lightSecondary;
+  const card = colorScheme === 'dark' ? colors.card : colors.lightCard;
+  const ongoing = colorScheme === 'dark' ? colors.ongoing : colors.lightOngoing;
+
   // redux states
-  const {home, work, origin, destination} = useSelector(state => state.map);
+  const { home, work, origin, destination } = useSelector(state => state.map);
 
   // states
   const [expanded, setExpanded] = useState(true);
@@ -98,16 +88,14 @@ const Map = ({route}) => {
     }
   }, [animate]);
 
-  const [currentLocation, setCurrentLocation] = useState(null);
   const [isLocationMount, setIsLocationMount] = useState(false);
+  const [metrics, setMetrics] = useState(null);
   // geolocation
   useEffect(() => {
-    requestLocationPermission();
-
     if (isLocationMount) {
       Geolocation.getCurrentPosition(
         position => {
-          const {latitude, longitude} = position.coords;
+          const { latitude, longitude } = position.coords;
 
           setCenter({
             lat: latitude,
@@ -117,11 +105,10 @@ const Map = ({route}) => {
         error => {
           console.warn(error.message);
         },
-        {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
+        { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
       );
 
       // setCenter(currentLocation);
-      console.log(center);
       setIsLocationMount(false);
     }
   }, [isLocationMount]);
@@ -134,7 +121,45 @@ const Map = ({route}) => {
     });
   };
 
-  const AddressModal = ({modalState}) => {
+  // Google directions api for calculating distance and time between origin and destination
+
+  const getOrderMetrics = async () => {
+    const params = {
+      origin: `${origin?.lat} ${origin?.lng}`,
+      destination: `${destination?.lat} ${destination?.lng}`,
+      key: API_KEY,
+      departure_time: 'now', // You can also specify a specific time
+      traffic_model: 'pessimistic', // Or 'optimistic', or '
+    };
+
+    try {
+      const { data } = await axios({
+        method: 'GET',
+        url: API_URL,
+        params,
+      });
+      const routes = data.routes;
+      if (routes.length > 0) {
+        const legs = routes[0].legs;
+        if (legs.length > 0) {
+          const distance = legs[0].distance.text;
+          const duration = legs[0].duration.text;
+          setMetrics({
+            distance,
+            duration,
+          });
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getOrderMetrics();
+  }, [origin, destination]);
+
+  const AddressModal = ({ modalState }) => {
     const pinCodeRef = React.useRef();
 
     const [address, setAddress] = useState(
@@ -261,44 +286,45 @@ const Map = ({route}) => {
               ? 'Destination'
               : 'Map'
           }
-          className="mb-0 py-4"
+          className="mb-0 py-2"
           expand
           isInverted={expanded}
           onPress={() => setExpanded(expanded => !expanded)}
         />
-
-        {/* {expanded && <Input placeholder="Search..." returnKeyType="search" />} */}
-      </View>
-
-      {expanded && (
-        <>
-          <View className="flex-row w-full justify-evenly my-2">
+        {expanded && (
+          <View className="flex-row z-10 w-full justify-evenly my-2">
             <Button
               onPress={() => {
-                setCenter(home);
                 setAnimate(true);
+                setCenter({
+                  lat: home?.lat,
+                  lng: home?.lng,
+                });
               }}
               source={
                 colorScheme === 'dark'
                   ? require('../../../assets/home-focused.png')
                   : require('../../../assets/home-light.png')
               }
+              card
               title="Home"
-              alt
               className={classNames}
             />
             <Button
               onPress={() => {
-                setCenter(work);
                 setAnimate(true);
+                setCenter({
+                  lat: work?.lat,
+                  lng: work?.lng,
+                });
               }}
               source={
                 colorScheme === 'dark'
                   ? require('../../../assets/activity-focused.png')
                   : require('../../../assets/activity-light.png')
               }
+              card
               title="Work"
-              alt
               className={classNames}
             />
             <Button
@@ -312,38 +338,41 @@ const Map = ({route}) => {
                 setIsLocationMount(true);
                 setAnimate(true);
               }}
-              alt
+              card
               className={classNames}
             />
           </View>
-          {/* <View className="px-4 w-full">
-            <GooglePlacesAutocomplete
-              styles={{
-                textInput: {
-                  color: colorScheme === 'dark' ? '#fff' : '#000',
-                  backgroundColor: ongoing,
-                  borderWidth: 1,
-                  borderRadius: 100,
-                  marginTop: 10,
-                  height: 44,
-                  fontSize: 18,
-                  paddingHorizontal: 20,
-                  borderColor: primary,
-                },
-                predefinedPlacesDescription: {
-                  color: '#000',
-                },
-              }}
-              placeholder="Search..."
-              query={{
-                key: process.env.REACT_APP_GOOGLE_MAPS_API,
-              }}
-            />
-          </View> */}
-        </>
-      )}
+        )}
+      </View>
 
       {/* MAP */}
+
+      {expanded && (
+        <GooglePlacesAutocomplete
+          placeholder="Search... "
+          textInputProps={{
+            InputComp: Input,
+            errorStyle: { color: 'red' },
+          }}
+          returnKeyType="search"
+          onPress={(data, details = null) => {
+            // 'details' is provided when fetchDetails = true
+            console.log(details);
+          }}
+          query={{
+            key: API_KEY,
+            language: 'en',
+            types: 'geocode',
+            components: 'country:in',
+          }}
+          styles={{
+            container: {
+              marginTop: 10,
+            },
+          }}
+        />
+      )}
+
       <MapView
         showsCompass
         onRegionChange={() => {
@@ -373,16 +402,17 @@ const Map = ({route}) => {
           latitudeDelta: delta.latitudeDelta,
           longitudeDelta: delta.longitudeDelta,
         }}>
-        {/* <MapViewDirections
-          origin={{latitude: origin?.lat, longitude: origin?.lng}}
+        <MapViewDirections
+          origin={{ latitude: origin?.lat, longitude: origin?.lng }}
           destination={{
             latitude: destination?.lat,
             longitude: destination?.lng,
           }}
           apikey={process.env.REACT_APP_GOOGLE_MAPS_API}
           strokeWidth={4}
+          timePrecision="now"
           strokeColor={primary}
-        /> */}
+        />
         <Marker
           coordinate={{
             latitude: origin?.lat,
@@ -402,6 +432,15 @@ const Map = ({route}) => {
           description={`${destination?.address} \n ${destination?.pinCode}`}
           image={require('../../../assets/Destination-marker.png')}
         />
+
+        {/* <Marker
+          coordinate={{
+            latitude: destination?.lat,
+            longitude: destination?.lng,
+          }}
+          title={`${metrics?.distance} km \n ${metrics?.duration} mins`}
+          image=""
+        /> */}
 
         <Marker
           coordinate={{
@@ -427,7 +466,7 @@ const Map = ({route}) => {
       <Image
         source={require('../../../assets/marker.png')}
         className="w-[30] h-[45] absolute top-1/2 left-1/2 z-10"
-        style={{transform: [{translateX: -15}, {translateY: -22.5}]}}
+        style={{ transform: [{ translateX: -15 }, { translateY: -22.5 }] }}
       />
       {expanded && (
         <View className="absolute flex-row bottom-10 w-full items-center justify-center space-x-6">

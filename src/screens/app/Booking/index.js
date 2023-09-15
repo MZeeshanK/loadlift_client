@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -17,17 +17,17 @@ import Card from '../../../components/Card';
 import categories from '../../../data/categories';
 import Title from '../../../components/Title';
 import colors from '../../../constants/colors';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import TextLabel from '../../../components/TextLabel';
-import {useNavigation} from '@react-navigation/native';
-import {findDrivers} from '../../../store/orders';
+import { useNavigation } from '@react-navigation/native';
+import { findDrivers } from '../../../store/orders';
 
 const Booking = () => {
   const colorScheme = useColorScheme();
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
-  const {origin, destination} = useSelector(state => state.map);
+  const { origin, destination } = useSelector(state => state.map);
 
   const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
   const ongoing = colorScheme === 'dark' ? colors.ongoing : colors.lightOngoing;
@@ -52,7 +52,7 @@ const Booking = () => {
 
   useEffect(() => {
     if (isMount) {
-      findDrivers({origin, navigation, typeOfVehicle, dispatch});
+      findDrivers({ origin, navigation, typeOfVehicle, dispatch });
       setIsMount(false);
     }
   }, [isMount]);
@@ -60,18 +60,18 @@ const Booking = () => {
   const ChipButton = () => (
     <Pressable
       className="w-[70%] border-2 rounded-full flex-row items-center justify-center mb-4"
-      style={{borderColor: primary}}
+      style={{ borderColor: primary }}
       onPress={() => setWeight(weight => !weight)}>
       <View
         className="flex-1 bg-transparent rounded-full items-center justify-center"
-        style={{backgroundColor: weight && primary}}>
+        style={{ backgroundColor: weight && primary }}>
         <Title primary={!weight} black={weight} bold>
           Weight
         </Title>
       </View>
       <View
         className="flex-1 bg-transparent rounded-full items-center justify-center"
-        style={{backgroundColor: !weight && primary}}>
+        style={{ backgroundColor: !weight && primary }}>
         <Title primary={weight} black={!weight} bold>
           Vehicle
         </Title>
@@ -90,7 +90,7 @@ const Booking = () => {
           showsVerticalScrollIndicator={false}
           data={categories}
           keyExtractor={item => item?.id}
-          renderItem={({item, index}) => {
+          renderItem={({ item, index }) => {
             const icon = colorScheme === 'dark' ? item?.icon : item?.darkIcon;
             const darkIcon =
               colorScheme === 'dark' ? item?.darkIcon : item?.icon;
@@ -106,7 +106,7 @@ const Booking = () => {
                     width: '100%',
                     flexDirection: 'row',
                   },
-                  index === categories.length - 1 && {marginBottom: 50},
+                  index === categories.length - 1 && { marginBottom: 50 },
                 ]}>
                 <View
                   className={`border-r-2 pr-3 h-12 items-center justify-center ${
@@ -114,7 +114,7 @@ const Booking = () => {
                   }`}
                   style={
                     vehicle === item && colorScheme === 'dark'
-                      ? {borderColor: colors.black}
+                      ? { borderColor: colors.black }
                       : vehicle === item && colorScheme !== 'dark'
                       ? {
                           borderColor: colors.white,
@@ -163,16 +163,19 @@ const Booking = () => {
       <View className="w-full flex-1 items-center justify-start">
         <TextLabel title="Pick Up: " />
         <InputButton
-          style={{marginTop: 0}}
+          style={{ marginTop: 0 }}
           title={origin?.address || 'Set Pick Up Location'}
           onPress={() =>
-            navigation.navigate('Map', {location: origin, state: 'origin'})
+            navigation.navigate('Map', {
+              location: origin,
+              state: 'origin',
+            })
           }
         />
         <TextLabel title="Destination: " />
         <InputButton
           title={destination?.address || 'Set Destination Location'}
-          style={{marginTop: 0}}
+          style={{ marginTop: 0 }}
           onPress={() =>
             navigation.navigate('Map', {
               location: destination,
@@ -183,7 +186,7 @@ const Booking = () => {
 
         <View
           className="w-full h-[1] rounded-full my-5"
-          style={{backgroundColor: primary}}
+          style={{ backgroundColor: primary }}
         />
 
         <ChipButton />
@@ -196,7 +199,7 @@ const Booking = () => {
               value={weightStr}
               onChangeText={setWeightStr}
               keyboardType="numeric"
-              style={{marginTop: 0}}
+              style={{ marginTop: 0 }}
             />
           </>
         ) : (
@@ -208,7 +211,7 @@ const Booking = () => {
       <Button
         title="Search for drivers"
         onPress={() => setIsMount(isMount => !isMount)}
-        style={{marginBottom: 16}}
+        style={{ marginBottom: 16 }}
       />
     </Linear>
   );

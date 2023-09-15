@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {View, Image, useColorScheme} from 'react-native';
+import React, { useState } from 'react';
+import { View, Image, useColorScheme } from 'react-native';
 
 import Linear from '../../../components/Linear';
 import Header from '../../../components/Header';
@@ -11,14 +11,18 @@ import CustomModal from '../../../components/CustomModal';
 
 import categories from '../../../data/categories';
 import styleConstants from '../../../constants/styles';
-import {formattedDate} from '../../../data/functions';
+import { formattedDate } from '../../../data/functions';
 
-import {useNavigation} from '@react-navigation/native';
-import {useDispatch, useSelector} from 'react-redux';
-import {getSingleOrder, updateOrderStatus} from '../../../store/orders';
+import { useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
+import { getSingleOrder, updateOrderStatus } from '../../../store/orders';
 
-const Order = ({route}) => {
-  const {orderId} = route.params;
+import RazorpayCheckout from 'react-native-razorpay';
+
+const KEY_ID = process.env.REACT_APP_RAZORPAY_KEY_ID;
+
+const Order = ({ route }) => {
+  const { orderId } = route.params;
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
@@ -31,8 +35,8 @@ const Order = ({route}) => {
 
   // redux states
   const myOrder = useSelector(state => getSingleOrder(state, orderId));
-  const {order, user, driver, createdAt: date} = myOrder;
-  const {type: userType, token: userToken} = useSelector(state => state.user);
+  const { order, user, driver, createdAt: date } = myOrder;
+  const { type: userType, token: userToken } = useSelector(state => state.user);
 
   const [rating, setRating] = useState(order?.rating || 0);
 
@@ -46,6 +50,47 @@ const Order = ({route}) => {
 
   const newDate = formattedDate(date);
 
+  const handlePayment = () => {
+    var options = {
+      description: 'Loadlift Payment',
+      image: '',
+      currency: 'INR',
+      key: KEY_ID,
+      amount: (order?.price * 100).toFixed(0),
+      name: 'Loadlift Payment',
+      order_id: '', //Replace this with an order_id created using Orders API. Learn more at https://razorpay.com/docs/api/orders.
+      prefill: {
+        email: 'what@example.com',
+        contact: '9419191919',
+        name: 'User 1',
+      },
+      theme: { color: '#F37254' },
+    };
+
+    RazorpayCheckout.open(options)
+      .then(data => {
+        // handle success
+        alert(`Success: ${data.razorpay_payment_id}`);
+        dispatch(
+          updateOrderStatus({
+            userType,
+            userId: user?._id,
+            driverId: driver?._id,
+            orderStatus: {
+              code: 4,
+              message: 'Completed',
+            },
+            orderId,
+            userToken,
+          }),
+        );
+      })
+      .catch(error => {
+        // handle failure
+        console.log(error);
+        alert(`Error: ${error.code} | ${error.description}`);
+      });
+  };
   const PickUpModal = () => {
     const onPress = bool => {
       if (bool) {
@@ -148,7 +193,7 @@ const Order = ({route}) => {
             <Card className="mt-6">
               <View
                 className="w-full flex-row items-center justify-between border-b pb-5 pt-2 px-1"
-                style={{borderColor: primary}}>
+                style={{ borderColor: primary }}>
                 {userType === 'driver' ? (
                   <View className="items-start">
                     <Title className="pb-1" bold primary>
@@ -162,7 +207,7 @@ const Order = ({route}) => {
                   <View className="items-start justify-center">
                     <Image source={imageSource} style={styleConstants.icon} />
                     <Title xsm>{categoryTitle}</Title>
-                    <Rating rating={4.5} style={{width: 15, height: 15}} />
+                    <Rating rating={4.5} style={{ width: 15, height: 15 }} />
                   </View>
                 )}
                 <View className="items-end justify-center">
@@ -177,7 +222,7 @@ const Order = ({route}) => {
               {userType === 'user' && (
                 <View
                   className="w-full items-center justify-between flex-row py-5 border-b px-1"
-                  style={{borderColor: primary}}>
+                  style={{ borderColor: primary }}>
                   <Title sm bold left primary>
                     Name:{' '}
                     <Title sm>
@@ -191,7 +236,7 @@ const Order = ({route}) => {
               )}
               <View
                 className="w-full items-start justify-center py-8 border-b gap-y-6 px-1"
-                style={{borderColor: primary}}>
+                style={{ borderColor: primary }}>
                 <Title
                   className="tracking-wide leading-5"
                   numberOfLines={3}
@@ -294,22 +339,7 @@ const Order = ({route}) => {
                   <Button
                     title="Pay" // console.log(driver);
                     half
-                    onPress={() =>
-                      // navigation.navigate('Payment', {price: order?.price})
-                      dispatch(
-                        updateOrderStatus({
-                          userType,
-                          userId: user?._id,
-                          driverId: driver?._id,
-                          orderStatus: {
-                            code: 4,
-                            message: 'Completed',
-                          },
-                          orderId,
-                          userToken,
-                        }),
-                      )
-                    }
+                    onPress={() => handlePayment()}
                   />
                 )}
               </View>
@@ -327,7 +357,7 @@ const Order = ({route}) => {
                     setRating={setRating}
                     orderId={orderId}
                     driverId={driver?._id.toString()}
-                    style={{height: 32, marginRight: 5}}
+                    style={{ height: 32, marginRight: 5 }}
                   />
                 </>
               ) : (
@@ -339,7 +369,7 @@ const Order = ({route}) => {
                     <Rating
                       className="mb-10"
                       rating={order?.rating}
-                      style={{height: 32, marginRight: 5}}
+                      style={{ height: 32, marginRight: 5 }}
                     />
                   </>
                 )

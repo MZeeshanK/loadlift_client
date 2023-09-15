@@ -1,7 +1,7 @@
 import React from 'react';
-import {StyleSheet, Pressable, useColorScheme} from 'react-native';
+import { StyleSheet, Pressable, useColorScheme } from 'react-native';
 
-const Card = ({children, style, ...props}) => {
+const Card = ({ children, style, ...props }) => {
   const colorScheme = useColorScheme();
 
   const card = colorScheme === 'dark' ? colors.card : colors.lightCard;
@@ -30,8 +30,7 @@ const Card = ({children, style, ...props}) => {
 
 const styles = StyleSheet.create({
   container: {
-    elevation: 3,
-    // shadowColor: colors.black,
+    elevation: 1.8,
   },
 });
 

@@ -1,12 +1,13 @@
 import React from 'react';
-import {View, useColorScheme} from 'react-native';
+import { View, useColorScheme } from 'react-native';
 
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import Title from '../../../components/Title';
 import Button from '../../../components/Button';
 import Card from '../../../components/Card';
-import {useDispatch, useSelector} from 'react-redux';
-import {declineOrder, updateOrderStatus} from '../../../store/orders';
+import { useDispatch, useSelector } from 'react-redux';
+import { declineOrder, updateOrderStatus } from '../../../store/orders';
+import DriverRate from './DriverRate';
 
 const DriverCard = () => {
   const navigation = useNavigation();
@@ -15,7 +16,7 @@ const DriverCard = () => {
 
   const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
   const orders = useSelector(state => state.orders.data);
-  const {token: userToken, type: userType} = useSelector(state => state.user);
+  const { token: userToken, type: userType } = useSelector(state => state.user);
 
   const newOrder =
     orders.find(order => order?.order?.status?.code === 0) || null;
@@ -32,7 +33,7 @@ const DriverCard = () => {
       <Card className="w-full">
         <View
           className="w-full items-start justify-center border-b pb-3"
-          style={{borderColor: primary}}>
+          style={{ borderColor: primary }}>
           <View className="w-full">
             <Title lg bold primary left>
               Name:{' '}
@@ -55,7 +56,7 @@ const DriverCard = () => {
         </View>
         <View
           className="w-full py-2 mb-5 border-b"
-          style={{borderColor: primary}}>
+          style={{ borderColor: primary }}>
           <Title className="mb-3" bold primary left numberOfLines={2}>
             Pick Up:{' '}
             <Title light>
@@ -117,11 +118,11 @@ const DriverCard = () => {
       <Card
         className="w-full"
         onPress={() =>
-          navigation.navigate('Order', {orderId: activeOrder._id})
+          navigation.navigate('Order', { orderId: activeOrder._id })
         }>
         <View
           className="w-full items-start justify-center border-b pb-3"
-          style={{borderColor: primary}}>
+          style={{ borderColor: primary }}>
           <View className="w-full">
             <Title lg bold primary left>
               Name:{' '}
@@ -144,7 +145,7 @@ const DriverCard = () => {
         </View>
         <View
           className="w-full py-2 mb-5 border-b"
-          style={{borderColor: primary}}>
+          style={{ borderColor: primary }}>
           <Title className="mb-3" bold primary left numberOfLines={2}>
             Pick Up:{' '}
             <Title light>
@@ -175,7 +176,7 @@ const DriverCard = () => {
             title="Details"
             className="w-[48%]"
             onPress={() =>
-              navigation.navigate('Order', {orderId: activeOrder?._id})
+              navigation.navigate('Order', { orderId: activeOrder?._id })
             }
           />
         </View>
@@ -183,7 +184,12 @@ const DriverCard = () => {
     );
   }
 
-  return <DriverRate />;
+  return (
+    <>
+      <View className="flex-1" />
+      <DriverRate />
+    </>
+  );
 };
 
 export default React.memo(DriverCard);
