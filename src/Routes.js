@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
 import {
   BackHandler,
@@ -10,43 +10,49 @@ import {
 } from 'react-native';
 import colors from './constants/colors';
 
-import {TransitionPresets, createStackNavigator} from '@react-navigation/stack';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {
+  TransitionPresets,
+  createStackNavigator,
+} from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
+// Auth Screens
 import Splash from './screens/Splash';
-import NotFound from './screens/NotFound';
-
 import Login from './screens/auth/Login';
 import OTP from './screens/auth/OTP';
 import UserType from './screens/auth/UserType';
 import CreateAccount from './screens/auth/CreateAccount';
 
+// Tab Screens
 import Home from './screens/app/Home';
 import Activity from './screens/app/Activity';
 import Account from './screens/app/Account';
 
+// App Screens
 import Booking from './screens/app/Booking';
 import Order from './screens/app/Order';
 import Profile from './screens/app/Profile';
-import Settings from './screens/app/Settings';
 import SwitchDetails from './screens/app/SwitchDetails';
-import AccountSwitch from './screens/app/AccountSwitch';
-import Payment from './screens/app/Payment';
 import PaymentMethod from './screens/app/PaymentMethod';
 import Map from './screens/app/Map';
 import Call from './screens/app/Call';
 import DriverList from './screens/app/DriverList';
 import PaymentDone from './screens/app/PaymentDone';
 
+// Misc Screens
+import NotFound from './screens/NotFound';
 import ComingSoon from './screens/ComingSoon';
+
+// Component imports
 import Title from './components/Title';
 
-import {useDispatch, useSelector} from 'react-redux';
-import {removeError, setError, setLoading} from './store/misc';
-import {fetchUser} from './store/user';
-import {fetchOrders} from './store/orders';
+// Redux Imports
+import { useDispatch, useSelector } from 'react-redux';
+import { setLoading } from './store/misc';
+import { fetchUser } from './store/user';
+import { fetchOrders } from './store/orders';
 
-import {io} from 'socket.io-client';
+import { io } from 'socket.io-client';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -55,7 +61,6 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 function Routes() {
   const socket = io(BACKEND_URL);
-
   const colorScheme = useColorScheme();
   const dispatch = useDispatch();
 
@@ -67,13 +72,13 @@ function Routes() {
     token: userToken,
     data: userData,
   } = useSelector(state => state.user);
-  const {loading} = useSelector(state => state.misc);
+  const { loading } = useSelector(state => state.misc);
 
   const onBackPress = () => {
     dispatch(setLoading(false));
   };
 
-  const config = {userToken, userType};
+  const config = { userToken, userType };
 
   socket.emit('user-connected', userData._id);
 
@@ -98,6 +103,7 @@ function Routes() {
 
   BackHandler.addEventListener('hardwareBackPress', onBackPress);
 
+  // Bottom Tab Navigator configuration
   const Tabs = () => {
     return (
       <Tab.Navigator
@@ -119,7 +125,7 @@ function Routes() {
           name="Home"
           component={Home}
           options={{
-            tabBarIcon: ({focused}) => (
+            tabBarIcon: ({ focused }) => (
               <View className="h-full w-full items-center justify-center">
                 <Image
                   style={styles.icon}
@@ -142,7 +148,7 @@ function Routes() {
           name="Activity"
           component={Activity}
           options={{
-            tabBarIcon: ({focused}) => (
+            tabBarIcon: ({ focused }) => (
               <View className="h-full w-full items-center justify-center">
                 <Image
                   style={styles.icon}
@@ -165,7 +171,7 @@ function Routes() {
           name="Account"
           component={Account}
           options={{
-            tabBarIcon: ({focused}) => (
+            tabBarIcon: ({ focused }) => (
               <View className="h-full w-full items-center justify-center">
                 <Image
                   style={styles.icon}
@@ -188,6 +194,7 @@ function Routes() {
     );
   };
 
+  // App Screen Navigator Configuration
   const AppScreens = () => {
     return (
       <Stack.Navigator
@@ -200,11 +207,8 @@ function Routes() {
         <Stack.Screen name="Booking" component={Booking} />
         <Stack.Screen name="Order" component={Order} />
         <Stack.Screen name="Profile" component={Profile} />
-        <Stack.Screen name="Settings" component={Settings} />
-        <Stack.Screen name="Payment" component={Payment} />
         <Stack.Screen name="PaymentMethod" component={PaymentMethod} />
         <Stack.Screen name="SwitchDetails" component={SwitchDetails} />
-        <Stack.Screen name="AccountSwitch" component={AccountSwitch} />
         <Stack.Screen name="Map" component={Map} />
         <Stack.Screen name="DriverList" component={DriverList} />
         <Stack.Screen name="PaymentDone" component={PaymentDone} />
@@ -218,6 +222,7 @@ function Routes() {
   if (userData) {
     return <AppScreens />;
   } else {
+    // Auth Screen Navigator Configuration
     return (
       <Stack.Navigator
         initialRouteName="Splash"

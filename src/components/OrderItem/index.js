@@ -1,6 +1,6 @@
 import React from 'react';
-import {View, StyleSheet, Image, useColorScheme} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import { View, StyleSheet, Image, useColorScheme } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 import styleConstants from '../../constants/styles';
 import colors from '../../constants/colors';
@@ -8,10 +8,10 @@ import colors from '../../constants/colors';
 import categories from '../../data/categories';
 import Title from '../Title';
 import Card from '../Card';
-import {useSelector} from 'react-redux';
-import {formattedDate} from '../../data/functions';
+import { useSelector } from 'react-redux';
+import { formattedDate } from '../../data/functions';
 
-const OrderItem = ({item, ...props}) => {
+const OrderItem = ({ item, ...props }) => {
   const navigation = useNavigation();
   const colorScheme = useColorScheme();
 
@@ -22,7 +22,6 @@ const OrderItem = ({item, ...props}) => {
   );
 
   const newDate = formattedDate(item?.createdAt);
-
   const image =
     colorScheme === 'dark' ? imageSource?.icon : imageSource?.darkIcon;
 
@@ -40,7 +39,7 @@ const OrderItem = ({item, ...props}) => {
           </Title>
 
           <Title primary bold right>
-            Price:{' '}
+            Charges:{' '}
             <Title>
               {'\u20b9'} {item?.order?.price}
             </Title>
@@ -64,7 +63,7 @@ const OrderItem = ({item, ...props}) => {
       <>
         <View
           className="border-r items-center justify-start px-1 py-3"
-          style={{borderColor: primary}}>
+          style={{ borderColor: primary }}>
           <Image source={image} style={styles.car} />
         </View>
 
@@ -78,7 +77,7 @@ const OrderItem = ({item, ...props}) => {
             </Title>
             <Title right className="tracking-tight" xsm>
               <Title semibold xsm>
-                Price:{' '}
+                Charges:{' '}
               </Title>
               {'\u20b9'} {item?.order?.price}
             </Title>
@@ -104,18 +103,15 @@ const OrderItem = ({item, ...props}) => {
 
   return (
     <Card
-      onPress={() => navigation.navigate('Order', {orderId: item?._id})}
+      onPress={() => navigation.navigate('Order', { orderId: item?._id })}
       className={`rounded-2xl mb-3 py-1 px-1 items-center justify-between`}
       style={styles.order}
       ongoing={props.ongoing}
       danger={props.danger}>
       <View
         className="border-b-2 w-[95%] items-center justify-between flex-row py-2"
-        style={{borderColor: primary}}>
-        <Title className="tracking-wider" sm>
-          <Title bold primary>
-            Status:{' '}
-          </Title>
+        style={{ borderColor: primary }}>
+        <Title className="tracking-wider" base bold primary>
           {props.danger
             ? 'Cancelled By the Driver'
             : props.ongoing
@@ -139,7 +135,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignSelf: 'center',
   },
-  car: {...styleConstants.icon, marginHorizontal: 5},
+  car: { ...styleConstants.icon, marginHorizontal: 5 },
 });
 
 export default React.memo(OrderItem);

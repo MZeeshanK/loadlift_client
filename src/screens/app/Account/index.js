@@ -1,6 +1,12 @@
-import React, {useState} from 'react';
-import {ScrollView, View, Image, Pressable, useColorScheme} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import React, { useState } from 'react';
+import {
+  ScrollView,
+  View,
+  Image,
+  Pressable,
+  useColorScheme,
+} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 import Linear from '../../../components/Linear';
 import Header from '../../../components/Header';
@@ -13,8 +19,8 @@ import CustomModal from '../../../components/CustomModal';
 import colors from '../../../constants/colors';
 import categories from '../../../data/categories';
 
-import {useSelector, useDispatch} from 'react-redux';
-import {userLogout} from '../../../store/user';
+import { useSelector, useDispatch } from 'react-redux';
+import { userLogout } from '../../../store/user';
 
 const Account = () => {
   const dispatch = useDispatch();
@@ -25,7 +31,7 @@ const Account = () => {
 
   const [modalVisible, setModalVisible] = useState(false);
 
-  const {type: userType, data: user} = useSelector(state => state.user);
+  const { type: userType, data: user } = useSelector(state => state.user);
 
   // Selecting vehicle details from categories
   let vehicleImage, vehicleTitle;
@@ -46,7 +52,7 @@ const Account = () => {
         </Title>
         <View
           className="w-full h-[1] my-5 "
-          style={{backgroundColor: primary}}
+          style={{ backgroundColor: primary }}
         />
         <View className="w-full px-2 mt-2 mb-5 flex-row items-center justify-center">
           <Button
@@ -102,6 +108,21 @@ const Account = () => {
         )}
 
         {/* User Profile info */}
+
+        {userType === 'user' && (
+          <View className="w-full items-end justify-center pr-3">
+            <View className="flex-row gap-2 items-center justify-center">
+              <Image
+                source={require('../../../assets/loadcoin.png')}
+                className="w-5 h-5"
+              />
+              <Title base bold>
+                {user.loadCoin}
+              </Title>
+            </View>
+          </View>
+        )}
+
         <Card onPress={() => navigation.navigate('Profile')}>
           <View className=" w-full flex-row justify-between items-center">
             <View className="flex-1 items-start justify-around">
@@ -165,7 +186,7 @@ const Account = () => {
             <Pressable
               onPress={() => navigation.navigate('NotFound')}
               className="w-full items-start border-b p-2 px-5 justify-center"
-              style={{borderColor: primary}}>
+              style={{ borderColor: primary }}>
               <Title className="py-1 tracking-wider" lg bold>
                 Switch to Driver's Account
               </Title>
@@ -175,7 +196,7 @@ const Account = () => {
           <Pressable
             onPress={() => navigation.navigate('NotFound')}
             className="w-full items-start border-b p-2 px-5 justify-center"
-            style={{borderColor: primary}}>
+            style={{ borderColor: primary }}>
             <Title className="py-1 tracking-wider" lg bold>
               FAQ's
             </Title>
@@ -184,7 +205,7 @@ const Account = () => {
           <Pressable
             onPress={() => navigation.navigate('NotFound')}
             className="w-full items-start border-b p-2 px-5 justify-center"
-            style={{borderColor: primary}}>
+            style={{ borderColor: primary }}>
             <Title className="py-1 tracking-wider" lg bold>
               Rate Us
             </Title>
@@ -193,7 +214,7 @@ const Account = () => {
           <Pressable
             onPress={() => navigation.navigate('NotFound')}
             className="w-full items-start border-b p-2 px-5 justify-center"
-            style={{borderColor: primary}}>
+            style={{ borderColor: primary }}>
             <Title className="py-1 tracking-wider" lg bold>
               Contact Us
             </Title>
@@ -202,7 +223,7 @@ const Account = () => {
           <Pressable
             onPress={() => setModalVisible(true)}
             className="w-full items-start p-2 px-5 justify-center"
-            style={{borderColor: primary}}>
+            style={{ borderColor: primary }}>
             <Title className="py-1 tracking-wider" lg bold>
               Logout
             </Title>

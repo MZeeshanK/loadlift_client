@@ -8,15 +8,12 @@ import GFlatList from '../../../components/GFlatList';
 import DriverButton from './DriverButton';
 
 import { useSelector } from 'react-redux';
-import axios from 'axios';
 import DriverCard from './DriverCard';
 
 // const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API;
 
 const Home = () => {
   const { type: userType } = useSelector(state => state.user);
-
-  // const {origin, destination} = useSelector(state => state.map);
 
   const Driver = () => (
     <View className="flex-1 w-full items-center justify-between -mt-8">

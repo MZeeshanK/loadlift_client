@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Image, useColorScheme } from 'react-native';
 
 import Linear from '../../../components/Linear';
@@ -11,11 +11,18 @@ import CustomModal from '../../../components/CustomModal';
 
 import categories from '../../../data/categories';
 import styleConstants from '../../../constants/styles';
-import { formattedDate } from '../../../data/functions';
+import {
+  formattedDate,
+  openGoogleMapsDirections,
+} from '../../../data/functions';
 
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
-import { getSingleOrder, updateOrderStatus } from '../../../store/orders';
+import {
+  getSingleOrder,
+  updateOrderStatus,
+  useLoadCoin,
+} from '../../../store/orders';
 
 import RazorpayCheckout from 'react-native-razorpay';
 
@@ -36,7 +43,11 @@ const Order = ({ route }) => {
   // redux states
   const myOrder = useSelector(state => getSingleOrder(state, orderId));
   const { order, user, driver, createdAt: date } = myOrder;
-  const { type: userType, token: userToken } = useSelector(state => state.user);
+  const {
+    type: userType,
+    token: userToken,
+    data: userData,
+  } = useSelector(state => state.user);
 
   const [rating, setRating] = useState(order?.rating || 0);
 
@@ -70,7 +81,6 @@ const Order = ({ route }) => {
     RazorpayCheckout.open(options)
       .then(data => {
         // handle success
-        alert(`Success: ${data.razorpay_payment_id}`);
         dispatch(
           updateOrderStatus({
             userType,
@@ -87,8 +97,6 @@ const Order = ({ route }) => {
       })
       .catch(error => {
         // handle failure
-        console.log(error);
-        alert(`Error: ${error.code} | ${error.description}`);
       });
   };
   const PickUpModal = () => {
@@ -181,24 +189,40 @@ const Order = ({ route }) => {
             <Button
               title="Map"
               className="flex-1 mx-2"
-              onPress={() => navigation.navigate('Map')}
+              onPress={() =>
+                openGoogleMapsDirections({
+                  origin: order.origin,
+                  destination: order.destination,
+                })
+              }
             />
           ) : (
-            <View className="flex-1" />
+            <>
+              <View className="flex-row items-center justify-center pl-3 gap-x-3 ">
+                <Image
+                  source={require('../../../assets/loadcoin.png')}
+                  className="w-5 h-5"
+                />
+                <Title base bold>
+                  {userData.loadCoin}
+                </Title>
+              </View>
+              <View className="flex-1" />
+            </>
           )}
           <Button title="Report" danger mini />
         </View>
-        <View className="w-full items-center justify-between flex-1 mt-0 ">
-          <View className="w-full items-center justify-start flex-1 mt-0">
+        <View className="w-full items-center justify-between flex-1">
+          <View className="w-full items-center justify-start flex-1">
             <Card className="mt-6">
               <View
                 className="w-full flex-row items-center justify-between border-b pb-5 pt-2 px-1"
                 style={{ borderColor: primary }}>
                 {userType === 'driver' ? (
                   <View className="items-start">
-                    <Title className="pb-1" bold primary>
+                    <Title className="pb-1" base bold primary>
                       Name:{' '}
-                      <Title black={colorScheme !== 'dark'}>
+                      <Title base black={colorScheme !== 'dark'}>
                         {user?.firstName} {user?.lastName}
                       </Title>
                     </Title>
@@ -268,7 +292,7 @@ const Order = ({ route }) => {
               </View>
               <View className="w-full pt-6 pb-3 flex-row items-center justify-between px-1">
                 <Title className="tracking-widest" bold primary>
-                  Price:{' '}
+                  Charges:{' '}
                   <Title>
                     {' '}
                     {'\u20b9'}
@@ -289,6 +313,27 @@ const Order = ({ route }) => {
               )}
             </Card>
           </View>
+
+          {userType === 'user' &&
+            userData.loadCoin > 999 &&
+            order.status.code < 4 &&
+            order.status.code > 1 && (
+              <Card className="mt-0">
+                <Button
+                  className="w-full"
+                  title="Use Loadcoin"
+                  onPress={() =>
+                    dispatch(
+                      useLoadCoin({
+                        orderId,
+                        userToken,
+                        userId: userData?._id,
+                      }),
+                    )
+                  }
+                />
+              </Card>
+            )}
 
           {order?.status?.code !== 4 &&
           order?.status?.code !== 8 &&
@@ -325,7 +370,7 @@ const Order = ({ route }) => {
                   title="Call"
                   half
                   card={order?.status?.code >= 2}
-                  className={`${order?.status?.code === 3 && 'flex-1'}`}
+                  className="flex-1"
                   onPress={() => navigation.navigate('Call')}
                 />
                 {order?.status?.code === 2 && userType === 'driver' && (
@@ -344,37 +389,33 @@ const Order = ({ route }) => {
                 )}
               </View>
             </Card>
-          ) : (
+          ) : userType === 'user' ? (
             <Card className="w-full items-center justify-center mb-4">
-              {userType === 'user' ? (
-                <>
-                  <Title className="mb-5" lg bold primary>
-                    {order.rating ? 'You have Rated' : 'Leave a Rating'}
-                  </Title>
-                  <Rating
-                    className="mb-10"
-                    rating={rating}
-                    setRating={setRating}
-                    orderId={orderId}
-                    driverId={driver?._id.toString()}
-                    style={{ height: 32, marginRight: 5 }}
-                  />
-                </>
-              ) : (
-                order.rating && (
-                  <>
-                    <Title lg bold primary className="mb-5">
-                      You have recieved the rating
-                    </Title>
-                    <Rating
-                      className="mb-10"
-                      rating={order?.rating}
-                      style={{ height: 32, marginRight: 5 }}
-                    />
-                  </>
-                )
-              )}
+              <Title className="mb-5" lg bold primary>
+                {order.rating ? 'You have Rated' : 'Leave a Rating'}
+              </Title>
+              <Rating
+                className="mb-10"
+                rating={rating}
+                setRating={setRating}
+                orderId={orderId}
+                driverId={driver?._id.toString()}
+                style={{ height: 32, marginRight: 5 }}
+              />
             </Card>
+          ) : (
+            order.rating && (
+              <Card className="w-full items-center justify-center mb-4">
+                <Title lg bold primary className="mb-5">
+                  You have recieved the rating
+                </Title>
+                <Rating
+                  className="mb-10"
+                  rating={order?.rating}
+                  style={{ height: 32, marginRight: 5 }}
+                />
+              </Card>
+            )
           )}
         </View>
       </View>

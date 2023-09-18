@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -18,16 +18,13 @@ import categories from '../../../data/categories';
 import colors from '../../../constants/colors';
 import styleConstants from '../../../constants/styles';
 import Title from '../../../components/Title';
-import {useNavigation} from '@react-navigation/native';
-import axios from 'axios';
-import {useDispatch, useSelector} from 'react-redux';
-import {setLoading} from '../../../store/misc';
-import {createOrder} from '../../../store/orders';
+import { useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
+import { createOrder } from '../../../store/orders';
+import { getOrderMetrics } from '../../../data/functions';
 
-const BACKEND_URl = process.env.REACT_APP_BACKEND_URL;
-
-const DriverList = ({route}) => {
-  const {drivers} = route.params;
+const DriverList = ({ route }) => {
+  const { drivers } = route.params;
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const colorScheme = useColorScheme();
@@ -37,9 +34,14 @@ const DriverList = ({route}) => {
 
   const [driver, setDriver] = useState({});
   const [isMount, setIsMount] = useState(false);
+  const [orderMetrics, setOrderMetrics] = useState(null);
 
-  const {token: userToken, type: userType} = useSelector(state => state.user);
-  const {origin, destination} = useSelector(state => state.map);
+  const { token: userToken, type: userType } = useSelector(state => state.user);
+  const { origin, destination } = useSelector(state => state.map);
+
+  useEffect(() => {
+    getOrderMetrics({ origin, destination }, setOrderMetrics);
+  }, []);
 
   useEffect(() => {
     if (isMount) {
@@ -47,7 +49,7 @@ const DriverList = ({route}) => {
         dispatch(
           createOrder({
             userToken,
-            transitDistance: 11.2,
+            transitDistance: orderMetrics?.distance,
             origin,
             destination,
             driverId: driver?._id,
@@ -60,7 +62,7 @@ const DriverList = ({route}) => {
     }
   }, [isMount]);
 
-  const Item = ({item}) => {
+  const Item = ({ item }) => {
     const category = categories.find(
       category => category?.value === item?.typeOfVehicle,
     );
@@ -188,7 +190,7 @@ const DriverList = ({route}) => {
       <Header title="Driver List" />
       <View className="w-full flex-1 items-center justify-center">
         <View className="w-full flex-1 mb-5">
-          <Card style={{width: '100%', flex: 1}}>
+          <Card style={{ width: '100%', flex: 1 }}>
             {drivers.length ? (
               <>
                 <Title className="tracking-wider my-2 mb-8" xl bold>
@@ -199,7 +201,7 @@ const DriverList = ({route}) => {
                   className="flex-1 w-full"
                   data={drivers}
                   keyExtractor={item => item?._id}
-                  renderItem={({item}) => <Item item={item} />}
+                  renderItem={({ item }) => <Item item={item} />}
                 />
               </>
             ) : (
@@ -220,7 +222,7 @@ const DriverList = ({route}) => {
         </View>
         <Button
           title="Book Vehicle"
-          style={{marginVertical: 15}}
+          style={{ marginVertical: 15 }}
           onPress={() => setIsMount(true)}
         />
       </View>

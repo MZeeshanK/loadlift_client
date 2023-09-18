@@ -8,6 +8,7 @@ import Card from '../../../components/Card';
 import { useDispatch, useSelector } from 'react-redux';
 import { declineOrder, updateOrderStatus } from '../../../store/orders';
 import DriverRate from './DriverRate';
+import { openGoogleMapsDirections } from '../../../data/functions';
 
 const DriverCard = () => {
   const navigation = useNavigation();
@@ -169,7 +170,12 @@ const DriverCard = () => {
             title="Map"
             className="w-[48%]"
             card
-            // onPress={() => navigation.navigate('Map')}
+            onPress={() =>
+              openGoogleMapsDirections({
+                origin: activeOrder?.order.origin,
+                destination: activeOrder?.order.destination,
+              })
+            }
           />
 
           <Button

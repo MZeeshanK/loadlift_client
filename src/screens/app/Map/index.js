@@ -23,15 +23,12 @@ import Input from '../../../components/Input';
 import TextLabel from '../../../components/TextLabel';
 import Geolocation from '@react-native-community/geolocation';
 
-import { Linking } from 'react-native';
-import axios from 'axios';
 import MapViewDirections from 'react-native-maps-directions';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 const classNames = 'py-1 z-10 rounded-md mx-2 px-4';
 
 const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API;
-const API_URL = 'https://maps.googleapis.com/maps/api/directions/json';
 
 const Map = ({ route }) => {
   const { state, location } = route.params;
@@ -41,11 +38,6 @@ const Map = ({ route }) => {
   const navigation = useNavigation();
 
   const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
-  const secondary =
-    colorScheme === 'dark' ? colors.secondary : colors.lightSecondary;
-  const card = colorScheme === 'dark' ? colors.card : colors.lightCard;
-  const ongoing = colorScheme === 'dark' ? colors.ongoing : colors.lightOngoing;
-
   // redux states
   const { home, work, origin, destination } = useSelector(state => state.map);
 
@@ -89,7 +81,6 @@ const Map = ({ route }) => {
   }, [animate]);
 
   const [isLocationMount, setIsLocationMount] = useState(false);
-  const [metrics, setMetrics] = useState(null);
   // geolocation
   useEffect(() => {
     if (isLocationMount) {
@@ -113,51 +104,7 @@ const Map = ({ route }) => {
     }
   }, [isLocationMount]);
 
-  const openGoogleMapsDirections = () => {
-    const url = `https://www.google.com/maps/dir/?api=1&origin=${origin?.lat},${origin?.lng}&destination=${destination?.lat},${destination?.lng}`;
-
-    Linking.openURL(url).catch(error => {
-      console.warn(`Error opening Google Maps: ${error}`);
-    });
-  };
-
   // Google directions api for calculating distance and time between origin and destination
-
-  const getOrderMetrics = async () => {
-    const params = {
-      origin: `${origin?.lat} ${origin?.lng}`,
-      destination: `${destination?.lat} ${destination?.lng}`,
-      key: API_KEY,
-      departure_time: 'now', // You can also specify a specific time
-      traffic_model: 'pessimistic', // Or 'optimistic', or '
-    };
-
-    try {
-      const { data } = await axios({
-        method: 'GET',
-        url: API_URL,
-        params,
-      });
-      const routes = data.routes;
-      if (routes.length > 0) {
-        const legs = routes[0].legs;
-        if (legs.length > 0) {
-          const distance = legs[0].distance.text;
-          const duration = legs[0].duration.text;
-          setMetrics({
-            distance,
-            duration,
-          });
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    getOrderMetrics();
-  }, [origin, destination]);
 
   const AddressModal = ({ modalState }) => {
     const pinCodeRef = React.useRef();
@@ -432,15 +379,6 @@ const Map = ({ route }) => {
           description={`${destination?.address} \n ${destination?.pinCode}`}
           image={require('../../../assets/Destination-marker.png')}
         />
-
-        {/* <Marker
-          coordinate={{
-            latitude: destination?.lat,
-            longitude: destination?.lng,
-          }}
-          title={`${metrics?.distance} km \n ${metrics?.duration} mins`}
-          image=""
-        /> */}
 
         <Marker
           coordinate={{
