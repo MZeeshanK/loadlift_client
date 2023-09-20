@@ -1,77 +1,43 @@
-import React, {useEffect, useRef} from 'react';
-import {
-  View,
-  StyleSheet,
-  Dimensions,
-  useColorScheme,
-  Animated,
-  Pressable,
-} from 'react-native';
-import Card from '../Card';
+import React from 'react';
+import { Animated, View, useColorScheme } from 'react-native';
+
 import Title from '../Title';
-import {useDispatch, useSelector} from 'react-redux';
-import {removePopUp, setPopUp} from '../../store/misc';
+import { useSelector } from 'react-redux';
 import colors from '../../constants/colors';
 
-const {width} = Dimensions.get('window');
-
 const PopUp = () => {
-  const dispatch = useDispatch();
   const colorScheme = useColorScheme();
-
-  const {visible, message} = useSelector(state => state.misc.popUp);
-
-  const animation = useRef(new Animated.Value(0)).current;
-
-  const animationDuration = 1000;
-
-  const startAnimation = () => {
-    Animated.timing(animation, {
-      toValue: visible ? 1 : 0,
-      duration: animationDuration,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  useEffect(() => {
-    if (visible) {
-      setTimeout(() => {
-        dispatch(removePopUp());
-      }, 3000);
-    }
-
-    startAnimation();
-  }, [visible]);
+  const { message } = useSelector(state => state.misc.popUp);
 
   const ongoing = colorScheme === 'dark' ? colors.ongoing : colors.lightOngoing;
   const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
 
+  const animation = new Animated.Value(0);
+
+  Animated.timing(animation, {
+    toValue: 1,
+    duration: 1000,
+    useNativeDriver: true,
+  }).start();
+
   return (
     <Animated.View
-      className="absolute py-2 px-5 top-24 rounded-lg z-20 border"
-      style={{
-        backgroundColor: ongoing,
-        aspectRatio: 1,
-        alignSelf: 'center',
-        borderColor: primary,
-        opacity: animation.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, 1],
-        }),
-        transform: [
-          {
-            scale: animation.interpolate({
-              inputRange: [0, 1],
-              outputRange: [0, 1],
-            }),
-          },
-        ],
-      }}>
-      <Title xsm semibold className="tracking-widest">
-        Success
+      className="absolute z-10 top-16 py-2 px-5 rounded-lg"
+      style={[
+        { opacity: animation },
+        {
+          backgroundColor: ongoing,
+          alignSelf: 'center',
+          elevation: 2,
+          borderWidth: 0.5,
+          borderColor: primary,
+        },
+      ]}>
+      <Title primary bold>
+        {message}
       </Title>
     </Animated.View>
   );
 };
 
-export default React.memo(PopUp);
+export default PopUp;

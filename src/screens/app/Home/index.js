@@ -31,12 +31,14 @@ const Home = () => {
     homeOrders = orders.filter(
       order =>
         order?.order.status.code !== 9 &&
-        order?.order?.status.code !== 0 &&
+        order?.order?.status.code !== 8 &&
         order?.order?.status.code !== 4,
     );
   } else {
     homeOrders = [];
   }
+
+  // return;
 
   return (
     <Linear style={{ paddingVertical: 0, paddngHorizontal: 0 }}>

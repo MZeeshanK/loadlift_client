@@ -1,9 +1,9 @@
 import React from 'react';
-import {Image, TouchableOpacity, useColorScheme} from 'react-native';
+import { Image, TouchableOpacity, useColorScheme } from 'react-native';
 import colors from '../../constants/colors';
 import Title from '../Title';
 
-const Button = ({title, onPress, source, style, ...props}) => {
+const Button = ({ title, onPress, source, style, ...props }) => {
   const colorScheme = useColorScheme();
 
   const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
@@ -33,7 +33,7 @@ const Button = ({title, onPress, source, style, ...props}) => {
           backgroundColor: card,
           elevation: 7,
         },
-        props.success && {backgroundColor: colors.green},
+        props.success && { backgroundColor: colors.green },
         {
           elevation: !props.mini && !props.half ? 2 : 1,
         },
@@ -46,6 +46,7 @@ const Button = ({title, onPress, source, style, ...props}) => {
       onPress={onPress}>
       {source && <Image className="w-[16] h-[16] mr-2" source={source} />}
       <Title
+        onPress={onPress}
         bold={!props.mini}
         semibold={props.mini}
         black

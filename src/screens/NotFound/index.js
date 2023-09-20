@@ -1,23 +1,23 @@
 import React from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import { View } from 'react-native';
+
 import Linear from '../../components/Linear';
 import Header from '../../components/Header';
 import Button from '../../components/Button';
+import Title from '../../components/Title';
 
-const NotFound = ({navigation}) => {
+const NotFound = ({ navigation }) => {
   return (
     <Linear>
       <Header title="Not Found" isBack />
       <View className="flex-1 items-center justify-around">
-        <Text className="text-white text-5xl font-bold tracking-wider">
+        <Title style={{ fontSize: 44 }} bold className="tracking-wider">
           Not Found
-        </Text>
+        </Title>
         <Button onPress={() => navigation.goBack()} title="Go Back" />
       </View>
     </Linear>
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default React.memo(NotFound);

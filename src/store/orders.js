@@ -26,7 +26,7 @@ export const fetchOrders = createAsyncThunk(
         },
       });
 
-      if (status === 200) return data;
+      return data;
     } catch (err) {
       return err.response;
     } finally {
@@ -74,12 +74,13 @@ export const createOrder = createAsyncThunk(
         message: 'Update Order',
       });
 
+      dispatch(fetchOrders({ userToken, userType }));
       navigation.navigate('Tabs');
       return data;
     } catch (err) {
+      console.log(err.response.data);
       return err.response.data;
     } finally {
-      dispatch(fetchOrders({ userToken, userType }));
       dispatch(setLoading(false));
     }
   },
@@ -116,9 +117,9 @@ export const findDrivers = async ({
     if (err.response.status === 404)
       navigation.navigate('DriverList', { drivers: [] });
     console.log(err.response.data);
+  } finally {
+    dispatch(setLoading(false));
   }
-
-  dispatch(setLoading(false));
 };
 
 export const updateOrderStatus = createAsyncThunk(
@@ -151,17 +152,18 @@ export const updateOrderStatus = createAsyncThunk(
         message: 'Update Order',
       });
 
+      dispatch(fetchOrders({ userToken, userType }));
+
+      if (userType === 'driver' && orderStatus.code === 1) {
+        dispatch(fetchUser({ userToken, userType: 'driver' }));
+      }
+
       return data;
     } catch (err) {
       console.log(err.response.data);
       return err.response.data;
     } finally {
       dispatch(setLoading(false));
-      dispatch(fetchOrders({ userToken, userType }));
-
-      if (userType === 'driver' && orderStatus.code === 1) {
-        dispatch(fetchUser({ userToken, userType: 'driver' }));
-      }
     }
   },
 );
@@ -222,15 +224,21 @@ export const declineOrder = createAsyncThunk(
         },
       });
 
+      dispatch(fetchOrders({ userToken, userType: 'driver' }));
+
       socket.emit('send-message-to-user', {
         userId,
         message: 'Update Order',
+      });
+
+      socket.emit('send-message-to-user', {
+        userId,
+        message: 'Order Declined',
       });
     } catch (err) {
       return err.response.data;
     } finally {
       dispatch(setLoading(false));
-      dispatch(fetchOrders({ userToken, userType: 'driver' }));
     }
   },
 );
@@ -255,6 +263,8 @@ export const useLoadCoin = createAsyncThunk(
         },
       });
 
+      dispatch(fetchUser({ userToken, userType: 'user' }));
+
       socket.emit('send-message-to-user', {
         userId,
         message: 'Update Order',
@@ -265,7 +275,6 @@ export const useLoadCoin = createAsyncThunk(
       return err.response.data;
     } finally {
       dispatch(setLoading(false));
-      dispatch(fetchUser({ userToken, userType: 'user' }));
     }
   },
 );

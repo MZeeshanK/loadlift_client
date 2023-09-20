@@ -101,6 +101,8 @@ const OrderItem = ({ item, ...props }) => {
     );
   };
 
+  const { code } = item.order.status;
+
   return (
     <Card
       onPress={() => navigation.navigate('Order', { orderId: item?._id })}
@@ -112,11 +114,19 @@ const OrderItem = ({ item, ...props }) => {
         className="border-b-2 w-[95%] items-center justify-between flex-row py-2"
         style={{ borderColor: primary }}>
         <Title className="tracking-wider" base bold primary>
-          {props.danger
-            ? 'Cancelled By the Driver'
-            : props.ongoing
+          {code === 9
+            ? 'Cancelled By User'
+            : code === 8
+            ? 'Cancelled by Driver'
+            : code === 1 || code === 2
             ? 'In Transit'
-            : 'Completed'}
+            : code === 3
+            ? 'Delivered'
+            : code === 4
+            ? 'Completed'
+            : code === 0
+            ? 'Awaiting Acceptance'
+            : null}
         </Title>
         <Title className="tracking-wide" bold>
           {props.ongoing ? 'Ongoing' : newDate}
@@ -138,4 +148,4 @@ const styles = StyleSheet.create({
   car: { ...styleConstants.icon, marginHorizontal: 5 },
 });
 
-export default React.memo(OrderItem);
+export default OrderItem;

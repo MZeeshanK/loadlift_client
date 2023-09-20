@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
-import {Text, useColorScheme} from 'react-native';
+import React, { useState } from 'react';
+import { Text, useColorScheme } from 'react-native';
 import colors from '../../constants/colors';
 
-const Title = ({children, style, ...props}) => {
+const Title = ({ children, style, ...props }) => {
   const colorScheme = useColorScheme();
 
   const [lines, setLines] = useState(props.numberOfLines || 10);
@@ -15,7 +15,8 @@ const Title = ({children, style, ...props}) => {
 
   return (
     <Text
-      onPress={props.press && (() => setLines(10))}
+      // onPress={props.press && (() => setLines(10))}
+      onPress={props.onPress}
       numberOfLines={lines}
       className={`pt-1 text-center ${props.left && 'text-left'} ${
         props.right && 'text-right'

@@ -1,12 +1,12 @@
-import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import {setLoading} from './misc';
+import { setLoading } from './misc';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 export const fetchUser = createAsyncThunk(
   'user/fetchUser',
-  async ({userToken, userType}, {dispatch}) => {
+  async ({ userToken, userType }, { dispatch }) => {
     const url =
       userType === 'driver'
         ? `${BACKEND_URL}/api/drivers/me`
@@ -14,7 +14,7 @@ export const fetchUser = createAsyncThunk(
 
     dispatch(setLoading(true));
     try {
-      const {data} = await axios({
+      const { data } = await axios({
         method: 'GET',
         url,
         headers: {
@@ -33,11 +33,11 @@ export const fetchUser = createAsyncThunk(
 
 export const otpVerify = createAsyncThunk(
   'user/otpVerify',
-  async ({phone, otp}, {dispatch}) => {
+  async ({ phone, otp }, { dispatch }) => {
     const url = `${BACKEND_URL}/api/verify`;
     dispatch(setLoading(true));
     try {
-      const {data} = await axios.post(
+      const { data } = await axios.post(
         url,
         {
           phone,
@@ -61,12 +61,12 @@ export const otpVerify = createAsyncThunk(
 
 export const userLogin = createAsyncThunk(
   'user/userLogin',
-  async ({phone, navigation}, {dispatch}) => {
+  async ({ phone, navigation }, { dispatch }) => {
     const url = `${BACKEND_URL}/api/verify/login`;
     dispatch(setLoading(true));
 
     try {
-      const {data, status} = await axios.post(
+      const { data, status } = await axios.post(
         url,
         {
           phone,
@@ -79,13 +79,13 @@ export const userLogin = createAsyncThunk(
       );
 
       if (status === 200) {
-        navigation.navigate('OTP', {phone});
+        navigation.navigate('OTP', { phone });
         return data.type;
       }
     } catch (err) {
       console.log(err);
       if (err.response.status === 404) {
-        navigation.navigate('UserType', {phone});
+        navigation.navigate('UserType', { phone });
       }
       return err.response.data;
     } finally {
@@ -96,7 +96,7 @@ export const userLogin = createAsyncThunk(
 
 export const registerUser = createAsyncThunk(
   'user/registerUser',
-  async ({userType, inputs, phone, navigation}, {dispatch}) => {
+  async ({ userType, inputs, phone, navigation }, { dispatch }) => {
     const url =
       userType === 'driver'
         ? `${BACKEND_URL}/api/drivers/register`
@@ -113,7 +113,7 @@ export const registerUser = createAsyncThunk(
         },
       });
 
-      navigation.navigate('OTP', {phone});
+      navigation.navigate('OTP', { phone });
     } catch (err) {
       return err.response.data;
     } finally {
@@ -124,7 +124,7 @@ export const registerUser = createAsyncThunk(
 
 export const updateUser = createAsyncThunk(
   'user/updateUser',
-  async ({userType, inputs, userToken, navigation}, {dispatch}) => {
+  async ({ userType, inputs, userToken, navigation }, { dispatch }) => {
     const url =
       userType === 'driver'
         ? `${BACKEND_URL}/api/drivers/me`
@@ -133,7 +133,7 @@ export const updateUser = createAsyncThunk(
     dispatch(setLoading(true));
 
     try {
-      const {data} = await axios({
+      const { data } = await axios({
         method: 'PUT',
         url,
         data: inputs,
@@ -143,7 +143,7 @@ export const updateUser = createAsyncThunk(
         },
       });
 
-      navigation.navigate('Tabs', {screen: 'Account'});
+      navigation.navigate('Tabs', { screen: 'Account' });
       return data;
     } catch (err) {
       return err.response.data;
@@ -155,13 +155,13 @@ export const updateUser = createAsyncThunk(
 
 export const activateDriver = createAsyncThunk(
   'user/activateDriver',
-  async ({active, userToken}, {dispatch}) => {
+  async ({ active, userToken }, { dispatch }) => {
     const url = `${BACKEND_URL}/api/drivers/me/activate`;
 
     dispatch(setLoading(true));
 
     try {
-      const {data} = await axios({
+      const { data } = await axios({
         method: 'PUT',
         url,
         data: {
@@ -184,7 +184,7 @@ export const activateDriver = createAsyncThunk(
 
 export const setRate = createAsyncThunk(
   'user/setRate',
-  async ({perKmRate, userToken}, {dispatch}) => {
+  async ({ perKmRate, userToken }, { dispatch }) => {
     const url = `${BACKEND_URL}/api/drivers/me/rate`;
 
     dispatch(setLoading(true));
@@ -202,12 +202,12 @@ export const setRate = createAsyncThunk(
         },
       });
 
+      dispatch(fetchUser({ userType: 'driver', userToken }));
       return data;
     } catch (err) {
       return err.response.data;
     } finally {
       dispatch(setLoading(false));
-      dispatch(fetchUser({userType: 'driver', userToken}));
     }
   },
 );
@@ -291,6 +291,6 @@ export const userSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const {changeUserType, userLogout} = userSlice.actions;
+export const { changeUserType, userLogout } = userSlice.actions;
 
 export default userSlice.reducer;

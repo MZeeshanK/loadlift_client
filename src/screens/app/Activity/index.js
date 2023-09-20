@@ -1,18 +1,18 @@
-import React, {useEffect, useState} from 'react';
-import {View, Image, TextInput, TouchableOpacity} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Image, TextInput, TouchableOpacity } from 'react-native';
 
 import Linear from '../../../components/Linear';
 import GFlatList from '../../../components/GFlatList';
 import Card from '../../../components/Card';
 
 import colors from '../../../constants/colors';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import Title from '../../../components/Title';
 
 const Activity = () => {
   const orders = useSelector(state => state.orders.data);
-  const {type} = useSelector(state => state.user);
+  const { type } = useSelector(state => state.user);
 
   // state
   const [text, setText] = useState('');
@@ -68,13 +68,11 @@ const Activity = () => {
             <TouchableOpacity onPress={() => setText('')} className="p-3 mr-1">
               <Image
                 source={require('../../../assets/clear.png')}
-                style={{width: 10, height: 10}}
+                style={{ width: 10, height: 10 }}
               />
             </TouchableOpacity>
           )}
         </View>
-
-        {/* Filter Button */}
       </Card>
 
       {/* List */}

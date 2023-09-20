@@ -1,23 +1,16 @@
-import {createSlice} from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 export const miscSlice = createSlice({
   name: 'user',
+
   initialState: {
     loading: false,
-    error: {
-      message: '',
-      visible: false,
-    },
-    modalError: {
-      message: '',
-      visible: false,
-      modal: false,
-    },
     popUp: {
-      visible: false,
       message: '',
+      display: false,
     },
   },
+
   reducers: {
     setLoading: (state, action) => {
       state.loading = action.payload;
@@ -25,40 +18,18 @@ export const miscSlice = createSlice({
     resetLoading: state => {
       state.loading = false;
     },
-    setError: (state, action) => {
-      state.error = {
-        message: action.payload,
-        visible: true,
-      };
-    },
-    removeError: state => {
-      state.error = {
-        message: '',
-        visible: false,
-      };
-    },
     setPopUp: (state, action) => {
-      state.popUp = {
-        message: action.payload,
-        visible: true,
-      };
+      state.popUp.message = action.payload.message;
+      state.popUp.display = true;
     },
     removePopUp: state => {
-      state.popUp = {
-        message: '',
-        visible: false,
-      };
+      state.popUp.message = '';
+      state.popUp.display = false;
     },
   },
 });
 
-export const {
-  setLoading,
-  resetLoading,
-  setError,
-  removeError,
-  setPopUp,
-  removePopUp,
-} = miscSlice.actions;
+export const { setLoading, resetLoading, setPopUp, removePopUp } =
+  miscSlice.actions;
 
 export default miscSlice.reducer;

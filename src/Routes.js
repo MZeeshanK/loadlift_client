@@ -48,7 +48,7 @@ import Title from './components/Title';
 
 // Redux Imports
 import { useDispatch, useSelector } from 'react-redux';
-import { setLoading } from './store/misc';
+import { removePopUp, setLoading, setPopUp } from './store/misc';
 import { fetchUser } from './store/user';
 import { fetchOrders } from './store/orders';
 
@@ -72,7 +72,7 @@ function Routes() {
     token: userToken,
     data: userData,
   } = useSelector(state => state.user);
-  const { loading } = useSelector(state => state.misc);
+  const { loading, popUp } = useSelector(state => state.misc);
 
   const onBackPress = () => {
     dispatch(setLoading(false));
@@ -80,13 +80,17 @@ function Routes() {
 
   const config = { userToken, userType };
 
-  socket.emit('user-connected', userData._id);
+  if (userData._id) {
+    socket.emit('user-connected', userData._id);
 
-  socket.on('new-message', message => {
-    if (message === 'Update Order') {
-      dispatch(fetchOrders(config));
-    }
-  });
+    socket.on('new-message', message => {
+      if (message === 'Update Order') dispatch(fetchOrders(config));
+
+      if (message === 'Order Declined') {
+        dispatch(setPopUp({ message: 'Order Declined' }));
+      }
+    });
+  }
 
   useEffect(() => {
     if (userType) {
@@ -99,6 +103,12 @@ function Routes() {
     setTimeout(() => {
       dispatch(setLoading(false));
     }, 15000);
+  }
+
+  if (popUp.display) {
+    setTimeout(() => {
+      dispatch(removePopUp());
+    }, 5000);
   }
 
   BackHandler.addEventListener('hardwareBackPress', onBackPress);

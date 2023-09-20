@@ -317,7 +317,7 @@ const Order = ({ route }) => {
           {userType === 'user' &&
             userData.loadCoin > 999 &&
             order.status.code < 4 &&
-            order.status.code > 1 && (
+            order.status.code >= 1 && (
               <Card className="mt-0">
                 <Button
                   className="w-full"
@@ -327,7 +327,7 @@ const Order = ({ route }) => {
                       useLoadCoin({
                         orderId,
                         userToken,
-                        userId: userData?._id,
+                        userId: driver._id,
                       }),
                     )
                   }
@@ -353,7 +353,7 @@ const Order = ({ route }) => {
                           userId: user?._id,
                           driverId: driver?._id,
                           orderStatus: {
-                            code: userType === 'driver' ? 0 : 9,
+                            code: userType === 'driver' ? 8 : 9,
                             message:
                               userType === 'driver'
                                 ? 'Cancelled By Driver'

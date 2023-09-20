@@ -21,7 +21,11 @@ import Title from '../../../components/Title';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { createOrder } from '../../../store/orders';
-import { getOrderMetrics } from '../../../data/functions';
+// import { getOrderMetrics } from '../../../data/functions';
+import axios from 'axios';
+
+const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API;
+const API_URL = 'https://maps.googleapis.com/maps/api/directions/json';
 
 const DriverList = ({ route }) => {
   const { drivers } = route.params;
@@ -32,24 +36,56 @@ const DriverList = ({ route }) => {
   const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
   const ongoing = colorScheme === 'dark' ? colors.ongoing : colors.lightOngoing;
 
-  const [driver, setDriver] = useState({});
+  const [driver, setDriver] = useState(null);
   const [isMount, setIsMount] = useState(false);
   const [orderMetrics, setOrderMetrics] = useState(null);
+  const [isMetrics, setIsMetrics] = useState(false);
 
   const { token: userToken, type: userType } = useSelector(state => state.user);
   const { origin, destination } = useSelector(state => state.map);
 
-  useEffect(() => {
-    getOrderMetrics({ origin, destination }, setOrderMetrics);
-  }, []);
+  const getOrderMetrics = async ({ origin, destination }) => {
+    const params = {
+      origin: `${origin?.lat} ${origin?.lng}`,
+      destination: `${destination?.lat} ${destination?.lng}`,
+      key: API_KEY,
+      departure_time: 'now', // You can also specify a specific time
+      traffic_model: 'pessimistic', // Or 'optimistic', or '
+    };
+
+    try {
+      const { data } = await axios({
+        method: 'GET',
+        url: API_URL,
+        params,
+      });
+      const routes = data.routes;
+      if (routes.length > 0) {
+        const legs = routes[0].legs;
+        if (legs.length > 0) {
+          const distance = legs[0].distance.value / 1000;
+          const duration = legs[0].duration.value / 60;
+
+          setOrderMetrics({
+            distance,
+            duration,
+          });
+          setIsMetrics(true);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
+    getOrderMetrics({ origin, destination });
     if (isMount) {
       if (driver) {
         dispatch(
           createOrder({
             userToken,
-            transitDistance: orderMetrics?.distance,
+            transitDistance: orderMetrics.distance,
             origin,
             destination,
             driverId: driver?._id,
@@ -222,6 +258,7 @@ const DriverList = ({ route }) => {
         </View>
         <Button
           title="Book Vehicle"
+          isDisabled={!isMetrics || !driver}
           style={{ marginVertical: 15 }}
           onPress={() => setIsMount(true)}
         />
