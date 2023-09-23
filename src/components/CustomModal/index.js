@@ -1,19 +1,11 @@
 import React from 'react';
-import {Modal, Dimensions, Pressable} from 'react-native';
+import { Modal, Dimensions, Pressable } from 'react-native';
 
 import Card from '../Card';
-import {useSelector} from 'react-redux';
-import Alert from '../Alert';
 
-const {height} = Dimensions.get('window');
+const { height } = Dimensions.get('window');
 
-const CustomModal = ({children, visible, setVisible, style, ...props}) => {
-  const {
-    message: error,
-    visible: errorVisible,
-    modal,
-  } = useSelector(state => state.misc.modalError);
-
+const CustomModal = ({ children, visible, setVisible, style, ...props }) => {
   return (
     <Modal
       onRequestClose={() => setVisible(false)}
@@ -23,11 +15,8 @@ const CustomModal = ({children, visible, setVisible, style, ...props}) => {
       <Pressable
         onPress={!props.block ? () => setVisible(false) : () => {}}
         className="items-center justify-center px-5"
-        style={[{height: height, backgroundColor: 'rgba(0,0,0,.6)'}, style]}>
-        <Card style={props.style}>
-          <Alert message={error} visible={errorVisible} modal={modal} />
-          {children}
-        </Card>
+        style={[{ height: height, backgroundColor: 'rgba(0,0,0,.6)' }, style]}>
+        <Card style={props.style}>{children}</Card>
       </Pressable>
     </Modal>
   );

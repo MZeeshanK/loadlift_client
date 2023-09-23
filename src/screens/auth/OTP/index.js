@@ -1,18 +1,18 @@
-import React, {useEffect, useState} from 'react';
-import {Pressable, TouchableOpacity, View} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import { Pressable, TouchableOpacity, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 import Linear from '../../../components/Linear';
 import Header from '../../../components/Header';
-import Input from '../../../components/Input';
 import Button from '../../../components/Button';
 import TextLabel from '../../../components/TextLabel';
 import Title from '../../../components/Title';
 
-import {useDispatch} from 'react-redux';
-import {otpVerify} from '../../../store/user';
+import { useDispatch } from 'react-redux';
+import { otpVerify } from '../../../store/user';
+import MonoInput from '../../../components/MonoInput';
 
-const OTP = ({route}) => {
+const OTP = ({ route }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
@@ -20,7 +20,7 @@ const OTP = ({route}) => {
   const [otp, setOtp] = useState('');
   const [isMount, setIsMount] = useState(false);
 
-  const {phone} = route?.params;
+  const { phone } = route?.params;
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -31,24 +31,30 @@ const OTP = ({route}) => {
 
   useEffect(() => {
     if (isMount) {
-      dispatch(otpVerify({phone, otp}));
+      dispatch(otpVerify({ phone, otp }));
       setIsMount(false);
     }
   }, [isMount]);
 
   return (
-    <Linear style={{justifyContent: 'flex-start'}}>
+    <Linear style={{ justifyContent: 'flex-start' }}>
       {/* <Alert visible={modal} /> */}
       <Header title="Login" />
 
       <View className="w-full items-center justify-between flex-1 my-10">
         <View className="w-full items-center justify-between ">
-          <Input isDisabled phone placeholder={phone} />
+          <MonoInput
+            isDisabled
+            style={{ marginTop: 5 }}
+            phone
+            placeholder={phone}
+          />
 
           <TextLabel title="Please Enter the 6 digit OTP" />
 
-          <Input
+          <MonoInput
             value={otp}
+            style={{ marginTop: 15 }}
             onChangeText={setOtp}
             placeholder="XXXXXX"
             keyboardType="numeric"
@@ -63,7 +69,7 @@ const OTP = ({route}) => {
               <Pressable
                 onPress={() => {
                   setTimer(3);
-                  navigation.navigate('OTP', {phone});
+                  navigation.navigate('OTP', { phone });
                 }}>
                 <Title bold primary sm left>
                   Resend OTP

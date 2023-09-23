@@ -52,7 +52,7 @@ const Booking = () => {
 
   useEffect(() => {
     if (isMount) {
-      findDrivers({ origin, navigation, typeOfVehicle, dispatch });
+      findDrivers({ origin, navigation, typeOfVehicle });
       setIsMount(false);
     }
   }, [isMount]);
@@ -79,83 +79,80 @@ const Booking = () => {
     </Pressable>
   );
 
-  const VehicleCard = () => {
-    return (
-      <Card className="w-full mb-5 py-2 flex-1">
-        <Title primary xxl bold className="pb-2">
-          Categories
-        </Title>
-        <FlatList
-          className="w-full"
-          showsVerticalScrollIndicator={false}
-          data={categories}
-          keyExtractor={item => item?.id}
-          renderItem={({ item, index }) => {
-            const icon = colorScheme === 'dark' ? item?.icon : item?.darkIcon;
-            const darkIcon =
-              colorScheme === 'dark' ? item?.darkIcon : item?.icon;
+  const VehicleCard = () => (
+    <Card className="w-full mb-5 py-2 flex-1">
+      <Title primary xxl bold className="pb-2">
+        Categories
+      </Title>
+      <FlatList
+        className="w-full"
+        showsVerticalScrollIndicator={false}
+        data={categories}
+        keyExtractor={item => item?.id}
+        renderItem={({ item, index }) => {
+          const icon = colorScheme === 'dark' ? item?.icon : item?.darkIcon;
+          const darkIcon = colorScheme === 'dark' ? item?.darkIcon : item?.icon;
 
-            return (
-              <Card
-                onPress={() => {
-                  setVehicle(item);
-                }}
-                style={[
-                  {
-                    backgroundColor: vehicle === item ? primary : ongoing,
-                    width: '100%',
-                    flexDirection: 'row',
-                  },
-                  index === categories.length - 1 && { marginBottom: 50 },
-                ]}>
-                <View
-                  className={`border-r-2 pr-3 h-12 items-center justify-center ${
-                    vehicle === item && 'border-black'
-                  }`}
-                  style={
-                    vehicle === item && colorScheme === 'dark'
-                      ? { borderColor: colors.black }
-                      : vehicle === item && colorScheme !== 'dark'
-                      ? {
-                          borderColor: colors.white,
-                        }
-                      : vehicle !== item && colorScheme === 'dark'
-                      ? {
-                          borderColor: colors.white,
-                        }
-                      : {
-                          borderColor: colors.black,
-                        }
-                  }>
-                  <Image
-                    source={vehicle === item ? darkIcon : icon}
-                    style={styles.icon}
-                  />
-                </View>
-                <View className="flex-row flex-1 px-2 items-center justify-between">
-                  <Title base bold black={vehicle === item}>
-                    {item?.title}
-                  </Title>
-                  <View className="items-start justify-center px-2">
-                    <Title
-                      className="tracking-tighter"
-                      xsm
-                      bold
-                      black={vehicle === item}>
-                      Max Capacity:{' '}
-                      <Title xsm medium black={vehicle === item}>
-                        {item?.weight}T
-                      </Title>
+          return (
+            <Card
+              onPress={() => {
+                setVehicle(item);
+              }}
+              style={[
+                {
+                  backgroundColor: vehicle === item ? primary : ongoing,
+                  width: '100%',
+                  flexDirection: 'row',
+                },
+                index === categories.length - 1 && { marginBottom: 50 },
+              ]}>
+              <View
+                className={`border-r-2 pr-3 h-12 items-center justify-center ${
+                  vehicle === item && 'border-black'
+                }`}
+                style={
+                  vehicle === item && colorScheme === 'dark'
+                    ? { borderColor: colors.black }
+                    : vehicle === item && colorScheme !== 'dark'
+                    ? {
+                        borderColor: colors.white,
+                      }
+                    : vehicle !== item && colorScheme === 'dark'
+                    ? {
+                        borderColor: colors.white,
+                      }
+                    : {
+                        borderColor: colors.black,
+                      }
+                }>
+                <Image
+                  source={vehicle === item ? darkIcon : icon}
+                  style={styles.icon}
+                />
+              </View>
+              <View className="flex-row flex-1 px-2 items-center justify-between">
+                <Title base bold black={vehicle === item}>
+                  {item?.title}
+                </Title>
+                <View className="items-start justify-center px-2">
+                  <Title
+                    className="tracking-tighter"
+                    xsm
+                    bold
+                    black={vehicle === item}>
+                    Max Capacity:{' '}
+                    <Title xsm medium black={vehicle === item}>
+                      {item?.weight}T
                     </Title>
-                  </View>
+                  </Title>
                 </View>
-              </Card>
-            );
-          }}
-        />
-      </Card>
-    );
-  };
+              </View>
+            </Card>
+          );
+        }}
+      />
+    </Card>
+  );
 
   return (
     <Linear>
@@ -203,9 +200,7 @@ const Booking = () => {
             />
           </>
         ) : (
-          <>
-            <VehicleCard />
-          </>
+          <VehicleCard />
         )}
       </View>
       <Button

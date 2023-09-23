@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, View, useColorScheme } from 'react-native';
+import { Animated, useColorScheme } from 'react-native';
 
 import Title from '../Title';
 import { useSelector } from 'react-redux';
@@ -8,6 +8,7 @@ import colors from '../../constants/colors';
 const PopUp = () => {
   const colorScheme = useColorScheme();
   const { message } = useSelector(state => state.misc.popUp);
+  // const message = 'Hello World Today!';
 
   const ongoing = colorScheme === 'dark' ? colors.ongoing : colors.lightOngoing;
   const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;

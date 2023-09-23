@@ -4,6 +4,7 @@ import { setLoading } from './misc';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
+// Fetching the user details using the token
 export const fetchUser = createAsyncThunk(
   'user/fetchUser',
   async ({ userToken, userType }, { dispatch }) => {
@@ -24,7 +25,7 @@ export const fetchUser = createAsyncThunk(
 
       return data;
     } catch (err) {
-      return err.response;
+      console.log(err);
     } finally {
       dispatch(setLoading(false));
     }
@@ -33,32 +34,35 @@ export const fetchUser = createAsyncThunk(
 
 export const otpVerify = createAsyncThunk(
   'user/otpVerify',
-  async ({ phone, otp }, { dispatch }) => {
+  async ({ phone, otp, userType }, { dispatch }) => {
     const url = `${BACKEND_URL}/api/verify`;
     dispatch(setLoading(true));
     try {
-      const { data } = await axios.post(
+      const { data } = await axios({
+        method: 'POST',
         url,
-        {
+        data: {
           phone,
           verificationCode: otp,
         },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
+        headers: {
+          'Content-Type': 'application/json',
         },
-      );
+      });
+
+      dispatch(fetchUser({ userType, userToken: data.token }));
 
       return data.token;
     } catch (err) {
-      return err.response.data;
+      console.log('error', err.response.data);
+      // return err.response.data;
     } finally {
       dispatch(setLoading(false));
     }
   },
 );
 
+// User login for getting the type and sending the OTP
 export const userLogin = createAsyncThunk(
   'user/userLogin',
   async ({ phone, navigation }, { dispatch }) => {
@@ -94,28 +98,64 @@ export const userLogin = createAsyncThunk(
   },
 );
 
+// Register User for sending otp
+// export const registerUser = createAsyncThunk(
+//   'user/registerUser',
+//   async ({ userType, inputs, navigation }, { dispatch }) => {
+//     const url =
+//       userType === 'driver'
+//         ? `${BACKEND_URL}/api/drivers/register`
+//         : `${BACKEND_URL}/api/users/register`;
+
+//     dispatch(setLoading(true));
+
+//     try {
+//       const { data } = await axios({
+//         method: 'POST',
+//         url,
+//         data: { ...inputs },
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//       });
+
+//       console.log('data => ', data);
+
+//       navigation.navigate('Login', { phone: inputs.phone });
+//     } catch (err) {
+//       console.log('error', err.response.data);
+//       // return err.response.data;
+//     } finally {
+//       dispatch(setLoading(false));
+//     }
+//   },
+// );
+
 export const registerUser = createAsyncThunk(
   'user/registerUser',
-  async ({ userType, inputs, phone, navigation }, { dispatch }) => {
+  async ({ userType, inputs, navigation }, { dispatch }) => {
     const url =
       userType === 'driver'
         ? `${BACKEND_URL}/api/drivers/register`
-        : `${BACKEND_URL}/api/drivers/register`;
+        : `${BACKEND_URL}/api/users/register`;
+
     dispatch(setLoading(true));
 
     try {
       await axios({
         method: 'POST',
         url,
-        data: inputs,
+        data: {
+          ...inputs,
+        },
         headers: {
           'Content-Type': 'application/json',
         },
       });
 
-      navigation.navigate('OTP', { phone });
-    } catch (err) {
-      return err.response.data;
+      navigation.navigate('Login', { registerPhone: inputs.phone });
+    } catch (error) {
+      console.log(error.response.data);
     } finally {
       dispatch(setLoading(false));
     }
@@ -203,6 +243,12 @@ export const setRate = createAsyncThunk(
       });
 
       dispatch(fetchUser({ userType: 'driver', userToken }));
+
+      socket.emit('send-message-to-user', {
+        userId,
+        message: 'Set Rate',
+      });
+
       return data;
     } catch (err) {
       return err.response.data;
@@ -259,7 +305,6 @@ export const userSlice = createSlice({
     });
 
     // register
-    builder.addCase(registerUser.fulfilled, state => {});
     builder.addCase(registerUser.rejected, (state, action) => {
       state.error = action.error.message;
     });

@@ -32,7 +32,6 @@ import Account from './screens/app/Account';
 import Booking from './screens/app/Booking';
 import Order from './screens/app/Order';
 import Profile from './screens/app/Profile';
-import SwitchDetails from './screens/app/SwitchDetails';
 import PaymentMethod from './screens/app/PaymentMethod';
 import Map from './screens/app/Map';
 import Call from './screens/app/Call';
@@ -52,7 +51,10 @@ import { removePopUp, setLoading, setPopUp } from './store/misc';
 import { fetchUser } from './store/user';
 import { fetchOrders } from './store/orders';
 
+import Geolocation from '@react-native-community/geolocation';
 import { io } from 'socket.io-client';
+import { setDestination, setOrigin, setWork } from './store/map';
+import { geolocationService, getDriverLocation } from './data/functions';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -71,6 +73,7 @@ function Routes() {
     type: userType,
     token: userToken,
     data: userData,
+    data: { active },
   } = useSelector(state => state.user);
   const { loading, popUp } = useSelector(state => state.misc);
 
@@ -80,7 +83,7 @@ function Routes() {
 
   const config = { userToken, userType };
 
-  if (userData._id) {
+  if (userData) {
     socket.emit('user-connected', userData._id);
 
     socket.on('new-message', message => {
@@ -89,11 +92,26 @@ function Routes() {
       if (message === 'Order Declined') {
         dispatch(setPopUp({ message: 'Order Declined' }));
       }
+
+      switch (message) {
+        case 'Update Order':
+          dispatch(fetchOrders(config));
+        case 'Order Declined':
+          dispatch(setPopUp({ message }));
+        case 'Set Rate':
+          dispatch(setPopUp({ message: 'Rate Set Succussfully!' }));
+        default:
+          break;
+      }
+
+      if (message === '') {
+        dispatch(setPopUp({ message: 'Order Declined' }));
+      }
     });
   }
 
   useEffect(() => {
-    if (userType) {
+    if (userType && userToken) {
       dispatch(fetchUser(config));
       dispatch(fetchOrders(config));
     }
@@ -206,6 +224,16 @@ function Routes() {
 
   // App Screen Navigator Configuration
   const AppScreens = () => {
+    // Calling the location update on the driver end after every 30s whenever the driver has activated to be visible to the users.
+    useEffect(() => {
+      if (userType === 'driver') {
+        const locationInterval = setInterval(() => {
+          if (active) geolocationService(userToken);
+          else clearInterval(locationInterval);
+        }, 30000);
+      }
+    }, [active]);
+
     return (
       <Stack.Navigator
         screenOptions={{
@@ -218,7 +246,6 @@ function Routes() {
         <Stack.Screen name="Order" component={Order} />
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="PaymentMethod" component={PaymentMethod} />
-        <Stack.Screen name="SwitchDetails" component={SwitchDetails} />
         <Stack.Screen name="Map" component={Map} />
         <Stack.Screen name="DriverList" component={DriverList} />
         <Stack.Screen name="PaymentDone" component={PaymentDone} />
@@ -257,4 +284,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default React.memo(Routes);
+export default Routes;

@@ -38,12 +38,16 @@ const Map = ({ route }) => {
   const navigation = useNavigation();
 
   const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
+
   // redux states
   const { home, work, origin, destination } = useSelector(state => state.map);
 
   // states
   const [expanded, setExpanded] = useState(true);
   const [animate, setAnimate] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalState, setModalState] = useState('default');
+  const [isLocationMount, setIsLocationMount] = useState(false);
 
   const [center, setCenter] = useState(
     location
@@ -56,9 +60,6 @@ const Map = ({ route }) => {
           lng: home?.lng,
         },
   );
-
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalState, setModalState] = useState('default');
 
   const delta = {
     latitudeDelta: 0.01,
@@ -80,7 +81,6 @@ const Map = ({ route }) => {
     }
   }, [animate]);
 
-  const [isLocationMount, setIsLocationMount] = useState(false);
   // geolocation
   useEffect(() => {
     if (isLocationMount) {
@@ -99,7 +99,6 @@ const Map = ({ route }) => {
         { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
       );
 
-      // setCenter(currentLocation);
       setIsLocationMount(false);
     }
   }, [isLocationMount]);

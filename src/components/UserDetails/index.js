@@ -1,5 +1,5 @@
-import React, {useEffect, useState, useRef} from 'react';
-import {View, StyleSheet, ScrollView, FlatList, Image} from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { View, StyleSheet, ScrollView, FlatList, Image } from 'react-native';
 import TextLabel from '../TextLabel';
 import Input from '../Input';
 import Card from '../Card';
@@ -8,11 +8,11 @@ import categories from '../../data/categories';
 import Title from '../Title';
 import Button from '../Button';
 
-import {useNavigation} from '@react-navigation/native';
-import {useSelector, useDispatch} from 'react-redux';
-import {registerUser, updateUser} from '../../store/user';
+import { useNavigation } from '@react-navigation/native';
+import { useSelector, useDispatch } from 'react-redux';
+import { registerUser, updateUser } from '../../store/user';
 
-const UserDetails = ({phoneNumber, info}) => {
+const UserDetails = ({ phoneNumber, info }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
@@ -46,7 +46,7 @@ const UserDetails = ({phoneNumber, info}) => {
     firstName,
     lastName,
     vehicleNumber,
-    typeOfVehilce: category?.title,
+    typeOfVehicle: category?.value,
   };
 
   const inputs = userType === 'driver' ? driverInputs : userInputs;
@@ -54,11 +54,11 @@ const UserDetails = ({phoneNumber, info}) => {
   useEffect(() => {
     if (isMount) {
       if (info === 'create') {
-        dispatch(registerUser({userType, inputs, phone, navigation}));
+        dispatch(registerUser({ userType, inputs, navigation }));
       }
-      if (info === 'profile') {
-        dispatch(updateUser({userType, inputs, userToken, navigation}));
-      }
+
+      if (info === 'profile')
+        dispatch(updateUser({ userType, inputs, userToken, navigation }));
 
       setIsMount(false);
     }
@@ -129,14 +129,14 @@ const UserDetails = ({phoneNumber, info}) => {
                 showsHorizontalScrollIndicator={false}
                 data={categories}
                 keyExtractor={item => item?.id}
-                renderItem={({item, index}) => (
+                renderItem={({ item, index }) => (
                   <Card
                     ongoing
                     border
                     style={[
                       styles.cardButton,
-                      category === item && {backgroundColor: colors.primary},
-                      index === categories.length - 1 && {marginRight: 30},
+                      category === item && { backgroundColor: colors.primary },
+                      index === categories.length - 1 && { marginRight: 30 },
                     ]}
                     onPress={() => setCategory(item)}>
                     {item?.icon && item?.darkIcon ? (

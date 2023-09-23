@@ -1,9 +1,11 @@
+import Geolocation from '@react-native-community/geolocation';
 import axios from 'axios';
 import moment from 'moment';
 import { Linking } from 'react-native';
 
 const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API;
 const API_URL = 'https://maps.googleapis.com/maps/api/directions/json';
+const BACKEND_URl = process.env.REACT_APP_BACKEND_URL;
 
 export const formattedDate = date => {
   const now = moment();
@@ -65,4 +67,42 @@ export const getOrderMetrics = async (
   } catch (error) {
     console.log(error);
   }
+};
+
+export const getDriverLocation = async (location, userToken) => {
+  const url = `${BACKEND_URl}/api/drivers/me/location`;
+
+  try {
+    const { data } = await axios({
+      method: 'PUT',
+      url,
+      data: {
+        location,
+      },
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+      },
+    });
+  } catch (err) {
+    console.log(err.response.data);
+  }
+};
+
+export const geolocationService = userToken => {
+  Geolocation.getCurrentPosition(
+    position => {
+      const { latitude, longitude } = position.coords;
+
+      const location = {
+        lat: latitude,
+        lng: longitude,
+      };
+
+      getDriverLocation(location, userToken);
+    },
+    error => {
+      console.warn(error.message);
+    },
+    { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
+  );
 };
