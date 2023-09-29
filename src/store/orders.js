@@ -18,7 +18,7 @@ export const fetchOrders = createAsyncThunk(
     dispatch(setLoading(true));
 
     try {
-      const { data, status } = await axios({
+      const { data } = await axios({
         method: 'GET',
         url,
         headers: {
@@ -85,42 +85,6 @@ export const createOrder = createAsyncThunk(
     }
   },
 );
-
-export const findDrivers = async ({
-  origin,
-  navigation,
-  typeOfVehicle,
-  dispatch,
-}) => {
-  const url = `${BACKEND_URL}/api/order/nearby`;
-
-  const { lat, lng } = origin;
-
-  dispatch(setLoading(true));
-
-  try {
-    const { data } = await axios({
-      method: 'GET',
-      url,
-      params: {
-        latitude: lat,
-        longitude: lng,
-        typeOfVehicle,
-      },
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    navigation.navigate('DriverList', { drivers: data });
-  } catch (err) {
-    if (err.response.status === 404)
-      navigation.navigate('DriverList', { drivers: [] });
-    console.log(err.response.data);
-  } finally {
-    dispatch(setLoading(false));
-  }
-};
 
 export const updateOrderStatus = createAsyncThunk(
   'orders/updateOrderStatus',

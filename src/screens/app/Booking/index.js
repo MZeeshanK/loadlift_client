@@ -20,11 +20,14 @@ import colors from '../../../constants/colors';
 import { useDispatch, useSelector } from 'react-redux';
 import TextLabel from '../../../components/TextLabel';
 import { useNavigation } from '@react-navigation/native';
-import { findDrivers } from '../../../store/orders';
+import { setLoading } from '../../../store/misc';
+import axios from 'axios';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const Booking = () => {
-  const colorScheme = useColorScheme();
   const dispatch = useDispatch();
+  const colorScheme = useColorScheme();
   const navigation = useNavigation();
 
   const { origin, destination } = useSelector(state => state.map);
@@ -50,9 +53,38 @@ const Booking = () => {
     typeOfVehicle = vehicle.value;
   }
 
+  const findDrivers = async () => {
+    const url = `${BACKEND_URL}/api/order/nearby`;
+
+    dispatch(setLoading(true));
+    try {
+      const { data } = await axios({
+        method: 'GET',
+        url,
+        params: {
+          latitude: origin.lat,
+          longitude: origin.lng,
+          typeOfVehicle,
+        },
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      navigation.navigate('DriverList', { drivers: data });
+    } catch (err) {
+      if (err.response.status)
+        navigation.navigate('DriverList', { drivers: [] });
+
+      console.log(err.response.data);
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+
   useEffect(() => {
     if (isMount) {
-      findDrivers({ origin, navigation, typeOfVehicle });
+      findDrivers();
       setIsMount(false);
     }
   }, [isMount]);

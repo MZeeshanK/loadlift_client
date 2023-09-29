@@ -1,4 +1,4 @@
-import Geolocation from '@react-native-community/geolocation';
+import Geolocation from 'react-native-geolocation-service';
 import axios from 'axios';
 import moment from 'moment';
 import { Linking } from 'react-native';
@@ -73,7 +73,7 @@ export const getDriverLocation = async (location, userToken) => {
   const url = `${BACKEND_URl}/api/drivers/me/location`;
 
   try {
-    const { data } = await axios({
+    await axios({
       method: 'PUT',
       url,
       data: {

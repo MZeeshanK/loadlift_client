@@ -25,7 +25,7 @@ export const fetchUser = createAsyncThunk(
 
       return data;
     } catch (err) {
-      console.log(err);
+      console.log(err.response.data);
     } finally {
       dispatch(setLoading(false));
     }

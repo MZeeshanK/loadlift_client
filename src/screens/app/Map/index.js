@@ -21,7 +21,7 @@ import Linear from '../../../components/Linear';
 import CustomModal from '../../../components/CustomModal';
 import Input from '../../../components/Input';
 import TextLabel from '../../../components/TextLabel';
-import Geolocation from '@react-native-community/geolocation';
+import Geolocation from 'react-native-geolocation-service';
 
 import MapViewDirections from 'react-native-maps-directions';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
@@ -96,12 +96,26 @@ const Map = ({ route }) => {
         error => {
           console.warn(error.message);
         },
-        { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
+        { enableHighAccuracy: true, timeout: 200000, maximumAge: 1000 },
       );
 
       setIsLocationMount(false);
     }
   }, [isLocationMount]);
+
+  // useEffect(() => {
+  //   Geolocation.getCurrentPosition(
+  //     position => {
+  //       const { latitude, longitude } = position.coords;
+
+  //       console.log(latitude, longitude);
+  //     },
+  //     error => {
+  //       console.warn(error.message);
+  //     },
+  //     { enableHighAccuracy: true },
+  //   );
+  // }, []);
 
   // Google directions api for calculating distance and time between origin and destination
 

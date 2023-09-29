@@ -51,10 +51,8 @@ import { removePopUp, setLoading, setPopUp } from './store/misc';
 import { fetchUser } from './store/user';
 import { fetchOrders } from './store/orders';
 
-import Geolocation from '@react-native-community/geolocation';
 import { io } from 'socket.io-client';
-import { setDestination, setOrigin, setWork } from './store/map';
-import { geolocationService, getDriverLocation } from './data/functions';
+import { geolocationService } from './data/functions';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -73,9 +71,9 @@ function Routes() {
     type: userType,
     token: userToken,
     data: userData,
-    data: { active },
   } = useSelector(state => state.user);
   const { loading, popUp } = useSelector(state => state.misc);
+  const active = userData && userData.active;
 
   const onBackPress = () => {
     dispatch(setLoading(false));
@@ -109,13 +107,6 @@ function Routes() {
       }
     });
   }
-
-  useEffect(() => {
-    if (userType && userToken) {
-      dispatch(fetchUser(config));
-      dispatch(fetchOrders(config));
-    }
-  }, [dispatch]);
 
   if (loading) {
     setTimeout(() => {
@@ -233,6 +224,13 @@ function Routes() {
         }, 30000);
       }
     }, [active]);
+
+    useEffect(() => {
+      if (userType && userToken) {
+        // dispatch(fetchUser(config));
+        // dispatch(fetchOrders(config));
+      }
+    }, [dispatch]);
 
     return (
       <Stack.Navigator

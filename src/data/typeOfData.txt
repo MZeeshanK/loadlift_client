@@ -1,3 +1,0 @@
-types of status: notAccepted, pending(driver has not reached initial destination), intransit (driver has started delivering), Requested payment(driver has reached the final destination and has requested payment) , completed(all requrired tasks has been completed), cancelledByDriver(the delivery has been cancelled by the driver), cancelledbyuser(the delivery has been cancelled by the user)
-
-* NOTE: Either driver or the user cant cancelled while the delivery is in transit
