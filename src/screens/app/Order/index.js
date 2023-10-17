@@ -19,6 +19,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  codOpt,
   getSingleOrder,
   updateOrderStatus,
   useLoadCoin,
@@ -39,6 +40,8 @@ const Order = ({ route }) => {
   // Local States
   const [pickUpModalVisible, setPickUpModalVisible] = useState(false);
   const [deliveredModalVisible, setDeliveredModalVisible] = useState(false);
+  const [paymentModal, setPaymentModal] = useState(false);
+  const [codModal, setCodModal] = useState(false);
 
   // redux states
   const myOrder = useSelector(state => getSingleOrder(state, orderId));
@@ -81,6 +84,7 @@ const Order = ({ route }) => {
     RazorpayCheckout.open(options)
       .then(data => {
         // handle success
+
         dispatch(
           updateOrderStatus({
             userType,
@@ -129,6 +133,62 @@ const Order = ({ route }) => {
         <View className="w-full flex-row items-center justify-between">
           <Button onPress={() => onPress(false)} title="No" danger half />
           <Button onPress={() => onPress(true)} title="Yes" half />
+        </View>
+      </CustomModal>
+    );
+  };
+
+  const PaymentModal = () => {
+    return (
+      <CustomModal visible={paymentModal} setVisible={setPaymentModal}>
+        <Title bold xxl className="tracking-tighter mb-4">
+          Choose an Options from below
+        </Title>
+        <View className="w-full flex-row items-center justify-between">
+          <Button
+            onPress={() =>
+              dispatch(
+                codOpt({ orderId, userId: driver._id, cod: true, userToken }),
+              )
+            }
+            title="Cash On Delivery"
+            card
+            half
+          />
+          <Button onPress={() => handlePayment()} title="Pay Online" half />
+        </View>
+      </CustomModal>
+    );
+  };
+
+  const CashOnDeliveryModal = () => {
+    return (
+      <CustomModal visible={codModal} setVisible={setCodModal}>
+        <Title bold xxl className="tracking-tighter mb-4">
+          Are You sure?
+        </Title>
+        <View className="w-full flex-row items-center justify-between">
+          <Button onPress={() => setCodModal(false)} title="No" danger half />
+          <Button
+            onPress={() => {
+              dispatch(
+                updateOrderStatus({
+                  userType,
+                  userId: user?._id,
+                  driverId: driver?._id,
+                  orderStatus: {
+                    code: 4,
+                    message: 'Completed',
+                  },
+                  orderId,
+                  userToken,
+                }),
+              );
+              setCodModal(false);
+            }}
+            title="Yes"
+            half
+          />
         </View>
       </CustomModal>
     );
@@ -183,6 +243,8 @@ const Order = ({ route }) => {
       <View className="flex-1 w-full -mt-5">
         <PickUpModal />
         <DeliveredModal />
+        <PaymentModal />
+        <CashOnDeliveryModal />
 
         <View className="flex-row items-center justify-between">
           {userType === 'driver' ? (
@@ -335,6 +397,16 @@ const Order = ({ route }) => {
               </Card>
             )}
 
+          {userType === 'driver' && order.cod && order?.status.code === 3 && (
+            <Card className="mt-0">
+              <Button
+                className="w-full"
+                title="Confirm Cash On Delivery Payment"
+                onPress={() => setCodModal(true)}
+              />
+            </Card>
+          )}
+
           {order?.status?.code !== 4 &&
           order?.status?.code !== 8 &&
           order?.status?.code !== 9 ? (
@@ -384,7 +456,7 @@ const Order = ({ route }) => {
                   <Button
                     title="Pay" // console.log(driver);
                     half
-                    onPress={() => handlePayment()}
+                    onPress={() => setPaymentModal(true)}
                   />
                 )}
               </View>

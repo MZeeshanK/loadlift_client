@@ -76,6 +76,8 @@ const Account = () => {
     );
   };
 
+  const debit = 311;
+
   return (
     <Linear>
       <Header title="Account" isBack={false} />
@@ -86,29 +88,41 @@ const Account = () => {
         showsVerticalScrollIndicator={false}>
         {/* Vehicle info */}
         {userType === 'driver' && (
-          <Card>
-            <View className="items-center justify-center w-full pb-5 ">
-              <Image
-                source={vehicleImage}
-                style={{
-                  width: 100,
-                  height: 37,
-                }}
-              />
-            </View>
-            <View className="w-full flex-row items-center justify-between">
-              <Title semibold lg>
-                {vehicleTitle}
-              </Title>
-              <Title semibold lg>
-                {user?.vehicleNumber}
-              </Title>
-            </View>
-          </Card>
+          <>
+            <Card>
+              <View className="items-center justify-center w-full pb-5 ">
+                <Image
+                  source={vehicleImage}
+                  style={{
+                    width: 100,
+                    height: 37,
+                  }}
+                />
+              </View>
+              <View className="w-full flex-row items-center justify-between">
+                <Title semibold lg>
+                  {vehicleTitle}
+                </Title>
+                <Title semibold lg>
+                  {user?.vehicleNumber}
+                </Title>
+              </View>
+            </Card>
+            <Card className="flex-row items-center justify-between">
+              <View className="flex-1 items-start justify-center">
+                <Title semibold base>
+                  Outstanding Amount
+                </Title>
+                <Title lg bold danger={debit >= 300} className="pt-0">
+                  {'\u20B9'} {debit}
+                </Title>
+              </View>
+              <Button title="Pay Bill" mini className="mr-2" />
+            </Card>
+          </>
         )}
 
         {/* User Profile info */}
-
         {userType === 'user' && (
           <View className="w-full items-end justify-center pr-3">
             <View className="flex-row gap-2 items-center justify-center">
@@ -182,7 +196,7 @@ const Account = () => {
 
         {/* Other Settings Card */}
         <Card className="py-1 px-0">
-          {userType === 'user' && (
+          {/* {userType === 'user' && (
             <Pressable
               onPress={() => navigation.navigate('NotFound')}
               className="w-full items-start border-b p-2 px-5 justify-center"
@@ -191,7 +205,7 @@ const Account = () => {
                 Switch to Driver's Account
               </Title>
             </Pressable>
-          )}
+          )} */}
 
           <Pressable
             onPress={() => navigation.navigate('NotFound')}

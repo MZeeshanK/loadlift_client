@@ -71,6 +71,8 @@ const Booking = () => {
         },
       });
 
+      console.log(data);
+
       navigation.navigate('DriverList', { drivers: data });
     } catch (err) {
       if (err.response.status)

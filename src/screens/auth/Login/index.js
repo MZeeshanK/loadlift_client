@@ -12,8 +12,7 @@ import MonoInput from '../../../components/MonoInput';
 import { useNavigation } from '@react-navigation/native';
 
 const Login = ({ route }) => {
-  const registerPhone = route.param ? route.params.registerPhone : '9622538116';
-  console.log();
+  const registerPhone = route.param ? route.params.registerPhone : '9622510439';
 
   const dispatch = useDispatch();
   const navigation = useNavigation();

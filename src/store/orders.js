@@ -28,7 +28,8 @@ export const fetchOrders = createAsyncThunk(
 
       return data;
     } catch (err) {
-      return err.response;
+      // return err.response;
+      console.log(err.response);
     } finally {
       dispatch(setLoading(false));
     }
@@ -117,7 +118,6 @@ export const updateOrderStatus = createAsyncThunk(
       });
 
       dispatch(fetchOrders({ userToken, userType }));
-
       if (userType === 'driver' && orderStatus.code === 1) {
         dispatch(fetchUser({ userToken, userType: 'driver' }));
       }
@@ -201,6 +201,43 @@ export const declineOrder = createAsyncThunk(
       });
     } catch (err) {
       return err.response.data;
+    } finally {
+      dispatch(setLoading(false));
+    }
+  },
+);
+
+export const codOpt = createAsyncThunk(
+  'orders/codOpt',
+  async ({ orderId, userId, userToken }, { dispatch }) => {
+    const url = `${BACKEND_URL}/api/users/me/orders/cod`;
+
+    dispatch(setLoading(true));
+
+    try {
+      await axios({
+        url,
+        method: 'PUT',
+        data: {
+          orderId,
+          cod: true,
+        },
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      console.log(userId);
+
+      dispatch(fetchOrders({ userToken, userType: 'user' }));
+
+      socket.emit('send-message-to-user', {
+        userId,
+        message: 'Update Order',
+      });
+    } catch (err) {
+      console.log('error', err.response);
     } finally {
       dispatch(setLoading(false));
     }

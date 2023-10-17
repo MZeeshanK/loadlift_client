@@ -8,7 +8,7 @@ import Button from '../../../components/Button';
 import TextLabel from '../../../components/TextLabel';
 import Title from '../../../components/Title';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { otpVerify } from '../../../store/user';
 import MonoInput from '../../../components/MonoInput';
 
@@ -19,6 +19,8 @@ const OTP = ({ route }) => {
   const [timer, setTimer] = useState(59);
   const [otp, setOtp] = useState('');
   const [isMount, setIsMount] = useState(false);
+
+  const { type: userType } = useSelector(state => state.user);
 
   const { phone } = route?.params;
 
@@ -31,7 +33,7 @@ const OTP = ({ route }) => {
 
   useEffect(() => {
     if (isMount) {
-      dispatch(otpVerify({ phone, otp }));
+      dispatch(otpVerify({ phone, otp, userType }));
       setIsMount(false);
     }
   }, [isMount]);

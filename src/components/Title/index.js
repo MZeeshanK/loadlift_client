@@ -5,13 +5,13 @@ import colors from '../../constants/colors';
 const Title = ({ children, style, ...props }) => {
   const colorScheme = useColorScheme();
 
-  const [lines, setLines] = useState(props.numberOfLines || 10);
+  const [lines] = useState(props.numberOfLines || 10);
 
   const normal = colorScheme === 'dark' ? colors.white : colors.black;
   const black = colorScheme === 'dark' ? colors.black : colors.white;
   const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
 
-  const danger = colors.danger;
+  const danger = colors.lightDanger;
 
   return (
     <Text

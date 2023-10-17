@@ -70,13 +70,13 @@ const OrderItem = ({ item, ...props }) => {
         <View className="flex-1 items-between justify-between py-2 px-2 h-[90%]">
           <View className="flex-row items-center justify-between">
             <Title left className="tracking-tight w-1/2" xsm>
-              <Title semibold xsm>
+              <Title semibold xsm primary>
                 Name:{' '}
               </Title>
               {item?.driver?.firstName} {item?.driver?.lastName}
             </Title>
             <Title right className="tracking-tight" xsm>
-              <Title semibold xsm>
+              <Title semibold xsm primary>
                 Charges:{' '}
               </Title>
               {'\u20b9'} {item?.order?.price}
@@ -84,13 +84,13 @@ const OrderItem = ({ item, ...props }) => {
           </View>
           <View className="flex-row items-center justify-between">
             <Title left className="tracking-tight w-1/2" xsm>
-              <Title semibold xsm>
+              <Title semibold xsm primary>
                 Vehicle:{' '}
               </Title>
               {item?.driver?.vehicleNumber}
             </Title>
             <Title right className="tracking-tight" xsm>
-              <Title semibold xsm>
+              <Title semibold xsm primary>
                 Distance:{' '}
               </Title>
               {item?.order?.distance} km

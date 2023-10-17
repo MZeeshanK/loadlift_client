@@ -79,30 +79,14 @@ function Routes() {
     dispatch(setLoading(false));
   };
 
-  const config = { userToken, userType };
-
   if (userData) {
     socket.emit('user-connected', userData._id);
 
     socket.on('new-message', message => {
-      if (message === 'Update Order') dispatch(fetchOrders(config));
+      if (message === 'Update Order')
+        dispatch(fetchOrders({ userType, userToken }));
 
       if (message === 'Order Declined') {
-        dispatch(setPopUp({ message: 'Order Declined' }));
-      }
-
-      switch (message) {
-        case 'Update Order':
-          dispatch(fetchOrders(config));
-        case 'Order Declined':
-          dispatch(setPopUp({ message }));
-        case 'Set Rate':
-          dispatch(setPopUp({ message: 'Rate Set Succussfully!' }));
-        default:
-          break;
-      }
-
-      if (message === '') {
         dispatch(setPopUp({ message: 'Order Declined' }));
       }
     });
@@ -217,20 +201,17 @@ function Routes() {
   const AppScreens = () => {
     // Calling the location update on the driver end after every 30s whenever the driver has activated to be visible to the users.
     useEffect(() => {
-      if (userType === 'driver') {
-        const locationInterval = setInterval(() => {
-          if (active) geolocationService(userToken);
-          else clearInterval(locationInterval);
-        }, 30000);
+      if (userType === 'driver' && active) {
+        geolocationService(userToken);
       }
     }, [active]);
 
     useEffect(() => {
       if (userType && userToken) {
-        // dispatch(fetchUser(config));
-        // dispatch(fetchOrders(config));
+        // dispatch(fetchUser({ userToken, userType }));
+        // dispatch(fetchOrders({ userToken, userType }));
       }
-    }, [dispatch]);
+    }, []);
 
     return (
       <Stack.Navigator

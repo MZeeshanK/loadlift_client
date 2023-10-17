@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { setLoading } from './misc';
+import { fetchOrders } from './orders';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -51,6 +52,7 @@ export const otpVerify = createAsyncThunk(
       });
 
       dispatch(fetchUser({ userType, userToken: data.token }));
+      dispatch(fetchOrders({ userType, userToken: data.token }));
 
       return data.token;
     } catch (err) {
@@ -97,39 +99,6 @@ export const userLogin = createAsyncThunk(
     }
   },
 );
-
-// Register User for sending otp
-// export const registerUser = createAsyncThunk(
-//   'user/registerUser',
-//   async ({ userType, inputs, navigation }, { dispatch }) => {
-//     const url =
-//       userType === 'driver'
-//         ? `${BACKEND_URL}/api/drivers/register`
-//         : `${BACKEND_URL}/api/users/register`;
-
-//     dispatch(setLoading(true));
-
-//     try {
-//       const { data } = await axios({
-//         method: 'POST',
-//         url,
-//         data: { ...inputs },
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//       });
-
-//       console.log('data => ', data);
-
-//       navigation.navigate('Login', { phone: inputs.phone });
-//     } catch (err) {
-//       console.log('error', err.response.data);
-//       // return err.response.data;
-//     } finally {
-//       dispatch(setLoading(false));
-//     }
-//   },
-// );
 
 export const registerUser = createAsyncThunk(
   'user/registerUser',

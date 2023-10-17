@@ -73,7 +73,7 @@ export const getDriverLocation = async (location, userToken) => {
   const url = `${BACKEND_URl}/api/drivers/me/location`;
 
   try {
-    await axios({
+    const { data } = await axios({
       method: 'PUT',
       url,
       data: {
@@ -83,8 +83,10 @@ export const getDriverLocation = async (location, userToken) => {
         Authorization: `Bearer ${userToken}`,
       },
     });
+
+    console.log(data);
   } catch (err) {
-    console.log(err.response.data);
+    console.log(err);
   }
 };
 
@@ -94,8 +96,8 @@ export const geolocationService = userToken => {
       const { latitude, longitude } = position.coords;
 
       const location = {
-        lat: latitude,
-        lng: longitude,
+        lat: 34.136466,
+        lng: 74.663155,
       };
 
       getDriverLocation(location, userToken);
