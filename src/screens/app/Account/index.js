@@ -20,7 +20,9 @@ import colors from '../../../constants/colors';
 import categories from '../../../data/categories';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { userLogout } from '../../../store/user';
+import { clearDebit, userLogout } from '../../../store/user';
+
+import { handlePayment } from '../../../data/functions';
 
 const Account = () => {
   const dispatch = useDispatch();
@@ -31,7 +33,11 @@ const Account = () => {
 
   const [modalVisible, setModalVisible] = useState(false);
 
-  const { type: userType, data: user } = useSelector(state => state.user);
+  const {
+    type: userType,
+    data: user,
+    token: userToken,
+  } = useSelector(state => state.user);
 
   // Selecting vehicle details from categories
   let vehicleImage, vehicleTitle;
@@ -76,8 +82,6 @@ const Account = () => {
     );
   };
 
-  const debit = 311;
-
   return (
     <Linear>
       <Header title="Account" isBack={false} />
@@ -113,11 +117,19 @@ const Account = () => {
                 <Title semibold base>
                   Outstanding Amount
                 </Title>
-                <Title lg bold danger={debit >= 300} className="pt-0">
-                  {'\u20B9'} {debit}
+                <Title lg bold danger={user.debit > 500} className="pt-0">
+                  {'\u20B9'} {user.debit}
                 </Title>
               </View>
-              <Button title="Pay Bill" mini className="mr-2" />
+              <Button
+                isDisabled={user.debit < 1}
+                title="Pay Bill"
+                onPress={() =>
+                  handlePayment(user.debit, dispatch(clearDebit({ userToken })))
+                }
+                mini
+                className="mr-2"
+              />
             </Card>
           </>
         )}

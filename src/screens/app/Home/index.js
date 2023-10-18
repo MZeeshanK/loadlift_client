@@ -13,13 +13,13 @@ import DriverCard from './DriverCard';
 // const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API;
 
 const Home = () => {
-  const { type: userType } = useSelector(state => state.user);
+  const { type: userType, data: userData } = useSelector(state => state.user);
 
   const Driver = () => (
     <View className="flex-1 w-full items-center justify-between -mt-8">
       <DriverCard />
       <View className="flex-1" />
-      <DriverButton />
+      <DriverButton isDisabled={userData.debit >= 500} />
     </View>
   );
 

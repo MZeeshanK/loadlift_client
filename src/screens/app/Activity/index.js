@@ -9,6 +9,7 @@ import colors from '../../../constants/colors';
 import { useSelector } from 'react-redux';
 
 import Title from '../../../components/Title';
+import Toast from 'react-native-toast-message';
 
 const Activity = () => {
   const orders = useSelector(state => state.orders.data);
@@ -46,6 +47,17 @@ const Activity = () => {
       setClear(false);
     }
   }, [text]);
+
+  const showToast = () => {
+    Toast.show({
+      type: 'errorToast',
+      text1: 'Hello World',
+    });
+  };
+
+  useEffect(() => {
+    showToast();
+  }, []);
 
   return (
     <Linear>

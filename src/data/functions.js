@@ -2,6 +2,8 @@ import Geolocation from 'react-native-geolocation-service';
 import axios from 'axios';
 import moment from 'moment';
 import { Linking } from 'react-native';
+import RazorpayCheckout from 'react-native-razorpay';
+const KEY_ID = process.env.REACT_APP_RAZORPAY_KEY_ID;
 
 const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API;
 const API_URL = 'https://maps.googleapis.com/maps/api/directions/json';
@@ -107,4 +109,32 @@ export const geolocationService = userToken => {
     },
     { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
   );
+};
+
+export const handlePayment = (amount, cb) => {
+  var options = {
+    description: 'Loadlift Payment',
+    image: '',
+    currency: 'INR',
+    key: KEY_ID,
+    amount: Math.round(amount * 100),
+    name: 'Loadlift Payment',
+    order_id: '', //Replace this with an order_id created using Orders API. Learn more at https://razorpay.com/docs/api/orders.
+    prefill: {
+      email: 'what@example.com',
+      contact: '9419191919',
+      name: 'User 1',
+    },
+    theme: { color: '#F37254' },
+  };
+
+  RazorpayCheckout.open(options)
+    .then(data => {
+      // handle success
+      cb();
+    })
+    .catch(error => {
+      console.log(error);
+      // handle failure
+    });
 };

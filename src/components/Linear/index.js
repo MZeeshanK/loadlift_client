@@ -6,20 +6,19 @@ import {
   TouchableWithoutFeedback,
   useColorScheme,
 } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import colors from '../../constants/colors';
 import Loader from '../Loader';
-import PopUp from '../PopUp';
 
 const { height } = Dimensions.get('window');
 
 const Linear = ({ children, style }) => {
   const colorScheme = useColorScheme();
 
-  const { loading, popUp } = useSelector(state => state.misc);
+  const { loading } = useSelector(state => state.misc);
 
-  if (loading || popUp.display) {
+  if (loading) {
     Keyboard.dismiss();
   }
 
@@ -38,7 +37,6 @@ const Linear = ({ children, style }) => {
           style,
         ]}>
         <>
-          {popUp.display && <PopUp />}
           {loading && <Loader />}
           {children}
         </>

@@ -43,10 +43,22 @@ const Button = ({ title, onPress, source, style, ...props }) => {
 
         style,
       ]}
-      onPress={onPress}>
+      onPress={() => {
+        if (props.isDisabled) {
+          return;
+        } else {
+          onPress();
+        }
+      }}>
       {source && <Image className="w-[16] h-[16] mr-2" source={source} />}
       <Title
-        onPress={onPress}
+        onPress={() => {
+          if (props.isDisabled) {
+            return;
+          } else {
+            onPress();
+          }
+        }}
         bold={!props.mini}
         semibold={props.mini}
         black

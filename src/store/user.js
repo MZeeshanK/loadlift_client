@@ -227,6 +227,31 @@ export const setRate = createAsyncThunk(
   },
 );
 
+export const clearDebit = createAsyncThunk(
+  'user/clearDebit',
+  async ({ userToken }, { dispatch }) => {
+    const url = `${BACKEND_URL}/api/drivers/me/debit`;
+
+    dispatch(setLoading(true));
+
+    try {
+      const { data } = await axios({
+        url,
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      });
+
+      return data;
+    } catch (err) {
+      console.log(err.response.data);
+    } finally {
+      dispatch(setLoading(false));
+    }
+  },
+);
+
 export const userSlice = createSlice({
   name: 'user',
   initialState: {
@@ -300,6 +325,11 @@ export const userSlice = createSlice({
     });
     builder.addCase(setRate.rejected, (state, action) => {
       state.error = action.error.message;
+    });
+
+    // clearDebit
+    builder.addCase(clearDebit.fulfilled, (state, action) => {
+      state.data = action.payload;
     });
   },
 });

@@ -114,6 +114,7 @@ const DriverCard = () => {
       </Card>
     );
   }
+
   if (activeOrder) {
     return (
       <Card
@@ -170,12 +171,22 @@ const DriverCard = () => {
             title="Map"
             className="w-[48%]"
             card
-            onPress={() =>
-              openGoogleMapsDirections({
-                origin: activeOrder?.order.origin,
-                destination: activeOrder?.order.destination,
-              })
-            }
+            onPress={() => {
+              if (activeOrder.order.status === 1) {
+                openGoogleMapsDirections({
+                  origin: {
+                    lat: 34.136274,
+                    lng: 74.663173,
+                  },
+                  destination: activeOrder?.order.destination,
+                });
+              } else {
+                openGoogleMapsDirections({
+                  origin: activeOrder?.order.origin,
+                  destination: activeOrder?.order.destination,
+                });
+              }
+            }}
           />
 
           <Button

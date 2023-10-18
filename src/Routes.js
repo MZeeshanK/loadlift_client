@@ -89,8 +89,17 @@ function Routes() {
       if (message === 'Order Declined') {
         dispatch(setPopUp({ message: 'Order Declined' }));
       }
+
+      if (message === 'Update User') {
+        dispatch(fetchUser({ userType, userToken }));
+      }
     });
   }
+
+  // useEffect(() => {
+  //   dispatch(fetchUser({ userToken, userType }));
+  //   dispatch(fetchOrders({ userToken, userType }));
+  // }, []);
 
   if (loading) {
     setTimeout(() => {

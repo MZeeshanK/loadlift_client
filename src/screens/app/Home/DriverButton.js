@@ -1,16 +1,16 @@
-import React, {useEffect, useState} from 'react';
-import {Pressable, Dimensions, useColorScheme} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Pressable, Dimensions, useColorScheme } from 'react-native';
 
 import Title from '../../../components/Title';
 
 import colors from '../../../constants/colors';
 
-import {useSelector, useDispatch} from 'react-redux';
-import {activateDriver} from '../../../store/user';
+import { useSelector, useDispatch } from 'react-redux';
+import { activateDriver } from '../../../store/user';
 
-const {width} = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
-const DriverHomeButton = () => {
+const DriverHomeButton = ({ isDisabled }) => {
   const colorScheme = useColorScheme();
   const dispatch = useDispatch();
 
@@ -18,7 +18,7 @@ const DriverHomeButton = () => {
   const [isMount, setIsMount] = useState(false);
 
   // global states
-  const {data: userData, token: userToken} = useSelector(state => state.user);
+  const { data: userData, token: userToken } = useSelector(state => state.user);
   const orders = useSelector(state => state.orders.data);
 
   const activeOrder = orders.find(
@@ -29,16 +29,17 @@ const DriverHomeButton = () => {
       order?.order?.status.code !== 4,
   );
 
-  const {active} = userData;
+  const { active } = userData;
 
   useEffect(() => {
     if (isMount) {
-      dispatch(activateDriver({active, userToken}));
+      dispatch(activateDriver({ active, userToken }));
       setIsMount(false);
     }
   }, [isMount]);
 
   const primary = colorScheme === 'dark' ? colors.primary : colors.lightPrimary;
+  const danger = colorScheme === 'dark' ? colors.lightDanger : colors.danger;
   return (
     <>
       {active && (
@@ -48,8 +49,11 @@ const DriverHomeButton = () => {
       )}
       <Pressable
         onPress={() => {
-          if (!activeOrder) setIsMount(isMount => !isMount);
+          if (!activeOrder) {
+            setIsMount(isMount => !isMount);
+          }
         }}
+        disabled={isDisabled}
         className={`aspect-square items-center justify-center rounded-full border-4 mb-5`}
         style={[
           {
@@ -61,9 +65,24 @@ const DriverHomeButton = () => {
             elevation: 10,
             shadowColor: colors.ongoing,
           },
+          isDisabled && {
+            borderColor: danger,
+          },
         ]}>
-        <Title xxl bold primary={!active} black={active}>
-          {activeOrder ? 'isDelivering' : active ? 'Active' : 'InActive'}
+        <Title
+          xxl
+          xsm={isDisabled}
+          bold
+          primary={!active}
+          black={active}
+          style={isDisabled && { color: danger }}>
+          {activeOrder
+            ? 'isDelivering'
+            : active
+            ? 'Active'
+            : isDisabled
+            ? 'Please pay the outstanding amount'
+            : 'InActive'}
         </Title>
       </Pressable>
     </>

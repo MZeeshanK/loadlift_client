@@ -24,10 +24,7 @@ import {
   updateOrderStatus,
   useLoadCoin,
 } from '../../../store/orders';
-
-import RazorpayCheckout from 'react-native-razorpay';
-
-const KEY_ID = process.env.REACT_APP_RAZORPAY_KEY_ID;
+import { handlePayment } from '../../../data/functions';
 
 const Order = ({ route }) => {
   const { orderId } = route.params;
@@ -64,45 +61,6 @@ const Order = ({ route }) => {
 
   const newDate = formattedDate(date);
 
-  const handlePayment = () => {
-    var options = {
-      description: 'Loadlift Payment',
-      image: '',
-      currency: 'INR',
-      key: KEY_ID,
-      amount: (order?.price * 100).toFixed(0),
-      name: 'Loadlift Payment',
-      order_id: '', //Replace this with an order_id created using Orders API. Learn more at https://razorpay.com/docs/api/orders.
-      prefill: {
-        email: 'what@example.com',
-        contact: '9419191919',
-        name: 'User 1',
-      },
-      theme: { color: '#F37254' },
-    };
-
-    RazorpayCheckout.open(options)
-      .then(data => {
-        // handle success
-
-        dispatch(
-          updateOrderStatus({
-            userType,
-            userId: user?._id,
-            driverId: driver?._id,
-            orderStatus: {
-              code: 4,
-              message: 'Completed',
-            },
-            orderId,
-            userToken,
-          }),
-        );
-      })
-      .catch(error => {
-        // handle failure
-      });
-  };
   const PickUpModal = () => {
     const onPress = bool => {
       if (bool) {
@@ -155,7 +113,27 @@ const Order = ({ route }) => {
             card
             half
           />
-          <Button onPress={() => handlePayment()} title="Pay Online" half />
+          <Button
+            onPress={() =>
+              handlePayment(order.price, () =>
+                dispatch(
+                  updateOrderStatus({
+                    userType,
+                    userId: user?._id,
+                    driverId: driver?._id,
+                    orderStatus: {
+                      code: 4,
+                      message: 'Completed',
+                    },
+                    orderId,
+                    userToken,
+                  }),
+                ),
+              )
+            }
+            title="Pay Online"
+            half
+          />
         </View>
       </CustomModal>
     );
@@ -185,6 +163,7 @@ const Order = ({ route }) => {
                 }),
               );
               setCodModal(false);
+              navigation.navigate('Tabs');
             }}
             title="Yes"
             half

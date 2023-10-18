@@ -118,7 +118,10 @@ export const updateOrderStatus = createAsyncThunk(
       });
 
       dispatch(fetchOrders({ userToken, userType }));
-      if (userType === 'driver' && orderStatus.code === 1) {
+      if (
+        (userType === 'driver' && orderStatus.code === 1) ||
+        (userType === 'driver' && orderStatus.code === 4)
+      ) {
         dispatch(fetchUser({ userToken, userType: 'driver' }));
       }
 
@@ -157,6 +160,11 @@ export const reviewOrder = createAsyncThunk(
       socket.emit('send-message-to-user', {
         userId: driverId,
         message: 'Update Order',
+      });
+
+      socket.emit('send-message-to-user', {
+        userId: driverId,
+        message: 'Update User',
       });
 
       navigation.navigate('Tabs');
@@ -209,7 +217,7 @@ export const declineOrder = createAsyncThunk(
 
 export const codOpt = createAsyncThunk(
   'orders/codOpt',
-  async ({ orderId, userId, userToken }, { dispatch }) => {
+  async ({ orderId, userId, userToken, cod }, { dispatch }) => {
     const url = `${BACKEND_URL}/api/users/me/orders/cod`;
 
     dispatch(setLoading(true));
@@ -220,15 +228,13 @@ export const codOpt = createAsyncThunk(
         method: 'PUT',
         data: {
           orderId,
-          cod: true,
+          cod,
         },
         headers: {
           Authorization: `Bearer ${userToken}`,
           'Content-Type': 'application/json',
         },
       });
-
-      console.log(userId);
 
       dispatch(fetchOrders({ userToken, userType: 'user' }));
 

@@ -46,7 +46,7 @@ const Map = ({ route }) => {
   const [expanded, setExpanded] = useState(true);
   const [animate, setAnimate] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [modalState, setModalState] = useState('default');
+  const [modalState, setModalState] = useState();
   const [isLocationMount, setIsLocationMount] = useState(false);
 
   const [center, setCenter] = useState(
@@ -103,20 +103,6 @@ const Map = ({ route }) => {
     }
   }, [isLocationMount]);
 
-  // useEffect(() => {
-  //   Geolocation.getCurrentPosition(
-  //     position => {
-  //       const { latitude, longitude } = position.coords;
-
-  //       console.log(latitude, longitude);
-  //     },
-  //     error => {
-  //       console.warn(error.message);
-  //     },
-  //     { enableHighAccuracy: true },
-  //   );
-  // }, []);
-
   // Google directions api for calculating distance and time between origin and destination
 
   const AddressModal = ({ modalState }) => {
@@ -143,53 +129,55 @@ const Map = ({ route }) => {
 
     // set address for all the location states
     const result = () => {
-      switch (modalState) {
-        case 'home':
-          dispatch(
-            setHome({
-              lat: center?.lat,
-              lng: center?.lng,
-              address: address,
-              pinCode: pinCode,
-            }),
-          );
-          break;
-        case 'work':
-          dispatch(
-            setWork({
-              lat: center?.lat,
-              lng: center?.lng,
-              address: address,
-              pinCode: pinCode,
-            }),
-          );
-          break;
-        case 'default':
-          if (state === 'origin') {
-            dispatch(
-              setOrigin({
-                lat: center?.lat,
-                lng: center?.lng,
-                address: address,
-                pinCode: pinCode,
-              }),
-            );
-          } else {
-            dispatch(
-              setDestination({
-                lat: center?.lat,
-                lng: center?.lng,
-                address: address,
-                pinCode: pinCode,
-              }),
-            );
-          }
-          break;
+      if (state === 'home') {
+        dispatch(
+          setHome({
+            lat: center?.lat,
+            lng: center?.lng,
+            address: address,
+            pinCode: pinCode,
+          }),
+        );
+      }
+
+      if (state === 'work') {
+        dispatch(
+          setWork({
+            lat: center?.lat,
+            lng: center?.lng,
+            address: address,
+            pinCode: pinCode,
+          }),
+        );
       }
 
       if (state === 'origin') {
+        dispatch(
+          setOrigin({
+            lat: center?.lat,
+            lng: center?.lng,
+            address: address,
+            pinCode: pinCode,
+          }),
+        );
+
         navigation.navigate('Map', {
           state: 'destination',
+          location: destination,
+        });
+      }
+
+      if (state === 'destination') {
+        dispatch(
+          setDestination({
+            lat: center?.lat,
+            lng: center?.lng,
+            address: address,
+            pinCode: pinCode,
+          }),
+        );
+        navigation.navigate('Map', {
+          state: 'book',
           location: destination,
         });
       }
@@ -225,6 +213,26 @@ const Map = ({ route }) => {
         <Button title="Done" className="mt-4" onPress={result} />
       </CustomModal>
     );
+  };
+
+  const fetchPlaceCoordinates = placeId => {
+    const apiKey = API_KEY; // Replace with your API key
+    const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&key=${apiKey}`;
+
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        const { lat, lng } = data.result.geometry.location;
+
+        setCenter({
+          lat,
+          lng,
+        });
+        setAnimate(true);
+      })
+      .catch(error => {
+        console.error('Error fetching place details:', error);
+      });
   };
 
   return (
@@ -317,7 +325,11 @@ const Map = ({ route }) => {
           returnKeyType="search"
           onPress={(data, details = null) => {
             // 'details' is provided when fetchDetails = true
-            console.log(details);
+
+            const placeId = details.place_id;
+
+            // Now, you can fetch the coordinates using the Place Details API
+            fetchPlaceCoordinates(placeId);
           }}
           query={{
             key: API_KEY,
@@ -328,6 +340,20 @@ const Map = ({ route }) => {
           styles={{
             container: {
               marginTop: 10,
+            },
+            poweredContainer: {
+              display: 'none',
+            },
+            separator: {
+              backgroundColor: primary,
+            },
+            listView: {
+              marginTop: 5,
+              marginHorizontal: 15,
+              borderRadius: 10,
+            },
+            description: {
+              color: '#000',
             },
           }}
         />
@@ -431,10 +457,14 @@ const Map = ({ route }) => {
             }}
           />
           <Button
-            title="Mark"
+            title={state === 'book' ? 'Book' : 'Mark'}
             onPress={() => {
-              setModalState('default');
-              setModalVisible(true);
+              if (state === 'book') {
+                navigation.navigate('Booking');
+              } else {
+                setModalState();
+                setModalVisible(true);
+              }
             }}
           />
           <Button
